@@ -20,28 +20,30 @@ function request(config) {
     return axios.request(requestConfig);
 }
 
-export function get(url, config) {
-    return request({
-        ...config,
-        method: 'GET',
-        url
-    });
-}
+export default {
+    get(url, config) {
+        return request({
+            ...config,
+            method: 'GET',
+            url
+        });
+    },
 
-export function post(url, data, config) {
-    return request({
-        ...config,
-        method: 'POST',
-        url,
-        data
-    });
-}
+    post(url, data, config) {
+        return request({
+            ...config,
+            method: 'POST',
+            url,
+            data
+        });
+    },
 
-export function put(url, data, config) {
-    return request({
-        ...config,
-        method: 'PUT',
-        url,
-        data
-    });
+    put(url, data, config) {
+        return request({
+            ...config,
+            method: 'PUT',
+            url,
+            data
+        });
+    }
 }

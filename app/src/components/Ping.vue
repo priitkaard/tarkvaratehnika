@@ -6,7 +6,8 @@
 </template>
 
 <script>
-    import {ApiService} from "../core/api.service";
+
+    import apiService from "../services/ApiService";
 
     export default {
         name: 'Ping',
@@ -16,19 +17,19 @@
             }
         },
         async mounted() {
-            const response = await ApiService.get('/ping');
+            const response = await apiService.get('/ping');
             this.message = response.data.message;
         }
     }
 </script>
 
-<style>
+<style lang="scss">
     #ping {
         width: 100%;
         height: 100vh;
         background-color: #1c1c1c;
         overflow: hidden;
         text-align: center;
-        color: white;
+        // color: white;
     }
 </style>
