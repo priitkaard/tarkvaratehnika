@@ -1,10 +1,10 @@
 <template>
     <div class="QuestionSearch">
         <div class="search">
-            <input type="text" placeholder="Ask a question" />
+            <input type="text" placeholder="Ask a question" v-model="query" />
             <arrow-right-icon class="icon" />
         </div>
-        <div class="suggestions">
+        <div class="suggestions" v-if="query">
             <em>Already asked questions:</em>
 
             <div class="answer">
@@ -28,6 +28,11 @@
 
     export default {
         name: "QuestionSearch",
+        data() {
+            return {
+                query: ''
+            }
+        },
         components: {
             ArrowRightIcon
         }
