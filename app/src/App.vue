@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <Ping />
+    <Hero />
+    <HomePage />
   </div>
 </template>
 
 <script>
-import Ping from './components/Ping.vue'
+import Hero from './components/Hero';
+import HomePage from './views/HomePage.vue'
 
 export default {
   name: 'app',
   components: {
-    Ping
+    Hero,
+    HomePage
   }
 }
 </script>

@@ -1,4 +1,5 @@
-body, html {
-  color: orange;
+@import './_colors.scss';
 
+body, html {
+  background: $background-color;
 }
