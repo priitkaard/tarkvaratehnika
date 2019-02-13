@@ -21,7 +21,7 @@
     .Hero {
         width: 100%;
         height: 100vh;
-        background-image: url('../assets/img/hero-image.jpg');
+        background: url('../assets/img/hero-image.jpg') center;
         background-size: cover;
         display: flex;
         flex-direction: column;
