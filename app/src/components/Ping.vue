@@ -6,22 +6,20 @@
 </template>
 
 <script>
-import axios from 'axios';
+    import {ApiService} from "../core/api.service";
 
-export default {
-    name: 'Ping',
-    data() {
-        return {
-            message: 'Loading...'
+    export default {
+        name: 'Ping',
+        data() {
+            return {
+                message: 'Loading...'
+            }
+        },
+        async mounted() {
+            const response = await ApiService.get('/ping');
+            this.message = response.data.message;
         }
-    },
-    async mounted() {
-        const response = await axios.get('http://localhost:8080/ping');
-        this.message = response.data.message;
     }
-
-}
-
 </script>
 
 <style>
