@@ -1,9 +1,9 @@
-package com.kaard.untitled;
+package com.qaengine;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {"com.kaard.untitled.database"})
+@SpringBootApplication(scanBasePackages = {"com.qaengine.database"})
 public class Application {
 
 	public static void main(String[] args) {

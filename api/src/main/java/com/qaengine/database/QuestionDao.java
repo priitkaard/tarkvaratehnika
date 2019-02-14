@@ -1,13 +1,6 @@
-package com.kaard.untitled.database;
+package com.qaengine.database;
 
-import com.kaard.untitled.models.Question;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 @Repository
 public class QuestionDao {

@@ -1,4 +1,4 @@
-package com.kaard.untitled;
+package com.qaengine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

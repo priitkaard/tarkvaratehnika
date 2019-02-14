@@ -1,9 +1,8 @@
-package com.kaard.untitled.controllers;
+package com.qaengine.controllers;
 
-import com.kaard.untitled.database.QuestionDao;
-import com.kaard.untitled.database.QuestionRepository;
-import com.kaard.untitled.models.Question;
-import com.kaard.untitled.models.inputs.QuestionInput;
+import com.qaengine.database.QuestionRepository;
+import com.qaengine.models.Question;
+import com.qaengine.models.inputs.QuestionInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

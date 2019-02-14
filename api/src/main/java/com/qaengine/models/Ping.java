@@ -1,4 +1,4 @@
-package com.kaard.untitled.models;
+package com.qaengine.models;
 
 public class Ping {
     private String message;

@@ -1,4 +1,4 @@
-package com.kaard.untitled.models.inputs;
+package com.qaengine.models.inputs;
 
 
 import lombok.*;

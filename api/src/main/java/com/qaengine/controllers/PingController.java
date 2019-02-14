@@ -1,6 +1,6 @@
-package com.kaard.untitled.controllers;
+package com.qaengine.controllers;
 
-import com.kaard.untitled.models.Ping;
+import com.qaengine.models.Ping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
