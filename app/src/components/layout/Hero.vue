@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import QuestionSearch from './QuestionSearch';
+    import QuestionSearch from '../Searchbar';
 
     export default {
         name: "Hero",
@@ -18,10 +18,11 @@
 </script>
 
 <style lang="scss" scoped>
+    @import '../../assets/styles/_mixins.scss';
     .Hero {
         width: 100%;
         height: 100vh;
-        background: url('../assets/img/hero-image.jpg') center;
+        background: url('../../assets/img/hero-image.jpg') center;
         background-size: cover;
         display: flex;
         flex-direction: column;
@@ -35,6 +36,9 @@
         }
         p {
             margin: -10px 0 50px 0;
+        }
+        h1, p {
+            @include shadow-box;
         }
     }
 </style>

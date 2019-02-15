@@ -1,23 +1,15 @@
 <template>
     <div class="QuestionSearch">
         <div class="search">
-            <input type="text" placeholder="Ask a question" v-model="query" />
-            <arrow-right-icon class="icon" />
+            <input type="text" placeholder="Ask a question" v-model="query" v-on:input="updateAutoComplete" v-on:/>
+            <arrow-right-icon class="icon-button" />
         </div>
-        <div class="suggestions" v-if="query">
+
+        <div class="suggestions" v-if="suggestions.length > 0">
             <em>Already asked questions:</em>
 
-            <div class="answer">
-                What is the meaning of life?
-            </div>
-            <div class="answer">
-                How many pets does Jesus have?
-            </div>
-            <div class="answer">
-                How many hours per day I should sleep?
-            </div>
-            <div class="answer">
-                Are cats reborn as angry women?
+            <div v-for="(suggestion, index) in suggestions" v-bind:key="index" class="answer">
+                {{ suggestion }}
             </div>
         </div>
     </div>
@@ -25,27 +17,35 @@
 
 <script>
     import ArrowRightIcon from "vue-material-design-icons/ArrowRight.vue"
+    import QuestionsService from '../services/QuestionsService';
 
     export default {
         name: "QuestionSearch",
         data() {
             return {
-                query: ''
+                query: '',
+                suggestions: []
             }
         },
         components: {
             ArrowRightIcon
+        },
+        methods: {
+            async updateAutoComplete() {
+                this.suggestions = await QuestionsService.autoCompleteSuggestions(this.query);
+            }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    @import '../assets/styles/_colors.scss';
-    @import '../assets/styles/_mixins.scss';
+    @import '../assets/styles/colors';
+    @import '../assets/styles/mixins';
 
     .QuestionSearch {
         width: 90%;
         max-width: 800px;
+        height: 40px;
         color: black;
 
         position: relative;
@@ -77,10 +77,6 @@
                 text-align: center;
                 border: none;
                 outline-color: transparent;
-            }
-
-            .icon:hover {
-                cursor: pointer;
             }
 
             &:focus-within {
