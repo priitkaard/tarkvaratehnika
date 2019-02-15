@@ -6,7 +6,7 @@
             <menu-down-icon class="icon-button" :size="40" />
         </div>
 
-        <div class="body">
+        <div class="body" v-on:click="openQuestion">
             <h3>{{ question.title }}</h3>
             <p>{{ question.description }}</p>
         </div>
@@ -28,6 +28,16 @@
             MenuUpIcon,
             MenuDownIcon,
             QuestionsListElementDetails
+        },
+        methods: {
+            openQuestion() {
+                this.$router.push({
+                    name: 'QuestionView',
+                    params: {
+                        id: this.question.id
+                    }
+                });
+            }
         }
     }
 </script>
@@ -67,6 +77,9 @@
             }
             p {
                 font-size: 14px;
+            }
+            &:hover {
+                cursor: pointer;
             }
         }
     }

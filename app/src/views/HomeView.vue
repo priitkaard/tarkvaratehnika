@@ -1,5 +1,5 @@
 <template>
-    <div class="HomePage">
+    <div class="HomeView">
         <div class="container">
             <QuestionsSortBar />
             <div class="row">
@@ -7,7 +7,7 @@
                     <QuestionsList />
                 </div>
                 <div class="col-md-4">
-                    test2
+                    <QuestionStatistics />
                 </div>
             </div>
         </div>
@@ -17,10 +17,12 @@
 <script>
     import QuestionsSortBar from '../components/questions/QuestionsSortBar';
     import QuestionsList from '../components/questions/QuestionsList';
+    import QuestionStatistics from "../components/QuestionStatistics";
 
     export default {
-        name: "HomePage",
+        name: "HomeView",
         components: {
+            QuestionStatistics,
             QuestionsSortBar,
             QuestionsList
         }
@@ -28,7 +30,7 @@
 </script>
 
 <style scoped>
-    .HomePage {
+    .HomeView {
         padding-top: 80px;
         padding-bottom: 80px;
     }

@@ -7,3 +7,22 @@ body, html {
 .icon-button:hover {
     cursor: pointer;
 }
+
+.sidebar {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  background-color: white;
+  margin: 10px 0;
+
+  header {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-right: 5px solid $primary-color;
+    text-align: right;
+    padding: 0 15px;
+    font-size: 18px;
+  }
+}
