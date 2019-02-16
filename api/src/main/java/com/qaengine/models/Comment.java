@@ -18,6 +18,7 @@ public class Comment {
     @GeneratedValue
     private Integer id;
     private String text;
+    private Integer score = 0;
 
     public Comment(String text) {
         this.text = text;
