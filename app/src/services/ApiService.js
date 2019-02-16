@@ -7,7 +7,7 @@ const axios = Axios.create({
 });
 
 function request(config) {
-    const requestConfig = { ...config };
+    const requestConfig = {...config};
     if (!requestConfig.headers) {
         requestConfig.headers = {};
     }

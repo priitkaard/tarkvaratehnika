@@ -6,18 +6,18 @@ import QuestionView from './views/QuestionView.vue'
 Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      name: 'HomeView',
-      component: HomeView
-    },
-    {
-        name: 'QuestionView',
-        path: '/question/:id',
-        component: QuestionView
-    }
-  ]
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes: [
+        {
+            path: '/',
+            name: 'HomeView',
+            component: HomeView
+        },
+        {
+            name: 'QuestionView',
+            path: '/question/:id',
+            component: QuestionView
+        }
+    ]
 })

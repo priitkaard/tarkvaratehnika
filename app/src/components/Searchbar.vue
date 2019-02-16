@@ -2,7 +2,7 @@
     <div class="QuestionSearch">
         <div class="search">
             <input type="text" placeholder="Ask a question" v-model="query" v-on:input="updateAutoComplete" v-on:/>
-            <arrow-right-icon class="icon-button" />
+            <arrow-right-icon class="icon-button"/>
         </div>
 
         <div class="suggestions" v-if="suggestions.length > 0">

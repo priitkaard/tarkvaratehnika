@@ -1,6 +1,6 @@
 <template>
     <div class="QuestionsList">
-        <QuestionsListElement v-for="question in questions" v-bind:key="question.id" v-bind:question="question" />
+        <QuestionsListElement v-for="question in questions" v-bind:key="question.id" v-bind:question="question"/>
     </div>
 </template>
 

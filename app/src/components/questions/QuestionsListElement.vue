@@ -1,9 +1,9 @@
 <template>
     <div class="QuestionsListElement">
         <div class="score">
-            <menu-up-icon class="icon-button" :size="40" />
+            <menu-up-icon class="icon-button" :size="40"/>
             <em v-bind:class="{ positive: question.score > 0, negative: question.score < 0 }">{{ question.score }}</em>
-            <menu-down-icon class="icon-button" :size="40" />
+            <menu-down-icon class="icon-button" :size="40"/>
         </div>
 
         <div class="body" v-on:click="openQuestion">
@@ -11,7 +11,7 @@
             <p>{{ question.description }}</p>
         </div>
 
-        <QuestionsListElementDetails />
+        <QuestionsListElementDetails/>
 
     </div>
 </template>
@@ -62,8 +62,12 @@
             em {
                 font-style: normal;
                 font-weight: bold;
-                &.positive { color: $color-green }
-                &.negative { color: $color-red }
+                &.positive {
+                    color: $color-green
+                }
+                &.negative {
+                    color: $color-red
+                }
             }
         }
 

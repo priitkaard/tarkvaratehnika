@@ -1,11 +1,12 @@
 <template>
     <div class="Navigation">
-        <QuestionSearch />
+        <QuestionSearch/>
     </div>
 </template>
 
 <script>
     import QuestionSearch from "../Searchbar";
+
     export default {
         name: "Navigation",
         components: {QuestionSearch}
@@ -21,7 +22,7 @@
         justify-content: center;
         align-items: center;
 
-        position:fixed;
+        position: fixed;
         top: 0;
         z-index: 5;
     }

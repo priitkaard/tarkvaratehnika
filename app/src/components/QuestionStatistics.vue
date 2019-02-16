@@ -3,11 +3,11 @@
         <header>Statistics</header>
         <ul>
             <li>
-                <comment-text-multiple-icon />
+                <comment-text-multiple-icon/>
                 123 questions
             </li>
             <li>
-                <chevron-up-icon />
+                <chevron-up-icon/>
                 321 votes
             </li>
         </ul>

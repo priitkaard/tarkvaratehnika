@@ -1,6 +1,6 @@
 <template>
     <div class="QuestionsSortBar">
-        <div class="option" v-for="option in options" v-bind:key="option" >{{ option }}</div>
+        <div class="option" v-for="option in options" v-bind:key="option">{{ option }}</div>
     </div>
 </template>
 

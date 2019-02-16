@@ -1,13 +1,13 @@
 <template>
     <div id="app">
-        <Hero />
+        <Hero/>
 
         <transition name="fade">
             <Navigation v-if="isContentView"/>
         </transition>
         <router-view></router-view>
 
-        <Footer />
+        <Footer/>
     </div>
 </template>
 

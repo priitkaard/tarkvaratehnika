@@ -1,13 +1,13 @@
 <template>
     <div class="HomeView">
         <div class="container">
-            <QuestionsSortBar />
+            <QuestionsSortBar/>
             <div class="row">
                 <div class="col-md-8">
-                    <QuestionsList />
+                    <QuestionsList/>
                 </div>
                 <div class="col-md-4">
-                    <QuestionStatistics />
+                    <QuestionStatistics/>
                 </div>
             </div>
         </div>

@@ -1,19 +1,19 @@
 <template>
     <div class="QuestionsListElementDetails">
         <div class="detail">
-            <folder-icon :size="20" />
+            <folder-icon :size="20"/>
             Various
         </div>
         <div class="detail">
-            <clock-outline-icon :size="20" />
+            <clock-outline-icon :size="20"/>
             2 days ago
         </div>
         <div class="detail">
-            <eye-icon :size="20" />
+            <eye-icon :size="20"/>
             1315 views
         </div>
         <div class="detail">
-            <comment-icon :size="20" />
+            <comment-icon :size="20"/>
             4 comments
         </div>
     </div>

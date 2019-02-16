@@ -2,7 +2,7 @@
     <div class="Hero">
         <h1>Q&A Engine</h1>
         <p>Answers to your everyday questions</p>
-        <QuestionSearch />
+        <QuestionSearch/>
     </div>
 </template>
 
@@ -19,6 +19,7 @@
 
 <style lang="scss" scoped>
     @import '../../assets/styles/_mixins.scss';
+
     .Hero {
         width: 100%;
         height: 100vh;
