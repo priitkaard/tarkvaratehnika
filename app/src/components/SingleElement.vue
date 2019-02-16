@@ -2,8 +2,9 @@
   <div class="single">
     <div class = "eskast">{{title}}</div>
     <div class = "teinekast"><VoteChoice />{{question}}</div>
-    <div class = "parimkast"><h2>Most highly rated answer:</h2><VoteChoice />{{bestAnswer}}</div>
-    <div class = "answerkast" v-for="answer in answers"><VoteChoice />{{answer.text}}
+    <div class = "parimkast" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice />{{answers[0].text}}
+    <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice />{{comment.text}}</div></div>
+    <div class = "answerkast" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice />{{answer.text}}
     <div class = "comment" v-for="comment in answer.comments">
     <VoteChoice />{{comment.text}}</div>
     </div>
@@ -41,7 +42,6 @@ export default {
       "ut sit amet lacus. In efficitur dui leo, ut consequat orci porta sit amet. Mauris ut placerat"+
       "tellus.Cras id massa eget neque pharetra consequat sed quis nisi.",
       answers: [{id: 0, text: 'jeebus', score: 3, comments: [{id: 99, text: "esimene comment"},{id: 98, text: "teine comment"}]}, {id: 1, text: 'jeesus', score: 1}, {id: 5, text: 'viies', score: 1}, {id: 3, text: 'jeesus', score: 1}]
-    
     }
   },
   components: {
