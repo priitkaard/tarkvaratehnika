@@ -1,7 +1,7 @@
 <template>
 <div>
-<div class = "voteUp" v-on:click="voteUp">U</div></br>
-<div class = "voteDown" v-on:click="voteDown">D</div>
+<div class = "voteUp" v-on:click="voteUp"> <img src="vue-router\src\assets\arrowup.png" width="25" height="25"/> </div></br>
+<div class = "voteDown" v-on:click="voteDown"><img src="vue-router\src\assets\arrowdown.png" width="25" height="25"/></div>
 </div>
 </template>
 <script>

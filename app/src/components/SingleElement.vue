@@ -1,8 +1,8 @@
 <template>
-  <div class="hello">
+  <div class="single">
     <div class = "eskast">{{title}}</div>
     <div class = "teinekast"><VoteChoice />{{question}}</div>
-    <div class = "parimkast"><VoteChoice />{{bestAnswer}}</div>
+    <div class = "parimkast"><h2>Most highly rated answer:</h2><VoteChoice />{{bestAnswer}}</div>
     <div class = "answerkast" v-for="answer in answers"><VoteChoice />{{answer.text}}
     <div class = "comment" v-for="comment in answer.comments">
     <VoteChoice />{{comment.text}}</div>
@@ -10,7 +10,7 @@
     <div class = "post_section">
     <form>
       <textarea v-model="message" style = "width: 50%;" placeholder="Insert text here"></textarea></br>
-      <input type = "submit" value = "Post">
+      <input type = "submit" value = "Post" v-on:click = "submitPost">
     </form>
     </div>
   </div>
@@ -46,12 +46,22 @@ export default {
   },
   components: {
       VoteChoice
-    }
+    },
+  methods: {
+    submitPost: function (event) {
+        alert();
+        },
+  },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.single
+{
+  background-size: cover;
+  background: lightgray;
+}
 h1, h2 {
   font-weight: normal;
 }
@@ -67,18 +77,22 @@ a {
   color: #42b983;
 }
 .eskast {
+  text-shadow: 1px 1px 1px #ccc;
+  font-size: 40px;
   width: 50%;
   height: 5%;
   margin-left: 6%;
-  margin-top: 3%;
-  background: #C4C4C4;
+  background: white;
+  filter: drop-shadow(6px 11px 6px grey);
 }
 .teinekast{
   margin-top: 3%;
   width: 40%;
   height: auto;
   margin-left: 6%;
-  background: #C4C4C4;
+  background: white;
+  filter: drop-shadow(5px 11px 5px grey);
+  border: 3px solid lightgrey;
   display:inline-block;
 }
 .parimkast
@@ -87,7 +101,9 @@ a {
   display:inline-block;
   width: 40%;
   height: auto;
-  background: rgba(113, 255, 2, 0.5);
+  background: white;
+  border: 3px solid lightgrey;
+  filter: drop-shadow(5px 11px 5px grey);
 }
 .answerkast
 {
@@ -97,7 +113,8 @@ a {
   margin-left: 8%;
   width: 60%;
   height: auto;
-  background: red;
+  background: white;
+  filter: drop-shadow(5px 11px 5px grey);
 }
 .comment{
   background: pink;
@@ -107,4 +124,5 @@ a {
   margin-top: 3%;
   margin-left:6%;
 }
+
 </style>
