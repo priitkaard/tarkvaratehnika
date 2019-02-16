@@ -10,8 +10,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 public class Question {
     @Id
     @GeneratedValue

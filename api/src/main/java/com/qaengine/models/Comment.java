@@ -11,8 +11,6 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 public class Comment {
     @Id
     @GeneratedValue
