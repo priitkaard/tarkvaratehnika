@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class Comment {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String text;
     private Integer score = 0;
 

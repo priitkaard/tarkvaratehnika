@@ -2,10 +2,7 @@ package com.qaengine.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,16 +15,12 @@ import java.util.List;
 public class Question {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     private String text;
     private Integer score = 0;
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<Answer> answers = new ArrayList<>();
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<Comment> comments = new ArrayList<>();
-
-    public Question(String text) {
-        this.text = text;
-    }
 }
