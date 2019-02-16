@@ -9,5 +9,5 @@ import lombok.*;
 @Getter
 public class AnswerInput {
     private String text;
-    private Long questionId;
+
 }
