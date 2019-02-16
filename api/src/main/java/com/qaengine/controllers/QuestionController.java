@@ -3,14 +3,12 @@ package com.qaengine.controllers;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
-import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.models.inputs.QuestionInput;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +25,7 @@ public class QuestionController {
 
     @PostMapping("/questions")
     @CrossOrigin()
-    public Question postQuestion(@RequestBody QuestionInput questionInput) {
+    public Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
         Question question = new Question();
         HelperFunctions.copyProperties(question, questionInput);
         return repository.save(question);
@@ -59,10 +57,30 @@ public class QuestionController {
     @PutMapping("questions/{id}")
     protected Question updateQuestion(
             @PathVariable Long id,
-            @RequestBody QuestionInput questionInput
+            @RequestBody @Valid QuestionInput questionInput
     ) {
         Question question = getQuestion(id);
         HelperFunctions.copyProperties(question, questionInput);
+        return repository.save(question);
+    }
+
+    @CrossOrigin()
+    @PutMapping("questions/{id}/upvote")
+    protected Question upvoteQuestion(
+            @PathVariable Long id
+    ) {
+        Question question = getQuestion(id);
+        question.setScore(question.getScore() + 1);
+        return repository.save(question);
+    }
+
+    @CrossOrigin()
+    @PutMapping("questions/{id}/downvote")
+    protected Question downvoteQuestion(
+            @PathVariable Long id
+    ) {
+        Question question = getQuestion(id);
+        question.setScore(question.getScore() - 1);
         return repository.save(question);
     }
 

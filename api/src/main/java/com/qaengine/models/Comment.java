@@ -15,10 +15,8 @@ public class Comment {
     @Id
     @GeneratedValue
     private Long id;
+
+    private Long questionId;
     private String text;
     private Integer score = 0;
-
-    public Comment(String text) {
-        this.text = text;
-    }
 }

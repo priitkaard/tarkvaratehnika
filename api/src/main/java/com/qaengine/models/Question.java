@@ -15,6 +15,7 @@ public class Question {
     @GeneratedValue
     private Long id;
 
+    private String title;
     private String text;
     private Integer score = 0;
     @OneToMany(cascade = {CascadeType.ALL})

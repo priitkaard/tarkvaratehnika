@@ -6,12 +6,12 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
-import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.models.inputs.AnswerPostInput;
+import com.qaengine.models.inputs.AnswerPutInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -24,31 +24,17 @@ public class AnswerController {
     QuestionController questionController;
 
     @CrossOrigin()
-    @PostMapping("questions/{questionId}/answers")
+    @PostMapping("answers")
     protected Answer addAnswer(
-            @PathVariable Long questionId,
-            @RequestBody AnswerInput answerInput
+            @RequestBody @Valid AnswerPostInput answerinput
     ) {
-        Question question = questionController.getQuestion(questionId);
+        Question question = questionController.getQuestion(answerinput.getQuestionId());
         Answer answer = new Answer();
-        HelperFunctions.copyProperties(answer, answerInput);
+        HelperFunctions.copyProperties(answer, answerinput);
         answer = answerRepository.save(answer);
         question.getAnswers().add(answer);
         questionRepository.save(question);
         return answer;
-    }
-
-    @GetMapping("questions/{questionId}/answers")
-    @CrossOrigin()
-    public List<Answer> listAnswers(@PathVariable Long questionId) {
-        Question question = questionController.getQuestion(questionId);
-        return question.getAnswers();
-    }
-
-    @GetMapping("questions2")
-    @CrossOrigin()
-    public List<Answer> listAnswers2() {
-        return answerRepository.findAll();
     }
 
 
@@ -66,22 +52,41 @@ public class AnswerController {
     @CrossOrigin()
     @DeleteMapping("answers/{id}")
     protected Long deleteAnswer(@PathVariable Long id) {
-        try {
-            answerRepository.deleteById(id);
-            return id;
-        } catch (Exception e) {
-            throw new ResourceNotFoundException();
-        }
+        Answer answer = getAnswer(id);
+        Question question = questionController.getQuestion(answer.getQuestionId());
+        question.getAnswers().remove(answer);
+        questionRepository.save(question);
+        return id;
     }
 
     @CrossOrigin()
     @PutMapping("answers/{id}")
     protected Answer updateAnswer(
             @PathVariable Long id,
-            @RequestBody AnswerInput answerInput
+            @RequestBody @Valid AnswerPutInput answerPutInput
     ) {
         Answer answer = getAnswer(id);
-        HelperFunctions.copyProperties(answer, answerInput);
+        HelperFunctions.copyProperties(answer, answerPutInput);
+        return answerRepository.save(answer);
+    }
+
+    @CrossOrigin()
+    @PutMapping("answers/{id}/upvote")
+    protected Answer upvoteAnswer(
+            @PathVariable Long id
+    ) {
+        Answer answer = getAnswer(id);
+        answer.setScore(answer.getScore() + 1);
+        return answerRepository.save(answer);
+    }
+
+    @CrossOrigin()
+    @PutMapping("answers/{id}/downvote")
+    protected Answer downvoteAnswer(
+            @PathVariable Long id
+    ) {
+        Answer answer = getAnswer(id);
+        answer.setScore(answer.getScore() - 1);
         return answerRepository.save(answer);
     }
 }
