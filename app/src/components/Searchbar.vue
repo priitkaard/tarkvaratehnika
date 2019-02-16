@@ -32,6 +32,10 @@
         },
         methods: {
             async updateAutoComplete() {
+                if (this.query.length === 0) {
+                    this.suggestions = [];
+                    return;
+                }
                 this.suggestions = await QuestionsService.autoCompleteSuggestions(this.query);
             }
         }

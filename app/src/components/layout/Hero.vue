@@ -3,6 +3,8 @@
         <h1>Q&A Engine</h1>
         <p>Answers to your everyday questions</p>
         <QuestionSearch/>
+        <em class="or">or</em>
+        <button class="btn btn-outline-light browse-questions-btn">Browse questions</button>
     </div>
 </template>
 
@@ -18,6 +20,7 @@
 </script>
 
 <style lang="scss" scoped>
+    @import '../../assets/styles/_colors.scss';
     @import '../../assets/styles/_mixins.scss';
 
     .Hero {
@@ -35,11 +38,22 @@
         h1 {
             margin: 0;
         }
+
         p {
             margin: -10px 0 50px 0;
         }
-        h1, p {
-            @include shadow-box;
+
+        h1, p, em.or {
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .or {
+            font-style: normal;
+            margin: 10px 0;
+        }
+
+        .browse-questions-btn {
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
         }
     }
 </style>

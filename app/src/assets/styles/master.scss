@@ -4,6 +4,11 @@ body, html {
   background: $background-color;
 }
 
+.btn {
+  border-radius: 0;
+  font-size: 14px;
+}
+
 .icon-button:hover {
   cursor: pointer;
 }

@@ -17,7 +17,7 @@
 <script>
     import QuestionsSortBar from '../components/questions/QuestionsSortBar';
     import QuestionsList from '../components/questions/QuestionsList';
-    import QuestionStatistics from "../components/QuestionStatistics";
+    import QuestionStatistics from "../components/questions/QuestionStatistics";
 
     export default {
         name: "HomeView",

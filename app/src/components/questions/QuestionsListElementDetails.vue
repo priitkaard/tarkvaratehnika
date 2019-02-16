@@ -52,5 +52,19 @@
                 margin-right: 5px;
             }
         }
+        @media (max-width: 1000px) {
+            position: initial;
+            .detail {
+                display: inline-block;
+                width: 50%;
+                margin-left: 0;
+                text-align: center;
+                margin-top: 10px;
+                font-size: 12px;
+
+                .material-design-icon {
+                }
+            }
+        }
     }
 </style>

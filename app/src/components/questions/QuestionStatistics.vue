@@ -35,7 +35,7 @@
                 padding: 5px 10px;
 
                 .material-design-icon {
-                    margin-right: 20px;
+                    margin-right: 10px;
                 }
             }
         }
