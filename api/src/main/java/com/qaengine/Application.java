@@ -3,7 +3,7 @@ package com.qaengine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {"com.qaengine.database"})
+@SpringBootApplication()
 public class Application {
 
 	public static void main(String[] args) {

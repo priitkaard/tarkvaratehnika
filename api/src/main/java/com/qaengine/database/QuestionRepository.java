@@ -1,10 +1,9 @@
 package com.qaengine.database;
 
 import com.qaengine.models.Question;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface QuestionRepository extends CrudRepository<Question, Integer> {
-    List<Question> findByText(String text);
+@Repository
+public interface QuestionRepository extends JpaRepository<Question, Integer> {
 }

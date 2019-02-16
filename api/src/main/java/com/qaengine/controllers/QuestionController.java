@@ -16,7 +16,7 @@ public class QuestionController {
     @GetMapping("/questions")
     @CrossOrigin()
     public List<Question> getQuestions() {
-        return null;
+        return repository.findAll();
     }
 
     @PostMapping("/question")
