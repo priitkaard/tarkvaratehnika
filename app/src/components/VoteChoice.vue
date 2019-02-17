@@ -9,12 +9,13 @@ export default {
     name: 'VoteChoice',
     methods: {
         voteUp: function (event) {
-        alert('Up')
+        alert(this.id)
         },
         voteDown: function (event) {
-            alert('Down')
+            alert(this.id)
         }
     },
+    props: ['id', 'type']
 }
 </script>
 <style scoped>

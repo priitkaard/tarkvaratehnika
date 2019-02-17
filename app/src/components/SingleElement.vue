@@ -2,11 +2,11 @@
   <div class="single">
     <div class = "eskast">{{title}}</div>
     <div class = "teinekast"><VoteChoice />{{question}}</div>
-    <div class = "parimkast" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice />{{answers[0].text}}
-    <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice />{{comment.text}}</div></div>
-    <div class = "answerkast" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice />{{answer.text}}
+    <div class = "parimkast" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
+    <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div></div>
+    <div class = "answerkast" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/>{{answer.text}}
     <div class = "comment" v-for="comment in answer.comments">
-    <VoteChoice />{{comment.text}}</div>
+    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
     </div>
     <div class = "post_section">
     <form>
