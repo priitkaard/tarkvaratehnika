@@ -84,14 +84,14 @@
             }
 
             &:focus-within {
-                box-shadow: 0 0 5px 5px $primary-color-transparent;
+                box-shadow: 0 0 5px 5px $color-primary-transparent;
                 transition: 0.4s box-shadow;
             }
         }
 
         .suggestions {
             display: block;
-            background-color: $background-color-darker;
+            background-color: $color-background-darker;
             width: 100%;
             position: absolute;
             top: 20px;
@@ -117,7 +117,7 @@
                 transition: 0.4s background-color;
 
                 &:hover {
-                    background-color: $background-color;
+                    background-color: $color-background;
                     cursor: pointer;
                     transition: 0.4s background-color;
                 }

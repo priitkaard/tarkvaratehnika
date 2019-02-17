@@ -36,12 +36,6 @@
             '$route'(to) {
                 this.isHomeView = to.name === 'HomeView';
             }
-        },
-        created() {
-            window.addEventListener('scroll', this.handleScroll);
-        },
-        destroyed() {
-            window.removeEventListener('scroll', this.handleScroll);
         }
     }
 </script>

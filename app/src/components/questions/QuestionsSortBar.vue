@@ -35,7 +35,7 @@
         width: 100%;
         background-color: white;
         margin-bottom: 10px;
-        border-top: 2px solid $primary-color;
+        border-top: 2px solid $color-primary;
         overflow: hidden;
 
         .option {
@@ -49,17 +49,17 @@
             transition: 0.4s background-color;
 
             &:first-child {
-                background-color: $primary-color;
+                background-color: $color-primary;
                 color: white;
                 font-weight: bold;
             }
 
             &:hover {
                 cursor: pointer;
-                background-color: $background-color;
+                background-color: $color-background;
                 transition: 0.4s background-color;
                 &:first-child {
-                    background-color: $primary-color-darker;
+                    background-color: $color-primary-darker;
                 }
             }
         }
