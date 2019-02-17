@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnswerPutInput {
+public class CommentInput {
     @NotNull
     private String text;
 }

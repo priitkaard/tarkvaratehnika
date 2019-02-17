@@ -7,9 +7,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnswerPostInput {
+public class AnswerInput {
     @NotNull
     private String text;
-    @NotNull
-    private Long questionId;
 }

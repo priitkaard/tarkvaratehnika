@@ -17,6 +17,7 @@ public class Comment {
     private Long id;
 
     private Long questionId;
+    private Long answerid;
     private String text;
     private Integer score = 0;
 }

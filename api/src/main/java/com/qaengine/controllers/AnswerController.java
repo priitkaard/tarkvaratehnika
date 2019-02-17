@@ -6,8 +6,7 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerPostInput;
-import com.qaengine.models.inputs.AnswerPutInput;
+import com.qaengine.models.inputs.AnswerInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +23,13 @@ public class AnswerController {
     QuestionController questionController;
 
     @CrossOrigin()
-    @PostMapping("answers")
+    @PostMapping("questions/{questionId}/answers")
     protected Answer addAnswer(
-            @RequestBody @Valid AnswerPostInput answerinput
+            @PathVariable Long questionId,
+            @RequestBody @Valid AnswerInput answerinput
     ) {
-        Question question = questionController.getQuestion(answerinput.getQuestionId());
-        Answer answer = new Answer();
+        Question question = questionController.getQuestion(questionId);
+        Answer answer = new Answer(questionId);
         HelperFunctions.copyProperties(answer, answerinput);
         answer = answerRepository.save(answer);
         question.getAnswers().add(answer);
@@ -63,10 +63,10 @@ public class AnswerController {
     @PutMapping("answers/{id}")
     protected Answer updateAnswer(
             @PathVariable Long id,
-            @RequestBody @Valid AnswerPutInput answerPutInput
+            @RequestBody @Valid AnswerInput answerInput
     ) {
         Answer answer = getAnswer(id);
-        HelperFunctions.copyProperties(answer, answerPutInput);
+        HelperFunctions.copyProperties(answer, answerInput);
         return answerRepository.save(answer);
     }
 

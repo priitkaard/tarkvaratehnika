@@ -19,13 +19,13 @@ public class QuestionController {
 
     @GetMapping("/questions")
     @CrossOrigin()
-    public List<Question> listQuestions() {
+    protected List<Question> listQuestions() {
         return repository.findAll();
     }
 
     @PostMapping("/questions")
     @CrossOrigin()
-    public Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
+    protected Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
         Question question = new Question();
         HelperFunctions.copyProperties(question, questionInput);
         return repository.save(question);
