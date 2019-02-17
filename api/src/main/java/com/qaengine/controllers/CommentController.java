@@ -8,11 +8,9 @@ import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.models.inputs.CommentInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
