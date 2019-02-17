@@ -5,6 +5,7 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class QuestionController {
     @Autowired
     QuestionRepository repository;
+    @Autowired
+    QuestionService questionService;
 
     @GetMapping("/questions")
     @CrossOrigin()
@@ -34,12 +37,7 @@ public class QuestionController {
     @CrossOrigin()
     @GetMapping("questions/{id}")
     protected Question getQuestion(@PathVariable Long id) {
-        Optional<Question> question = repository.findById(id);
-        if (question.isPresent()) {
-            return question.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return questionService.getQuestion(id);
     }
 
     @CrossOrigin()

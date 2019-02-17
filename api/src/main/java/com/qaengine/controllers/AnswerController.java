@@ -7,6 +7,7 @@ import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
+import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class AnswerController {
     @Autowired
     AnswerRepository answerRepository;
     @Autowired
-    QuestionController questionController;
+    QuestionService questionService;
 
     @CrossOrigin()
     @PostMapping("questions/{questionId}/answers")
@@ -28,7 +29,7 @@ public class AnswerController {
             @PathVariable Long questionId,
             @RequestBody @Valid AnswerInput answerinput
     ) {
-        Question question = questionController.getQuestion(questionId);
+        Question question = questionService.getQuestion(questionId);
         Answer answer = new Answer(questionId);
         HelperFunctions.copyProperties(answer, answerinput);
         answer = answerRepository.save(answer);
@@ -53,7 +54,7 @@ public class AnswerController {
     @DeleteMapping("answers/{id}")
     protected Long deleteAnswer(@PathVariable Long id) {
         Answer answer = getAnswer(id);
-        Question question = questionController.getQuestion(answer.getQuestionId());
+        Question question = questionService.getQuestion(answer.getQuestionId());
         question.getAnswers().remove(answer);
         questionRepository.save(question);
         return id;

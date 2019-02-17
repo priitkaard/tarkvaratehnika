@@ -10,6 +10,8 @@ import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.models.inputs.CommentInput;
+import com.qaengine.services.AnswerService;
+import com.qaengine.services.QuestionService;
 import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +28,9 @@ public class CommentController {
     @Autowired
     CommentRepository commentRepository;
     @Autowired
-    QuestionController questionController;
+    QuestionService questionService;
     @Autowired
-    AnswerController answerController;
+    AnswerService answerService;
 
     @CrossOrigin()
     @PostMapping("questions/{questionId}/comments")
@@ -36,7 +38,7 @@ public class CommentController {
             @PathVariable Long questionId,
             @RequestBody @Valid CommentInput commentInput
     ) {
-        Question question = questionController.getQuestion(questionId);
+        Question question = questionService.getQuestion(questionId);
         Comment comment = new Comment();
         comment.setQuestionId(questionId);
 
@@ -53,7 +55,7 @@ public class CommentController {
             @PathVariable Long answerId,
             @RequestBody @Valid CommentInput commentInput
     ) {
-        Answer answer = answerController.getAnswer(answerId);
+        Answer answer = answerService.getAnswer(answerId);
         Comment comment = new Comment();
         comment.setAnswerid(answerId);
         HelperFunctions.copyProperties(comment, commentInput);
@@ -92,11 +94,11 @@ public class CommentController {
     ) {
         Comment comment = getComment(commentId);
         if (comment.getAnswerid() != null) {
-            Answer answer = answerController.getAnswer(comment.getAnswerid());
+            Answer answer = answerService.getAnswer(comment.getAnswerid());
             answer.getComments().remove(comment);
             answerRepository.save(answer);
         } else if (comment.getQuestionId() != null) {
-            Question question = questionController.getQuestion(comment.getQuestionId());
+            Question question = questionService.getQuestion(comment.getQuestionId());
             question.getComments().remove(comment);
             questionRepository.save(question);
         }

@@ -19,6 +19,7 @@ public class Question {
     private String text;
     private Integer score = 0;
     @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "fk_answer")
     private List<Answer> answers = new ArrayList<>();
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Comment> comments = new ArrayList<>();
