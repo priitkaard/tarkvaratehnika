@@ -1,12 +1,13 @@
 <template>
   <div class="single">
-    <div class = "eskast">{{title}}</div>
-    <div class = "teinekast"><VoteChoice />{{question}}</div>
-    <div class = "parimkast" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
+    <div class = "questionTitle">{{title}}</div>
+    <div class = "questionBox"><VoteChoice />{{question}}</div>
+    <div class = "bestAnswer" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
     <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div></div>
-    <div class = "answerkast" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/>{{answer.text}}
+    <div class = "answerBox" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/>{{answer.text}}
     <div class = "comment" v-for="comment in answer.comments">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
+    <CommentButton v-bind:id='answer.id'/>
     </div>
     <div class = "post_section">
     <form>
@@ -19,6 +20,7 @@
 
 <script>
 import VoteChoice from './VoteChoice.vue'
+import CommentButton from './CommentButton.vue'
 export default {
   name: 'SingleElement',
   
@@ -45,7 +47,8 @@ export default {
     }
   },
   components: {
-      VoteChoice
+      VoteChoice,
+      CommentButton
     },
   methods: {
     submitPost: function (event) {
@@ -76,7 +79,7 @@ li {
 a {
   color: #42b983;
 }
-.eskast {
+.questionTitle {
   text-shadow: 1px 1px 1px #ccc;
   font-size: 40px;
   width: 50%;
@@ -85,7 +88,7 @@ a {
   background: white;
   filter: drop-shadow(6px 11px 6px grey);
 }
-.teinekast{
+.questionBox{
   margin-top: 3%;
   width: 40%;
   height: auto;
@@ -95,7 +98,7 @@ a {
   border: 3px solid lightgrey;
   display:inline-block;
 }
-.parimkast
+.bestAnswer
 {
   /*width: 781px; */
   display:inline-block;
@@ -105,7 +108,7 @@ a {
   border: 3px solid lightgrey;
   filter: drop-shadow(5px 11px 5px grey);
 }
-.answerkast
+.answerBox
 {
   margin-top: 1%;
   /*left: 57px;
