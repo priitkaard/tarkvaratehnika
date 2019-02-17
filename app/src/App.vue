@@ -1,36 +1,40 @@
 <template>
     <div id="app">
-        <Hero/>
+        <transition name="fade">
+            <Navigation v-if="!isHomeView"/>
+        </transition>
+
+        <div class="page-content">
+            <transition name="router-animation">
+                <router-view></router-view>
+            </transition>
+        </div>
 
         <transition name="fade">
-            <Navigation v-if="isContentView"/>
+            <Footer v-if="!isHomeView"/>
         </transition>
-        <router-view></router-view>
-
-        <Footer/>
     </div>
 </template>
 
 <script>
-    import Hero from './components/layout/Hero';
+
     import Navigation from "./components/layout/Navigation";
-    import Footer from './components/layout/Footer';
+    import Footer from "./components/layout/Footer";
 
     export default {
         name: 'app',
         components: {
-            Navigation,
-            Hero,
-            Footer
+            Footer,
+            Navigation
         },
         data() {
             return {
-                isContentView: false
+                isHomeView: this.$route.name === 'HomeView'
             }
         },
-        methods: {
-            handleScroll() {
-                this.isContentView = window.scrollY > window.innerHeight;
+        watch: {
+            '$route'(to) {
+                this.isHomeView = to.name === 'HomeView';
             }
         },
         created() {
@@ -42,9 +46,14 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     html, body {
         margin: 0;
+    }
+
+    .page-content {
+        padding-top: 50px;
+        min-height: calc(100vh - 200px);
     }
 
     .fade-enter-active {
@@ -53,7 +62,23 @@
     }
 
     .fade-enter {
-        opacity: 0.1;
+        opacity: 0;
     }
 
+    .router-animation-enter-active {
+        transition: margin-top .4s;
+    }
+
+    .router-animation-enter {
+        margin-top: 100vh;
+    }
+
+    .router-animation-leave-active, .fade-leave-active {
+        opacity: 0;
+        transition: opacity .4s;
+    }
+
+    .router-animation-enter, .fade-leave {
+        opacity: 1;
+    }
 </style>

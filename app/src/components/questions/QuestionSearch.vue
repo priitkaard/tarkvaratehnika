@@ -17,7 +17,7 @@
 
 <script>
     import ArrowRightIcon from "vue-material-design-icons/ArrowRight.vue"
-    import QuestionsService from '../services/QuestionsService';
+    import QuestionsService from '../../services/QuestionsService';
 
     export default {
         name: "QuestionSearch",
@@ -43,10 +43,10 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../assets/styles/colors';
-    @import '../assets/styles/mixins';
+    @import '../../assets/styles/colors';
 
     .QuestionSearch {
+        display: inline-block;
         width: 90%;
         max-width: 800px;
         height: 40px;
@@ -55,7 +55,7 @@
         position: relative;
 
         .search {
-            @include shadow-box;
+            box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
 
             display: block;
             width: 100%;
@@ -100,6 +100,7 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 0 250px 100px rgba(0, 0, 0, 0.2);
 
             em {
                 display: block;

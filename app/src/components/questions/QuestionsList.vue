@@ -27,6 +27,7 @@
                         created: '2018-12-31T12:00:00+00:00',
                         views: 1315,
                         answers: 2,
+                        canVote: true
                     },
                     {
                         id: 2,
@@ -40,6 +41,7 @@
                         created: '2018-12-31T12:00:00+00:00',
                         views: 1315,
                         answers: 2,
+                        canVote: true
                     },
                     {
                         id: 3,
@@ -53,6 +55,7 @@
                         created: '2018-12-31T12:00:00+00:00',
                         views: 1315,
                         answers: 2,
+                        canVote: true
                     }
                 ]
             }

@@ -1,9 +1,9 @@
 <template>
-    <div class="QuestionsListElement">
+    <div class="QuestionsListElement noselect">
         <div class="score">
-            <menu-up-icon class="icon-button" :size="40"/>
+            <menu-up-icon v-if="question.canVote" class="icon-button" :size="40" v-on:click="vote('UP')"/>
             <em v-bind:class="{ positive: question.score > 0, negative: question.score < 0 }">{{ question.score }}</em>
-            <menu-down-icon class="icon-button" :size="40"/>
+            <menu-down-icon v-if="question.canVote" class="icon-button" :size="40" v-on:click="vote('DOWN')"/>
         </div>
 
         <div class="body" v-on:click="openQuestion">
@@ -37,6 +37,15 @@
                         id: this.question.id
                     }
                 });
+            },
+
+            vote(direction) {
+                if (direction === 'UP') {
+                    this.question.score++;
+                } else if (direction === 'DOWN') {
+                    this.question.score--;
+                }
+                this.question.canVote = false;
             }
         }
     }
@@ -62,6 +71,7 @@
             em {
                 font-style: normal;
                 font-weight: bold;
+                width: 40px;
                 &.positive {
                     color: $color-green
                 }

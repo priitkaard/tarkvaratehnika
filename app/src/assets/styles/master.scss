@@ -2,6 +2,24 @@
 
 body, html {
   background: $background-color;
+
+  body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+  }
+
+  body::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background-color: #000000;
+  }
+}
+
+.container {
+  margin-top: 50px;
 }
 
 .btn {
@@ -30,4 +48,15 @@ body, html {
     padding: 0 15px;
     font-size: 18px;
   }
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                   supported by Chrome and Opera */
 }
