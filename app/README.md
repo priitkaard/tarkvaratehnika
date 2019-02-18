@@ -1,4 +1,4 @@
-# app
+# Q&A Engine Client
 
 ## Project setup
 ```
