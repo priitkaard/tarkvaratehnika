@@ -1,6 +1,7 @@
 <template>
 <div>
-<div class = "voteUp" v-on:click="voteUp"> <img src="vue-router\src\assets\arrowup.png" width="25" height="25"/> </div></br>
+<div class = "voteUp" v-on:click="voteUp"> <img src="vue-router\src\assets\arrowup.png" width="25" height="25"/> </div>
+</br> nr
 <div class = "voteDown" v-on:click="voteDown"><img src="vue-router\src\assets\arrowdown.png" width="25" height="25"/></div>
 </div>
 </template>
@@ -20,6 +21,8 @@ export default {
 </script>
 <style scoped>
     div{
+        margin-top: 1%;
+        margin-left: 2%;
         display:inline-block;
     }
     .voteUp, .voteDown{
