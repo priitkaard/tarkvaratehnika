@@ -1,17 +1,23 @@
 <template>
   <div class="single">
+    <!--
     <div class = "questionTitle">{{title}}</div>
-    <div class = "questionBox"><VoteChoice /><p>{{question}}</p></div>
+    -->
+    <div class = "questionBox"><p id = "title">{{title}}</p><br><VoteChoice /><p>{{question}}</p></div>
+    <!-- Old code with best answer
     <div class = "bestAnswer" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
     <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div></div>
     <div class = "answerBox" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/><p>{{answer.text}}</p>
+    <div class = "comment" v-for="comment in answer.comments">
+    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>-->
+    <div class = "answerBox" v-for="answer in answers"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/><p>{{answer.text}}</p>
     <div class = "comment" v-for="comment in answer.comments">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
     <CommentButton v-bind:id='answer.id'/>
     </div>
     <div class = "post_section">
     <form>
-      <textarea v-model="message" style = "width: 50%;" placeholder="Insert text here"></textarea>
+      <textarea v-model="message" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>
       </br>
       <input type = "submit" value = "Post" v-on:click = "submitPost">
     </form>
@@ -90,12 +96,14 @@ a {
 }
 .questionBox{
   margin-top: 3%;
-  width: 40%;
+  margin-left:8%;
+  /*width: 40%;
+  margin-left: 6%;*/
+  width: 80%;
   height: auto;
-  margin-left: 6%;
   background: white;
   filter: drop-shadow(5px 11px 5px grey);
-  border: 3px solid lightgrey;
+  border: 1px solid lightgrey;
   display:inline-block;
 }
 .bestAnswer
@@ -130,16 +138,19 @@ a {
   vertical-align: middle;
   text-align: left;
 }
+#title{
+  font-size: 20px;
+  margin-left: 2%;
+}
 .answerBox p, .questionBox p
 {
   display: inline-block;
-  color:red;
   margin-right: 3%;
   width: 85%;
 }
 .post_section{
   margin-top: 3%;
-  margin-left:6%;
+  margin-left:8%;
 }
 
 </style>
