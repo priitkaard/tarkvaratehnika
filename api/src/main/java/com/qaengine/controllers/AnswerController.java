@@ -104,8 +104,7 @@ public class AnswerController {
         }
         this.revertAnswerAccepted(question.getId());
         answer.setAccepted(true);
-        answer = answerRepository.save(answer);
-        return answer;
+        return answerRepository.save(answer);
     }
 
     @CrossOrigin()
