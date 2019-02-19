@@ -2,6 +2,7 @@ package com.qaengine.controllers;
 
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.InternalServerErrorException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
@@ -100,7 +101,7 @@ public class AnswerController {
         Answer answer = answerService.getAnswer(answerId);
         Question question = questionService.getQuestion(questionId);
         if (!answer.getQuestionId().equals(questionId)) {
-            throw new InternalServerErrorException("Answer does not belong to specified question.");
+            throw new BadRequestException("Answer does not belong to specified question.");
         }
         this.revertAnswerAccepted(question.getId());
         answer.setAccepted(true);
