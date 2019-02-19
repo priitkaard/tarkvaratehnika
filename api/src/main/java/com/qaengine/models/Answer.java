@@ -21,6 +21,7 @@ public class Answer {
     private boolean accepted = false;
 
     @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "fk_answer_comment")
     private List<Comment> comments = new ArrayList<>();
 
     public Answer(Long questionId) {
