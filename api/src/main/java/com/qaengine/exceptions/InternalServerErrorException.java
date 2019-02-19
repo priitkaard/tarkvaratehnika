@@ -9,4 +9,7 @@ public class InternalServerErrorException extends RuntimeException {
         super("An internal server error has occurred.");
     }
 
+    public InternalServerErrorException(String message) {
+        super(message);
+    }
 }

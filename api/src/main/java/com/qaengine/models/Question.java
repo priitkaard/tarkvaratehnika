@@ -18,12 +18,12 @@ public class Question {
     private String title;
     private String text;
     private Integer score = 0;
-    
-    @OneToMany(cascade = {CascadeType.ALL})
+
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "fk_answer")
     private List<Answer> answers = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "fk_question_comment")
     private List<Comment> comments = new ArrayList<>();
 }
