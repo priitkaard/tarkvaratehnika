@@ -12,10 +12,18 @@
     <div class = "comment" v-for="comment in answer.comments">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>-->
 
+    <div class = "sorting">
+        Sort by:
+        <select v-model="sort" placeholder>
+            <option selected>Time</option>
+            <option>Score</option>
+        </select>
+    </div>
+
     <!-- v-bind:canVote="true" is temporary -->
     <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id"><VoteChoice v-bind:id="answer.id" v-bind:type="post" v-bind:score="answer.score" v-bind:canVote="true"/><p>{{answer.text}}</p>
-    <div class = "comment" v-for="comment in answer.comments">
-    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment" v-bind:key="comment.id"/>{{comment.text}}</div>
+    <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
+    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
     <CommentButton v-bind:id='answer.id'/>
     </div>
     <div class = "post_section">
@@ -135,6 +143,10 @@ export default {
 .post_section{
   margin-top: 3%;
   margin-left:8%;
+}
+.sorting{
+    margin-top:2%;
+    margin-left:8%;
 }
 
 </style>
