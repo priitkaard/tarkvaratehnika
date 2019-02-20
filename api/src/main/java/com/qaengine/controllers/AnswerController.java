@@ -99,9 +99,6 @@ public class AnswerController {
     ) {
         Answer answer = answerService.getAnswer(answerId);
         Question question = questionService.getQuestion(answer.getQuestionId());
-        if (!answer.getQuestionId().equals(answer.getQuestionId())) {
-            throw new BadRequestException("Answer does not belong to specified question.");
-        }
         questionRepository.revertAnswerAccepted(question.getId());
         answer.setAccepted(true);
         return answerRepository.save(answer);
