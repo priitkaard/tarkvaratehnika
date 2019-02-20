@@ -9,7 +9,7 @@
             <em>Already asked questions:</em>
 
             <div v-for="(suggestion, index) in suggestions" v-bind:key="index" class="answer">
-                {{ suggestion }}
+                {{ suggestion.title }}
             </div>
         </div>
     </div>
@@ -37,6 +37,7 @@
                     return;
                 }
                 this.suggestions = await QuestionsService.autoCompleteSuggestions(this.query);
+                console.log(this.suggestions);
             }
         }
     }

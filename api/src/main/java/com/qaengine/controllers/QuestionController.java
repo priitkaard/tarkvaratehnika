@@ -81,4 +81,10 @@ public class QuestionController {
         return repository.save(question);
     }
 
+    @CrossOrigin()
+    @GetMapping("questions/auto-complete")
+    public List<Question> autoCompleteQuestion(@RequestParam String query) {
+        return questionService.autoCompleteQuestion(query);
+    }
+
 }
