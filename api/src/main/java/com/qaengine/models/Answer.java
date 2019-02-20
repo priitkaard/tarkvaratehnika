@@ -20,7 +20,8 @@ public class Answer {
     private Integer score = 0;
     private boolean accepted = false;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JoinColumn(name = "fk_answer_comment")
     private List<Comment> comments = new ArrayList<>();
 
     public Answer(Long questionId) {

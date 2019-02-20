@@ -2,17 +2,16 @@ package com.qaengine.controllers;
 
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
-import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
+import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 public class AnswerController {
@@ -20,6 +19,8 @@ public class AnswerController {
     QuestionRepository questionRepository;
     @Autowired
     AnswerRepository answerRepository;
+    @Autowired
+    AnswerService answerService;
     @Autowired
     QuestionService questionService;
 
@@ -42,12 +43,7 @@ public class AnswerController {
     @CrossOrigin()
     @GetMapping("answers/{id}")
     protected Answer getAnswer(@PathVariable Long id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        if (answer.isPresent()) {
-            return answer.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return answerService.getAnswer(id);
     }
 
     @CrossOrigin()
@@ -90,4 +86,28 @@ public class AnswerController {
         answer.setScore(answer.getScore() - 1);
         return answerRepository.save(answer);
     }
+
+
+    @CrossOrigin()
+    @PutMapping("answers/{answerId}/accept")
+    protected Answer acceptAnswer(
+            @PathVariable Long answerId
+    ) {
+        Answer answer = answerService.getAnswer(answerId);
+        Question question = questionService.getQuestion(answer.getQuestionId());
+        questionRepository.revertAnswerAccepted(question.getId());
+        answer.setAccepted(true);
+        return answerRepository.save(answer);
+    }
+
+    @CrossOrigin()
+    @PutMapping("questions/{questionId}/revertAnswerAccepted")
+    protected Question revertAnswerAccepted(
+            @PathVariable Long questionId
+    ) {
+        Question question = questionService.getQuestion(questionId);
+        questionRepository.revertAnswerAccepted(question.getId());
+        return question;
+    }
+
 }

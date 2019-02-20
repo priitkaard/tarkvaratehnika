@@ -1,10 +1,13 @@
 package com.qaengine.controllers;
 
+import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
+import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +18,18 @@ import java.util.List;
 @RestController
 public class QuestionController {
     @Autowired
-    QuestionRepository repository;
+    QuestionRepository questionRepository;
+    @Autowired
+    AnswerRepository answerRepository;
+    @Autowired
+    AnswerService answerService;
     @Autowired
     QuestionService questionService;
 
     @GetMapping("/questions")
     @CrossOrigin()
     protected List<Question> listQuestions() {
-        return repository.findAll();
+        return questionRepository.findAll();
     }
 
     @PostMapping("/questions")
@@ -30,7 +37,7 @@ public class QuestionController {
     protected Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
         Question question = new Question();
         HelperFunctions.copyProperties(question, questionInput);
-        return repository.save(question);
+        return questionRepository.save(question);
     }
 
     @CrossOrigin()
@@ -43,7 +50,7 @@ public class QuestionController {
     @DeleteMapping("questions/{id}")
     protected Long deleteQuestion(@PathVariable Long id) {
         try {
-            repository.deleteById(id);
+            questionRepository.deleteById(id);
             return id;
         } catch (Exception e) {
             throw new ResourceNotFoundException();
@@ -58,7 +65,7 @@ public class QuestionController {
     ) {
         Question question = getQuestion(id);
         HelperFunctions.copyProperties(question, questionInput);
-        return repository.save(question);
+        return questionRepository.save(question);
     }
 
     @CrossOrigin()
@@ -68,7 +75,7 @@ public class QuestionController {
     ) {
         Question question = getQuestion(id);
         question.setScore(question.getScore() + 1);
-        return repository.save(question);
+        return questionRepository.save(question);
     }
 
     @CrossOrigin()
@@ -78,7 +85,7 @@ public class QuestionController {
     ) {
         Question question = getQuestion(id);
         question.setScore(question.getScore() - 1);
-        return repository.save(question);
+        return questionRepository.save(question);
     }
 
 }
