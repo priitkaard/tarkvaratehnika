@@ -93,17 +93,16 @@ public class AnswerController {
 
 
     @CrossOrigin()
-    @PutMapping("questions/{questionId}/acceptAnswer/{answerId}")
+    @PutMapping("answers/{answerId}/accept")
     protected Answer acceptAnswer(
-            @PathVariable Long questionId,
             @PathVariable Long answerId
     ) {
         Answer answer = answerService.getAnswer(answerId);
-        Question question = questionService.getQuestion(questionId);
-        if (!answer.getQuestionId().equals(questionId)) {
+        Question question = questionService.getQuestion(answer.getQuestionId());
+        if (!answer.getQuestionId().equals(answer.getQuestionId())) {
             throw new BadRequestException("Answer does not belong to specified question.");
         }
-        this.revertAnswerAccepted(question.getId());
+        questionRepository.revertAnswerAccepted(question.getId());
         answer.setAccepted(true);
         return answerRepository.save(answer);
     }
