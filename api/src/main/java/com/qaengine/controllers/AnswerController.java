@@ -2,9 +2,6 @@ package com.qaengine.controllers;
 
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
-import com.qaengine.exceptions.BadRequestException;
-import com.qaengine.exceptions.InternalServerErrorException;
-import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
@@ -15,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 public class AnswerController {
