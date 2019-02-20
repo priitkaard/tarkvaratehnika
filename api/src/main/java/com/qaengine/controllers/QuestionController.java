@@ -16,7 +16,6 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/questions")
 public class QuestionController {
     @Autowired
     QuestionRepository questionRepository;
@@ -27,7 +26,7 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
-    @GetMapping()
+    @GetMapping("/questions")
     @CrossOrigin()
     protected List<Question> listQuestions() {
         return questionRepository.findAll();
@@ -41,7 +40,7 @@ public class QuestionController {
         return questionRepository.save(question);
     }
 
-    @CrossOrigin()
+    @CrossOrigin("/questions")
     @GetMapping("{id}")
     protected Question getQuestion(@PathVariable Long id) {
         return questionService.getQuestion(id);
@@ -59,7 +58,7 @@ public class QuestionController {
     }
 
     @CrossOrigin()
-    @PutMapping("{id}")
+    @PutMapping("/questions{id}")
     protected Question updateQuestion(
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
@@ -70,7 +69,7 @@ public class QuestionController {
     }
 
     @CrossOrigin()
-    @PutMapping("{id}/upvote")
+    @PutMapping("/questions{id}/upvote")
     protected Question upvoteQuestion(
             @PathVariable Long id
     ) {
@@ -80,7 +79,7 @@ public class QuestionController {
     }
 
     @CrossOrigin()
-    @PutMapping("{id}/downvote")
+    @PutMapping("/questions{id}/downvote")
     protected Question downvoteQuestion(
             @PathVariable Long id
     ) {
