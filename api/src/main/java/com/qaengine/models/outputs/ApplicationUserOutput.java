@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserOutput {
+public class ApplicationUserOutput {
     private long id;
     private String username;
     private int score;
