@@ -37,7 +37,6 @@
                     return;
                 }
                 this.suggestions = await QuestionsService.autoCompleteSuggestions(this.query);
-                console.log(this.suggestions);
             }
         }
     }
