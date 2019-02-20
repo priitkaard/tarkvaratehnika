@@ -4,12 +4,12 @@ import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
-import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,8 +28,16 @@ public class QuestionController {
 
     @GetMapping("/questions")
     @CrossOrigin()
-    protected List<Question> listQuestions() {
-        return questionRepository.findAll();
+    protected List<Question> listQuestions(
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "amount", required = false) Integer amount) {
+        if (page == null) {
+            return questionRepository.findAll();
+        }
+        if (amount == null) {
+            amount = 20;
+        }
+        return questionRepository.findAll(PageRequest.of(page, amount)).getContent();
     }
 
     @PostMapping("/questions")
