@@ -4,7 +4,10 @@
     {{ $route.params.id }}
     <div class = "questionTitle">{{title}}</div>
     -->
-    <div class = "questionBox"><p id = "title">{{question.title}}</p><br><VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:canVote="true"/><p>{{question.text}}</p></div>
+    <div class = "questionBox"><p id = "title">{{question.title}}</p>
+    <br>
+    <VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:canVote="true"/>
+    <p>{{question.text}}</p></div>
     <!-- Old code with best answer
     <div class = "bestAnswer" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
     <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div></div>
