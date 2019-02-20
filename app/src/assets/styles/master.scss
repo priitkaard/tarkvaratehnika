@@ -1,4 +1,5 @@
 @import './_colors.scss';
+@import './_mixins.scss';
 
 body, html {
   background: $color-background;
@@ -25,6 +26,40 @@ body, html {
 .btn {
   border-radius: 0;
   font-size: 14px;
+  height: 40px;
+  padding: 0 30px;
+  &.btn-primary {
+    background-color: $color-primary;
+    border: $color-primary;
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] .btn-success,
+    &.disabled:hover,
+    &[disabled]:hover,
+    fieldset[disabled] .btn-success:hover,
+    &.disabled:focus,
+    &[disabled]:focus,
+    fieldset[disabled] .btn-success:focus,
+    &.disabled:active,
+    &[disabled]:active,
+    fieldset[disabled] .btn-success:active,
+    &.disabled.active,
+    &[disabled].active {
+      background-color: $color-primary-darker;
+    }
+  }
+}
+
+.form-control {
+  @include shadow-box;
+  border: none;
+  border-radius: 0;
+
+  &:focus {
+    box-shadow: 0 0 5px $color-primary;
+    border-color: transparent;
+  }
 }
 
 .icon-button:hover {
