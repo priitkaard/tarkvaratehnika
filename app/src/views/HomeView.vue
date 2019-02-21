@@ -1,14 +1,14 @@
 <template>
     <div class="HomeView" :style="{ backgroundImage: 'url(' + require('../assets/img/hero-image.jpg') + ')' }">
-        <h1>Q&A Engine</h1>
-        <p>Answers to your everyday questions</p>
+        <div class="HomeView__header">
+            <h1>TUTKit</h1>
+            <p>Answers to your education questions</p>
+        </div>
 
         <QuestionSearch/>
 
-        <em class="or">or</em>
-
         <button v-on:click="$router.push({name: 'QuestionsListView'})"
-                class="btn btn-light browse-questions-btn">Browse questions
+                class="HomeView__browse_button">Browse questions
         </button>
     </div>
 </template>
@@ -31,7 +31,6 @@
     .HomeView {
         width: 100%;
         height: 100vh;
-        // background: url('../assets/img/hero-image.jpg') center;
         background-size: cover;
         display: flex;
         flex-direction: column;
@@ -41,6 +40,32 @@
         color: white;
         position: absolute;
         top: 0;
+
+        &__header {
+            text-align: center;
+            h1 {
+                font-size: 60px;
+            }
+            p {
+                font-size: 12px;
+            }
+        }
+
+        &__browse_button {
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.9);
+            outline-color: transparent;
+            border: none;
+            padding: 0 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            transition: background-color 0.4s;
+
+            &:hover {
+                background-color: white;
+                transition: background-color 0.4s;
+            }
+        }
     }
 
     h1 {
@@ -61,10 +86,13 @@
     }
 
     .browse-questions-btn {
-        box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
         border-radius: 20px;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 15px;
+        padding-right: 15px;
         font-size: 14px;
+        background-color: rgba(255, 255, 255, 0.9);
+        &:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
     }
 </style>
