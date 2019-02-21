@@ -4,7 +4,7 @@
             <Navigation v-if="!isHomeView"/>
         </transition>
 
-        <div class="page-content" v-bind:class="{'nav-content': !isHomeView}">
+        <div class="page-content" v-bind:class="{'nav-offset': !isHomeView}">
             <transition name="router-animation">
                 <router-view></router-view>
             </transition>
@@ -49,7 +49,7 @@
         padding-top: 50px;
         min-height: calc(100vh - 200px);
 
-        &.nav-content {
+        &.nav-offset {
             padding-top: 80px;
         }
     }
