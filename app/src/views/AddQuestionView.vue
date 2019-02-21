@@ -41,7 +41,8 @@
                 editorConfig: {
                     // The configuration of the rich-text editor.
                     removePlugins: [ 'Heading', 'Link' ],
-                    toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
+                    toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ],
+                    height: 500
                 },
                 categories: [
                     {

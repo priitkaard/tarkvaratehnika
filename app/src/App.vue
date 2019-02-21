@@ -4,7 +4,7 @@
             <Navigation v-if="!isHomeView"/>
         </transition>
 
-        <div class="page-content">
+        <div class="page-content" v-bind:class="{'nav-content': !isHomeView}">
             <transition name="router-animation">
                 <router-view></router-view>
             </transition>
@@ -48,6 +48,10 @@
     .page-content {
         padding-top: 50px;
         min-height: calc(100vh - 200px);
+
+        &.nav-content {
+            padding-top: 80px;
+        }
     }
 
     .fade-enter-active {

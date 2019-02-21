@@ -8,7 +8,7 @@
         <em class="or">or</em>
 
         <button v-on:click="$router.push({name: 'QuestionsListView'})"
-                class="btn btn-outline-light browse-questions-btn">Browse questions
+                class="btn btn-light browse-questions-btn">Browse questions
         </button>
     </div>
 </template>
@@ -62,5 +62,9 @@
 
     .browse-questions-btn {
         box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 14px;
     }
 </style>
