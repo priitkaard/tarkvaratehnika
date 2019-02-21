@@ -1,11 +1,12 @@
 <template>
 <div class="score">
-    <menu-up-icon v-if="this.canVote" class="icon-button" :size="40" v-on:click="voteDown()"/>
+    <menu-up-icon v-if="this.canVote" class="icon-button" :size="40" v-on:click="voteUp()"/>
     <em v-bind:class="{ positive: score > 0, negative: score < 0 }">{{score}}</em>
-    <menu-down-icon v-if="this.canVote" class="icon-button" :size="40" v-on:click="voteUp()"/>
+    <menu-down-icon v-if="this.canVote" class="icon-button" :size="40" v-on:click="voteDown()"/>
 </div>
 </template>
 <script>
+    import apiService from '../services/ApiService.js'
     import MenuUpIcon from "vue-material-design-icons/MenuUp.vue"
     import MenuDownIcon from "vue-material-design-icons/MenuDown.vue"
 export default {
@@ -16,13 +17,13 @@ export default {
     },
     methods: {
         voteUp: function () {
-            alert(this.id)
-            this.score--;
+            apiService.put("answers/"+this.id+"/upvote")
+            this.score++;
             this.canVote = false;
         },
         voteDown: function () {
-            alert(this.id)
-            this.score++;
+            apiService.put("answers/"+this.id+"/downvote")
+            this.score--;
             this.canVote = false;
         }
     },
