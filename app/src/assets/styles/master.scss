@@ -19,6 +19,10 @@ body, html {
   }
 }
 
+.ck-editor__editable {
+  min-height: 100px;
+}
+
 .btn {
   border-radius: 0;
   font-size: 14px;
@@ -67,7 +71,6 @@ body, html {
   width: 100%;
   min-height: 100px;
   background-color: white;
-  margin: 10px 0;
 
   header {
     display: block;

@@ -1,7 +1,7 @@
 <template>
     <div class="UISelect">
-        <select v-model="selected" class="form-control">
-            <option v-for="option in options" v-bind:value="option.value" v-on:change="onChange(option.value)">
+        <select class="form-control"  @change="onChange($event)">
+            <option v-for="option in options" v-bind:value="option.value">
                 {{ option.text }}
             </option>
         </select>
@@ -12,21 +12,13 @@
     export default {
         name: "UISelect",
         props: ['options'],
-        data() {
-            return {
-                selected: null
-            }
-        },
         methods: {
-            onChange(value) {
-                this.$emit(value);
+            onChange($event) {
+                this.$emit('select-changed', $event.target.value);
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
-    .UISelect {
-
-    }
+<style scoped>
 </style>

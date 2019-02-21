@@ -5,10 +5,11 @@
             <p>Answers to your education questions</p>
         </div>
 
-        <QuestionSearch/>
+        <QuestionSearch />
 
         <button v-on:click="$router.push({name: 'QuestionsListView'})"
-                class="HomeView__browse_button">Browse questions
+                class="HomeView__browse_button">
+            Browse questions
         </button>
     </div>
 </template>
@@ -55,6 +56,8 @@
             height: 40px;
             background-color: rgba(255, 255, 255, 0.9);
             outline-color: transparent;
+            color: black;
+            font-weight: normal;
             border: none;
             padding: 0 20px;
             border-radius: 20px;

@@ -1,8 +1,14 @@
 <template>
     <div class="QuestionSearch">
         <div class="search">
-            <input type="text" placeholder="Ask a question" v-model="query" v-on:input="updateAutoComplete" v-on:/>
-            <arrow-right-icon class="icon-button"/>
+            <input type="text"
+                   placeholder="Ask a question"
+                   v-model="searchInput"
+                   v-on:input="updateAutoComplete" />
+
+            <arrow-right-icon
+                    class="icon-button"
+                    v-on:click="startQuestionCreate()"/>
         </div>
 
         <div class="suggestions" v-if="suggestions.length > 0">
@@ -23,7 +29,7 @@
         name: "QuestionSearch",
         data() {
             return {
-                query: '',
+                searchInput: '',
                 suggestions: []
             }
         },
@@ -32,11 +38,20 @@
         },
         methods: {
             async updateAutoComplete() {
-                if (this.query.length === 0) {
+                if (this.searchInput.length === 0) {
                     this.suggestions = [];
                     return;
                 }
-                this.suggestions = await QuestionsService.autoCompleteSuggestions(this.query);
+                this.suggestions = await QuestionsService.autoCompleteSuggestions(this.searchInput);
+            },
+
+            startQuestionCreate() {
+                this.$router.push({
+                    name: 'AddQuestionView',
+                    params: {
+                        userInput: this.searchInput
+                    }
+                });
             }
         }
     }

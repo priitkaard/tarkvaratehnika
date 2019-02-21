@@ -52,7 +52,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../assets/styles/_colors.scss';
+    @import '../../../assets/styles/colors';
 
     .QuestionsListElement {
         width: 100%;

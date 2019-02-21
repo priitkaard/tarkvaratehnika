@@ -14,5 +14,12 @@ export default {
                 query: input
             }
         });
+    },
+
+    postQuestion(data) {
+        return apiService.post('questions', {
+            title: data.title,
+            text: data.description
+        });
     }
 }

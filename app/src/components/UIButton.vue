@@ -1,6 +1,6 @@
 <template>
     <div class="UIButton">
-        <button>
+        <button v-on:click="$emit('click')">
             {{ text }}
         </button>
     </div>
