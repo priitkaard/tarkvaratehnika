@@ -17,22 +17,24 @@
     {{ $route.params.id }}
     <div class = "sorting">
         Sort by:
-        <select v-model="sort">
+        <select>
             <option selected>Time</option>
             <option>Score</option>
         </select>
     </div>
 
     <!-- v-bind:canVote="true" is temporary -->
-    <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id"><VoteChoice v-bind:id="answer.id" v-bind:type="post" v-bind:score="answer.score" v-bind:canVote="true"/><p>{{answer.text}}</p>
+    <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id"><VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><p>{{answer.text}}</p>
     <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
     <CommentButton v-bind:id='answer.id'/>
     </div>
     <div class = "post_section">
-    <textarea v-model="message" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>
-    <br>
-    <input type = "submit" value = "Post" v-on:click = "submitPost">
+    <form @submit.prevent="addAnswer" >
+      <textarea v-model="text" name = "text" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>
+      <br>
+      <input type = "submit" value = "Post" >
+    </form>
     </div>
   </div>
 </template>
@@ -47,41 +49,20 @@ export default {
     getData: function () {
       return apiService.get('questions/'+this.$route.params.id)
       },
-    submitPost: function () {
-      apiService.post('questions/'+this.$route.params.id+'/answers', {text: "hello"})
+    addAnswer() {
+      apiService.post('questions/'+this.$route.params.id+'/answers', {text: this.text}).then(res => this.answers = [...this.answers, res])
+      this.text = ''
     }
   },
   async created() {
     this.question = await this.getData()
     this.answers = this.question.answers
-    console.log(this.question)
-
   },  
   data () {
     return {
       question: {},
-      /*
-      question: {id: 0, title: "Halp me plz, I'm nub", text: "The question Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque luctus dolor libero, aliquet convallis erat cursus sit" +
-      "amet. Morbi justo diam, dictum aliquet iaculis sed, tempus vitae sem. Aliquam venenatis, mauris nec ornare tempor, ligula nisi"+
-      "consectetur ligula, sed lacinia magna metus et sem. Vivamus nec vulputate massa, convallis lobortis diam. Praesent eu nisi massa."+
-      "Quisque eros magna, aliquet a elementum vitae, eleifend pharetra metus. Quisque fringilla porta dignissim. Morbi hendrerit pretium"+
-      "nulla sed ultricies. Donec eget lobortis nisi, sed tempus velit. Quisque mauris elit, rhoncus rhoncus tempor et, malesuada sed metus."+
-      "Vivamus dictum dolor ut odio gravida ullamcorper. Pellentesque tristique fermentum est ac pharetra. Morbi venenatis convallis odio,"+
-      "imperdiet tristique lorem lacinia vitae.", score: 5},
-      title: 'Jesus is my savior?',
-      //not relevant right now.
-      bestAnswer: "Best Answer from starts here "+
-      "Donec euismod egestas mi, et pulvinar massa. Praesent cursus tellus id tortor dignissim,"+
-      "vitae sagittis nunc facilisis. Cras semper ante a ante malesuada, sed fermentum neque"+
-      "pretium. Nam ultrices quam facilisis odio pulvinar consequat. Donec elit mauris, tristique"+
-      "sit amet ligula et, aliquam luctus erat. Etiam vitae dictum enim, rutrum laoreet neque."+
-      "Vivamus ac euismod risus, tincidunt egestas ligula. Integer ut tortor in dolor porta dignissim"+
-      "ut sit amet lacus. In efficitur dui leo, ut consequat orci porta sit amet. Mauris ut placerat"+
-      "tellus.Cras id massa eget neque pharetra consequat sed quis nisi.",
-      //In future assign answers = question.answers
-      answers: [{id: 0, text: 'jeebus', score: -3, comments: [{id: 99, text: "esimene comment"},{id: 98, text: "teine comment"}]}, {id: 1, text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', score: 1, comments: [{id: 99, text: "esimene comment"},{id: 98, text: "teine comment"}]}, {id: 5, text: 'viies', score: 1}, {id: 3, text: 'jeesus', score: 1}]
-    */
-      answers: {}
+      answers: {},
+      text: ''
     }
   },
   components: {
