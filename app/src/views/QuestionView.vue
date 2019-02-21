@@ -6,7 +6,7 @@
     -->
     <div class = "questionBox"><p id = "title">{{question.title}}</p>
     <br>
-    <VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:canVote="true"/>
+    <VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:type="'question'" v-bind:canVote="true"/>
     <p>{{question.text}}</p></div>
     <!-- Old code with best answer
     <div class = "bestAnswer" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
@@ -14,7 +14,6 @@
     <div class = "answerBox" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/><p>{{answer.text}}</p>
     <div class = "comment" v-for="comment in answer.comments">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>-->
-    {{ $route.params.id }}
     <div class = "sorting">
         Sort by:
         <select>
@@ -24,7 +23,8 @@
     </div>
 
     <!-- v-bind:canVote="true" is temporary -->
-    <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id"><VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><p>{{answer.text}}</p>
+    <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id">
+    <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><p>{{answer.text}}</p>
     <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
     <CommentButton v-bind:id='answer.id'/>

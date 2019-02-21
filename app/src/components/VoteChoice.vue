@@ -17,12 +17,23 @@ export default {
     },
     methods: {
         voteUp: function () {
-            apiService.put("answers/"+this.id+"/upvote")
+            if(this.type === 'post'){
+                apiService.put("answers/"+this.id+"/upvote")
+            }
+            else{
+                apiService.put("questions/"+this.id+"/upvote")
+            }
             this.score++;
             this.canVote = false;
+           
         },
         voteDown: function () {
-            apiService.put("answers/"+this.id+"/downvote")
+            if(this.type === 'post'){
+                apiService.put("answers/"+this.id+"/downvote")
+            }
+            else{
+                apiService.put("questions/"+this.id+"/downvote")
+            }
             this.score--;
             this.canVote = false;
         }
