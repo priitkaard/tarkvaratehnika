@@ -41,6 +41,7 @@
         color: white;
         position: absolute;
         top: 0;
+        
     }
 
     h1 {
