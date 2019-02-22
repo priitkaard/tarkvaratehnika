@@ -59,7 +59,8 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../assets/styles/colors';
+    @import '../../assets/styles/_colors';
+    @import '../../assets/styles/_mixins';
 
     .QuestionSearch {
         display: inline-block;
@@ -116,7 +117,7 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 250px 100px rgba(0, 0, 0, 0.2);
+            @include shadow-depth;
 
             em {
                 display: block;

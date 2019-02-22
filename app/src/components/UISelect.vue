@@ -98,10 +98,10 @@
             z-index: 5;
             max-height: 150px;
             width: 100%;
-            box-shadow: 0 0 250px 100px rgba(0, 0, 0, 0.2);
             overflow-y: scroll;
             color: white;
             background-color: $color-primary;
+            @include shadow-depth;
 
             &::-webkit-scrollbar-track {
                 position: absolute;

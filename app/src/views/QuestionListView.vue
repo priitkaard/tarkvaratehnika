@@ -5,10 +5,17 @@
         <div class="row">
             <div class="col-md-8">
                 <QuestionFilterSearch />
-                <QuestionsList/>
             </div>
             <div class="col-md-4">
                 <QuestionFilterCategory/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <QuestionsList/>
+            </div>
+            <div class="col-md-4">
                 <QuestionStatistics />
             </div>
         </div>
