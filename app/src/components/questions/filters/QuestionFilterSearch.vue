@@ -19,6 +19,7 @@
 
                 <div v-for="(suggestion, index) in suggestions"
                      v-bind:key="index"
+                     v-on:click="selectSuggestion(suggestion)"
                      class="QuestionFilterSearch__suggestions_option">
                     {{ suggestion.title }}
                 </div>
@@ -33,11 +34,11 @@
 
     export default {
         name: "QuestionFilterSearch",
-        props: ['rounded'],
+        props: ['rounded', 'initialValue'],
         components: {MagnifyIcon},
         data() {
             return {
-                query: '',
+                query: this.initialValue || '',
                 suggestions: []
             }
         },
@@ -45,7 +46,17 @@
             executeSearch() {
                 this.$emit('execute-search', this.query);
             },
+            selectSuggestion(suggestion) {
+                this.$router.push({
+                    name: 'QuestionView',
+                    params: {
+                        id: suggestion.id
+                    }
+                })
+            },
             async updateSuggestions() {
+                this.$emit('input', this.query);
+
                 if (this.query) {
                     this.suggestions = await questionService.autoCompleteSuggestions(this.query);
                 } else {
@@ -54,7 +65,7 @@
             }
         },
         created() {
-
+            console.log(this.initialValue);
         }
     }
 </script>

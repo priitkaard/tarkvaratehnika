@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionFilterSearch />
+                <QuestionFilterSearch :initialValue="filters.query" />
             </div>
             <div class="col-md-4">
                 <QuestionFilterCategory/>
@@ -31,12 +31,20 @@
 
     export default {
         name: "QuestionListView",
+        props: ['query'],
         components: {
             QuestionFilterCategory,
             QuestionStatistics,
             QuestionFilterBar,
             QuestionsList,
             QuestionFilterSearch
+        },
+        data() {
+            return {
+                filters: {
+                    query: this.query
+                }
+            }
         }
     }
 </script>

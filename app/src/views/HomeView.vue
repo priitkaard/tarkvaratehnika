@@ -8,7 +8,7 @@
         <QuestionFilterSearch
                 class="HomeView__searchbar"
                 v-on:execute-search="startSearch"
-                v-on:input="query"
+                v-on:input="updateQuery"
                 :rounded="true"/>
 
         <button v-on:click="$router.push({name: 'AddQuestionView'})"
@@ -39,6 +39,9 @@
                         query: this.query
                     }
                 });
+            },
+            updateQuery(value) {
+                this.query = value;
             }
         }
     }
