@@ -63,9 +63,6 @@
                     this.suggestions = [];
                 }
             }
-        },
-        created() {
-            console.log(this.initialValue);
         }
     }
 </script>
