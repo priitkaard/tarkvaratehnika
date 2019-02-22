@@ -4,7 +4,8 @@
             <input type="text"
                    placeholder="Ask a question"
                    v-model="searchInput"
-                   v-on:input="updateAutoComplete" />
+                   v-on:input="updateAutoComplete"
+                   v-on:keyup.enter="startQuestionCreate" />
 
             <arrow-right-icon
                     class="icon-button"

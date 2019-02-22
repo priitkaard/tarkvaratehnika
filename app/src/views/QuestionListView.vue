@@ -8,6 +8,7 @@
                 <QuestionsList/>
             </div>
             <div class="col-md-4">
+                <QuestionFilterCategory/>
                 <QuestionStatistics />
             </div>
         </div>
@@ -19,10 +20,12 @@
     import QuestionsList from '../components/questions/list/QuestionsList';
     import QuestionStatistics from "../components/questions/sidebars/QuestionStatistics";
     import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
+    import QuestionFilterCategory from "../components/questions/filters/QuestionFilterCategory";
 
     export default {
         name: "QuestionListView",
         components: {
+            QuestionFilterCategory,
             QuestionStatistics,
             QuestionFilterBar,
             QuestionsList,

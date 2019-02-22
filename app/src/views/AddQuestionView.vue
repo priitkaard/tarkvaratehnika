@@ -85,7 +85,6 @@
                 this.question.categoryId = value;
             },
             async postQuestion() {
-                console.log('test');
                 const response = await questionService.postQuestion({
                     title: this.question.title,
                     description: this.question.description,
