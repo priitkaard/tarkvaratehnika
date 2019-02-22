@@ -1,7 +1,8 @@
 <template>
     <div class="UISelect" ref="UISelect">
         <div class="UISelect__closed noselect" v-on:click="toggleSelect">
-            {{ selected.text }}
+            {{ selected ? selected.name : '' }}
+
             <chevron-down-icon v-if="selectClosed" class="UISelect__closed_icon" />
             <chevron-up-icon v-if="!selectClosed" class="UISelect__closed_icon" />
         </div>
@@ -10,8 +11,9 @@
             <div class="UISelect__options" v-if="!selectClosed">
                 <div class="UISelect__option"
                      v-for="option in options"
+                     v-bind:key="option.id"
                      v-on:click="onChange(option)">
-                    {{ option.text }}
+                    {{ option.name }}
                 </div>
             </div>
         </transition>
@@ -29,6 +31,11 @@
             return {
                 selectClosed: true,
                 selected: this.options[0]
+            }
+        },
+        watch: {
+            options() {
+                this.selected = this.options[0]
             }
         },
         methods: {
@@ -96,7 +103,7 @@
             position: absolute;
             top: 40px;
             z-index: 5;
-            max-height: 150px;
+            max-height: 250px;
             width: 100%;
             overflow-y: scroll;
             color: white;
