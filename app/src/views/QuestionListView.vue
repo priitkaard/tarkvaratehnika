@@ -13,7 +13,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionsList/>
+                <QuestionsList :filters="filters" />
             </div>
             <div class="col-md-4">
                 <QuestionStatistics />

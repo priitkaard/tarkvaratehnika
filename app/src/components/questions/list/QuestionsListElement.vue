@@ -8,7 +8,7 @@
 
         <div class="body" v-on:click="openQuestion">
             <h3>{{ question.title }}</h3>
-            <p>{{ question.description }}</p>
+            <p v-html="question.text"></p>
         </div>
 
         <QuestionsListElementDetails/>
@@ -40,12 +40,10 @@
             },
 
             vote(direction) {
-                if (direction === 'UP') {
-                    this.question.score++;
-                } else if (direction === 'DOWN') {
-                    this.question.score--;
-                }
-                this.question.canVote = false;
+                this.$emit('vote', {
+                    id: this.question.id,
+                    direction
+                });
             }
         }
     }
