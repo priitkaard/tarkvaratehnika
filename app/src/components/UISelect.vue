@@ -96,12 +96,27 @@
             position: absolute;
             top: 40px;
             z-index: 5;
+            max-height: 150px;
             width: 100%;
             box-shadow: 0 0 250px 100px rgba(0, 0, 0, 0.2);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            overflow: hidden;
+            overflow-y: scroll;
             color: white;
+            background-color: $color-primary;
+
+            &::-webkit-scrollbar-track {
+                position: absolute;
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                background-color: $color-primary;
+            }
+
+            &::-webkit-scrollbar {
+                width: 6px;
+                background-color: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: #000000;
+            }
         }
 
         &__option {
