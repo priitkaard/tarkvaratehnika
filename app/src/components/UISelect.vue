@@ -88,6 +88,10 @@
 
         &__closed {
             height: 40px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
 
             &:hover {
                 cursor: pointer;
@@ -130,6 +134,10 @@
             height: 40px;
             background-color: $color-primary;
             transition: background-color 0.4s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
 
             &:hover {
                 cursor: pointer;

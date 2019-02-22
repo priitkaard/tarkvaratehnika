@@ -9,27 +9,27 @@
 
                 <div class="AddQuestionView__box">
 
-                    <input class="form-control AddQuestionView__input_title"
+                    <input class="form-control AddQuestionView__box_title"
                            placeholder="Question title"
                            type="text"
                            v-model="question.title" />
 
-                    <ckeditor :editor="editor.type"
+                    <ckeditor class="AddQuestionView__box_description"
+                              :editor="editor.type"
                               v-model="question.description"
                               :config="editor.config">
                     </ckeditor>
 
-                    <div class="row AddQuestionView__input_group">
+                    <UISelect class="AddQuestionView__box_categories"
+                              :options="categories"
+                              v-on:select-changed="onCategoryChange" />
 
-                        <div class="col-sm-5">
-                            <UISelect :options="categories" v-on:select-changed="onCategoryChange" />
-                        </div>
-
-                        <div class="col-sm-2"></div>
-
-                        <div class="col-sm-5">
-                            <UIButton text="Post question"
-                                      v-on:click="postQuestion()"/>
+                    <div class="row">
+                        <div class="col-md-7"></div>
+                        <div class="col-md-5">
+                            <UIButton class="AddQuestionView__box_submit"
+                                      text="Post question"
+                                      v-on:click="postQuestion()" />
                         </div>
                     </div>
                 </div>
@@ -106,21 +106,12 @@
             background-color: white;
             box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
             padding: 40px 30px;
-        }
-        &__input_title {
-            margin-bottom: 20px;
-        }
-        &__input_group {
-            margin-top: 20px;
 
-            .UISelect {
-                text-align: center;
-                width: 100%;
+            &_title, &_categories {
                 margin-bottom: 20px;
             }
-            .UIButton {
-                width: 100%;
-                text-align: right;
+            &_categories {
+                margin-top: 20px;
             }
         }
     }
