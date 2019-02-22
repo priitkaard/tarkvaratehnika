@@ -1,18 +1,20 @@
 <template>
     <div class="Navigation">
-        <div class="mobile-view">
-            <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo.png"/>
-            <menu-icon/>
-        </div>
-
-        <div class="desktop-view">
-            <div class="nav-logo">
+        <div class="container">
+            <div class="mobile-view">
                 <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo.png"/>
+                <menu-icon/>
             </div>
 
+            <div class="desktop-view">
+                <div class="nav-logo">
+                    <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo.png"/>
+                </div>
 
-            <div class="nav-menu">
-                Log in
+
+                <div class="nav-menu">
+                    Log in
+                </div>
             </div>
         </div>
     </div>
@@ -28,9 +30,9 @@
 </script>
 
 <style lang="scss" scoped>
-    .Navigation {
-        $nav-height: 50px;
+    @import '../../assets/styles/_variables.scss';
 
+    .Navigation {
         width: 100%;
         height: $nav-height;
         line-height: $nav-height;

@@ -94,8 +94,10 @@
 </script>
 
 <style lang="scss" scoped>
+    @import '../assets/styles/_variables.scss';
 
     .AddQuestionView {
+        min-height: calc(100vh - #{$nav-height});
         &__image {
             width: 50%;
             margin-left: 25%;
