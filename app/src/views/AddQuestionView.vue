@@ -1,11 +1,11 @@
 <template>
     <div class="AddQuestionView container">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 AddQuestionView__block">
                 <img class="AddQuestionView__image" src="../assets/img/question-mark.png" />
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 AddQuestionView__block">
 
                 <div class="AddQuestionView__box">
 
@@ -97,14 +97,23 @@
     @import '../assets/styles/_variables.scss';
 
     .AddQuestionView {
-        min-height: calc(100vh - #{$nav-height});
+        margin-bottom: 150px;
+
+        &__block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: calc(100vh - #{$nav-height} - 150px);
+        }
+
         &__image {
             width: 50%;
             margin-left: 25%;
         }
         &__box {
             display: block;
-            margin: 50px 0 100px 0;
+            box-sizing: border-box;
+            width: 100%;
             background-color: white;
             box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
             padding: 40px 30px;
