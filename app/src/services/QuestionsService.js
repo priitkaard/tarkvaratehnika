@@ -27,7 +27,6 @@ export default {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve([
-                    {id: 0, name: 'All lectures'},
                     {id: 1, name: 'Tarkaratehnika'},
                     {id: 2, name: 'Tehisintellekti ja masinõppe alused'},
                     {id: 3, name: 'Tõenäosusteooria ja statistiline matemaatika'},

@@ -10,9 +10,6 @@
                 <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo.png"/>
             </div>
 
-            <div class="nav-search">
-                <QuestionSearch/>
-            </div>
 
             <div class="nav-menu">
                 Log in
@@ -22,12 +19,11 @@
 </template>
 
 <script>
-    import QuestionSearch from "../questions/QuestionSearch";
     import MenuIcon from "vue-material-design-icons/Menu";
 
     export default {
         name: "Navigation",
-        components: {MenuIcon, QuestionSearch}
+        components: {MenuIcon}
     }
 </script>
 

@@ -51,8 +51,9 @@
             UISelect,
             UIButton
         },
-        created() {
+        async created() {
             this.question.title = this.$route.params.userInput;
+            this.categories = await questionService.getQuestionCategories();
         },
         data() {
             return {
@@ -68,16 +69,7 @@
                         toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
                     },
                 },
-                categories: [
-                    {
-                        value: 1,
-                        text: 'Tarkvaratehnika'
-                    },
-                    {
-                        value: 2,
-                        text: 'Arvutivõrgud'
-                    }
-                ]
+                categories: []
             }
         },
         methods: {

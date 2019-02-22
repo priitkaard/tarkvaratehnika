@@ -5,22 +5,41 @@
             <p>Answers to your education questions</p>
         </div>
 
-        <QuestionSearch />
+        <QuestionFilterSearch
+                class="HomeView__searchbar"
+                v-on:execute-search="startSearch"
+                v-on:input="query"
+                :rounded="true"/>
 
-        <button v-on:click="$router.push({name: 'QuestionsListView'})"
-                class="HomeView__browse_button">
-            Browse questions
+        <button v-on:click="$router.push({name: 'AddQuestionView'})"
+                class="HomeView__new_question_button">
+            Create new question
         </button>
     </div>
 </template>
 
 <script>
-    import QuestionSearch from '../components/questions/QuestionSearch';
+    import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
 
     export default {
         name: "HomeView",
         components: {
-            QuestionSearch
+            QuestionFilterSearch
+        },
+        data() {
+            return {
+                query: ''
+            }
+        },
+        methods: {
+            startSearch() {
+                this.$router.push({
+                    name: 'QuestionListView',
+                    params: {
+                        query: this.query
+                    }
+                });
+            }
         }
     }
 </script>
@@ -33,12 +52,12 @@
         width: 100%;
         height: 100vh;
         background-size: cover;
+        color: white;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-content: center;
         align-items: center;
-        color: white;
         position: absolute;
         top: 0;
 
@@ -52,23 +71,48 @@
             }
         }
 
-        &__browse_button {
-            height: 40px;
+        &__searchbar {
+            width: 95%;
+            max-width: 800px;
+            // color: black;
+            // border-radius: 20px;
+            // overflow: hidden;
+        }
+
+        &__new_question_button {
             background-color: rgba(255, 255, 255, 0.9);
-            outline-color: transparent;
             color: black;
-            font-weight: normal;
-            border: none;
+            width: auto;
             padding: 0 20px;
             border-radius: 20px;
             margin-top: 20px;
             transition: background-color 0.4s;
+            @include shadow-box;
 
             &:hover {
                 background-color: white;
+                cursor: pointer;
                 transition: background-color 0.4s;
             }
         }
+
+        // &__new_question_button {
+        //     height: 40px;
+        //     background-color: rgba(255, 255, 255, 0.9);
+        //     outline-color: transparent;
+        //     color: black;
+        //     font-weight: normal;
+        //     border: none;
+        //     padding: 0 20px;
+        //     border-radius: 20px;
+        //     margin-top: 20px;
+        //     transition: background-color 0.4s;
+//
+        //     &:hover {
+        //         background-color: white;
+        //         transition: background-color 0.4s;
+        //     }
+        // }
     }
 
     h1 {

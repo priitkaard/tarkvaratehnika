@@ -13,13 +13,14 @@
         components: {UISelect},
         data() {
             return {
-                categories: [
-                    'All lectures'
-                ]
+                categories: []
             }
         },
         async created() {
-            this.categories = await questionService.getQuestionCategories();
+            this.categories = [
+                {id: 0, name: 'All lectures'},
+                ... await questionService.getQuestionCategories()
+            ]
         }
     }
 </script>
