@@ -1,20 +1,26 @@
 <template>
     <div class="HomeView" :style="{ backgroundImage: 'url(' + require('../assets/img/hero-image.jpg') + ')' }">
-        <div class="HomeView__header">
-            <h1>TUTKit</h1>
-            <p>Answers to your education questions</p>
+        <div class="HomeView__overlay">
+            <!--div class="HomeView__header">
+                <h1>TUTKit</h1>
+                <p>Answers to your education questions</p>
+            </div-->
+            <div class="HomeView__header">
+                <img src="@/assets/img/logo.png" />
+            </div>
+
+            <QuestionFilterSearch
+                    class="HomeView__searchbar"
+                    v-on:execute-search="startSearch"
+                    v-on:input="updateQuery"
+                    :rounded="true"/>
+
+            <button v-on:click="$router.push({name: 'AddQuestionView'})"
+                    class="HomeView__new_question_button">
+                Create new question
+            </button>
+
         </div>
-
-        <QuestionFilterSearch
-                class="HomeView__searchbar"
-                v-on:execute-search="startSearch"
-                v-on:input="updateQuery"
-                :rounded="true"/>
-
-        <button v-on:click="$router.push({name: 'AddQuestionView'})"
-                class="HomeView__new_question_button">
-            Create new question
-        </button>
     </div>
 </template>
 
@@ -55,14 +61,21 @@
         width: 100%;
         height: 100vh;
         background-size: cover;
+        background-position: center;
         color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-content: center;
-        align-items: center;
         position: absolute;
         top: 0;
+
+
+        &__overlay {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
         &__header {
             text-align: center;
@@ -71,6 +84,9 @@
             }
             p {
                 font-size: 12px;
+            }
+            img {
+                margin-bottom: 20px;
             }
         }
 

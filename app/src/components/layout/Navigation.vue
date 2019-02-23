@@ -2,13 +2,13 @@
     <div class="Navigation">
         <div class="container">
             <div class="mobile-view">
-                <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo.png"/>
+                <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo-inline.png"/>
                 <menu-icon/>
             </div>
 
             <div class="desktop-view">
                 <div class="nav-logo">
-                    <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo.png"/>
+                    <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo-inline.png"/>
                 </div>
 
 
@@ -36,7 +36,7 @@
         width: 100%;
         height: $nav-height;
         line-height: $nav-height;
-        background-color: rgba(0, 0, 0, 0.9);
+        background-color: rgba(0, 0, 0, 1);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         color: white;
         padding: 0 100px;
@@ -46,8 +46,9 @@
         z-index: 9999;
 
         img {
-            height: 80px;
-            margin-top: -15px;
+            display: inline-block;
+            vertical-align: top;
+            height: $nav-height;
 
             &:hover {
                 cursor: pointer;
