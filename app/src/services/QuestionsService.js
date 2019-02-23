@@ -22,6 +22,29 @@ export default {
         });
     },
 
+    vote(questionId, direction) {
+        // TODO: Instead send request to backend with authenticated user.
+        const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
+        if (votedQuestions.includes(questionId)) {
+            throw {
+                error: 'Shouldn\'t be allowed to vote'
+            }
+        }
+        votedQuestions.push(questionId);
+        localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
+
+        if (direction === 'UP') {
+            return apiService.put(`questions/${questionId}/upvote`);
+        } else if (direction === 'DOWN') {
+            return apiService.put(`questions/${questionId}/downvote`);
+        } else {
+            throw {
+                error: 'Invalid vote direction!'
+            }
+        }
+
+    },
+
     getQuestionCategories() {
         return new Promise(resolve => {
             setTimeout(() => {

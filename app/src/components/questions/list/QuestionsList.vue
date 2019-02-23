@@ -35,7 +35,6 @@
             },
             voteQuestion({id, direction}) {
                 this.questions.map(question => {
-
                     if (question.id !== id) {
                         return question;
                     }
@@ -48,10 +47,7 @@
                         return question;
                     }
 
-                    // TODO: Instead use questionService to vote for question and send request to backend.
-                    const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
-                    votedQuestions.push(id);
-                    localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
+                    questionService.vote(id, direction);
 
                     question.canVote = false;
                     return question;
