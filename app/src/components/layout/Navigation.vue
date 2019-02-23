@@ -12,8 +12,10 @@
                 </div>
 
 
-                <div class="nav-menu">
-                    Log in
+                <div class="Navigation__menu">
+                    <ul>
+                        <li>Log in</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -44,6 +46,27 @@
         position: fixed;
         top: 0;
         z-index: 9999;
+
+        &__menu {
+            ul {
+                li {
+                    display: inline-block;
+                    list-style-type: none;
+                    height: 50px;
+                    line-height: 50px;
+                    padding: 0 25px;
+                    border-bottom: 2px solid white;
+                    box-sizing: border-box;
+                    transition: background-color 0.4s;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: rgba(255, 255, 255, 0.1);
+                        transition: background-color 0.4s;
+                    }
+                }
+            }
+        }
 
         img {
             display: inline-block;
