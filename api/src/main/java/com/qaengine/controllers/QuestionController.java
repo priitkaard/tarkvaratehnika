@@ -6,6 +6,7 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.models.outputs.QuestionListElement;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class QuestionController {
 
     @GetMapping("/questions")
     @CrossOrigin()
-    protected List<Question> listQuestions(
+    protected List<QuestionListElement> listQuestions(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "limit") Integer limit) {
         return questionService.listQuestions(page, limit);
