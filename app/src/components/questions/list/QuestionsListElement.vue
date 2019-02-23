@@ -11,7 +11,7 @@
             <p>{{ question.text }}</p>
         </div>
 
-        <QuestionsListElementDetails/>
+        <QuestionsListElementDetails :question="question" />
 
     </div>
 </template>
