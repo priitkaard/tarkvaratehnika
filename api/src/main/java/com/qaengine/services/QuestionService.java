@@ -4,6 +4,8 @@ import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Question;
 import com.qaengine.models.outputs.QuestionListElement;
+import org.jsoup.Jsoup;
+import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -11,14 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
-    private static final Pattern HTML_TAGS_PATTERN = Pattern.compile("<.+?>");
-
     private QuestionRepository repository;
 
     @Autowired
@@ -28,10 +26,11 @@ public class QuestionService {
 
     public List<QuestionListElement> listQuestions(int page, int limit) {
         List<QuestionListElement> questions = repository.listQuestions(PageRequest.of(page, limit));
-        return questions.stream().peek(question -> {
-            Matcher matcher = HTML_TAGS_PATTERN.matcher(question.getText());
-            question.setText(matcher.replaceAll(""));
-        }).collect(Collectors.toList());
+        return questions.stream()
+                .peek(question -> question.setText(
+                        Parser.unescapeEntities(Jsoup.parse(question.getText()).text(), false))
+                )
+                .collect(Collectors.toList());
     }
 
     public Question getQuestion(@PathVariable Long id) throws ResourceNotFoundException {

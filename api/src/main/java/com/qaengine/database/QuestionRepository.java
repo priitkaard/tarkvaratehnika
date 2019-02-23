@@ -15,9 +15,8 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(
-        "SELECT q.id, q.title, q.text, q.score, q.created, COUNT(c) " +
-        "FROM Question q " +
-        "LEFT JOIN Comment c " +
+        "SELECT new com.qaengine.models.outputs.QuestionListElement(q.id, q.title, q.text, q.score, q.created, COUNT(c)) " +
+        "FROM Question q LEFT JOIN q.comments c " +
         "GROUP BY q.id, q.title, q.text, q.score, q.created"
     )
     List<QuestionListElement> listQuestions(Pageable pageable);

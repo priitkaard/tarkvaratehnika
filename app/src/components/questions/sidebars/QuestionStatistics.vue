@@ -1,21 +1,26 @@
 <template>
     <div class="QuestionStatistics sidebar">
         <header>Statistics</header>
+
+        <wrench-outline-icon :size="50" />
         <p>Under development</p>
     </div>
 </template>
 
 <script>
+    import WrenchOutlineIcon from "vue-material-design-icons/WrenchOutline";
     export default {
-        name: "QuestionStatistics"
+        name: "QuestionStatistics",
+        components: {WrenchOutlineIcon}
     }
 </script>
 
 <style lang="scss" scoped>
     .QuestionStatistics {
+        text-align: center;
         p {
-            margin: 20px 0;
-            text-align: center;
+            padding-bottom: 20px;
+            font-weight: bold;
         }
     }
 </style>
