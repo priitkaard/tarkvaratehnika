@@ -18,7 +18,11 @@ export default {
 
     getQuestions(filters) {
         return apiService.get('questions', {
-            ...filters
+            params: {
+                page: 0,
+                limit: 20,
+                ...filters
+            }
         });
     },
 

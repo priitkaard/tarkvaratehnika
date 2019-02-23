@@ -13,7 +13,9 @@
                     class="HomeView__searchbar"
                     v-on:execute-search="startSearch"
                     v-on:input="updateQuery"
-                    :rounded="true"/>
+                    :rounded="true" />
+
+            <div class="HomeView__or">or</div>
 
             <button v-on:click="$router.push({name: 'AddQuestionView'})"
                     class="HomeView__new_question_button">
@@ -98,13 +100,17 @@
             // overflow: hidden;
         }
 
+        &__or {
+            font-style: normal;
+            margin: 10px 0;
+        }
+
         &__new_question_button {
             background-color: rgba(255, 255, 255, 0.9);
             color: black;
             width: auto;
             padding: 0 20px;
             border-radius: 20px;
-            margin-top: 20px;
             transition: background-color 0.4s;
             @include shadow-box;
 

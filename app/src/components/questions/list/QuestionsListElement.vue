@@ -8,7 +8,7 @@
 
         <div class="body" v-on:click="openQuestion">
             <h3>{{ question.title }}</h3>
-            <p v-html="question.text"></p>
+            <p>{{ question.text }}</p>
         </div>
 
         <QuestionsListElementDetails/>

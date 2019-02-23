@@ -29,15 +29,9 @@ public class QuestionController {
     @GetMapping("/questions")
     @CrossOrigin()
     protected List<Question> listQuestions(
-            @RequestParam(value = "page", required = false) Integer page,
-            @RequestParam(value = "amount", required = false) Integer amount) {
-        if (page == null) {
-            return questionRepository.findAll();
-        }
-        if (amount == null) {
-            amount = 20;
-        }
-        return questionRepository.findAll(PageRequest.of(page, amount)).getContent();
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "limit") Integer limit) {
+        return questionService.listQuestions(page, limit);
     }
 
     @PostMapping("/questions")

@@ -6,7 +6,8 @@
                 <input class="QuestionFilterSearch__search_input"
                        type="text"
                        v-model="query"
-                       v-on:input="updateSuggestions" />
+                       v-on:input="updateSuggestions"
+                       placeholder="Search..." />
                 <magnify-icon class="QuestionFilterSearch__search_icon" v-on:click="executeSearch()" />
             </form>
         </div>
