@@ -10,11 +10,11 @@
         </div>
         <div class="detail">
             <eye-icon :size="20"/>
-            1315 views
+            N/A views
         </div>
         <div class="detail">
             <comment-icon :size="20"/>
-            4 comments
+            {{ question.comments }} comments
         </div>
     </div>
 </template>
