@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -22,14 +21,14 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @PostMapping("/sign-up")
+    @PostMapping("/users/sign-up")
     public ApplicationUserOutput signUp(@RequestBody ApplicationUserInput userInput) {
         if (userRepository.findByUsername(userInput.getUsername()) != null) {
             throw new BadRequestException("ApplicationUser with given username already exists.");
         }
-        ApplicationUser applicationUser = (ApplicationUser)HelperFunctions.copyProperties(new ApplicationUser(), userInput);
-        applicationUser.setPassword(bCryptPasswordEncoder.encode(userInput.getPassword()));
-        userRepository.save(applicationUser);
-        return (ApplicationUserOutput)HelperFunctions.copyProperties(new ApplicationUserOutput(), applicationUser);
+        ApplicationUser user = (ApplicationUser)HelperFunctions.copyProperties(new ApplicationUser(), userInput);
+        user.setPassword(bCryptPasswordEncoder.encode(userInput.getPassword()));
+        userRepository.save(user);
+        return (ApplicationUserOutput)HelperFunctions.copyProperties(new ApplicationUserOutput(), user);
     }
 }
