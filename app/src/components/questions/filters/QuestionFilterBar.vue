@@ -1,12 +1,12 @@
 <template>
-    <div class="QuestionsSortBar">
+    <div class="QuestionFilterBar">
         <div class="option" v-for="option in options" v-bind:key="option">{{ option }}</div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "QuestionsSortBar",
+        name: "QuestionFilterBar",
         data() {
             return {
                 options: [
@@ -23,10 +23,10 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../assets/styles/_colors.scss';
-    @import '../../assets/styles/_mixins.scss';
+    @import '../../../assets/styles/colors';
+    @import '../../../assets/styles/mixins';
 
-    .QuestionsSortBar {
+    .QuestionFilterBar {
         @include shadow-box;
 
         $questions-sort-bar-height: 50px;

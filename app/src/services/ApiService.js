@@ -3,10 +3,10 @@ import Axios from 'axios';
 const API_URL = 'http://localhost:8080/';
 
 const axios = Axios.create({
-    baseUrl: API_URL
+    baseURL: API_URL
 });
 
-function request(config) {
+async function request(config) {
     const requestConfig = {...config};
     if (!requestConfig.headers) {
         requestConfig.headers = {};
@@ -17,7 +17,16 @@ function request(config) {
         requestConfig.headers.authorization = `Bearer ${localStorage.authToken}`;
     }
 
-    return axios.request(requestConfig);
+    try {
+        const response = await axios.request(requestConfig);
+        return response.data;
+    } catch (err) {
+        // TODO: Log error to sentry
+        throw {
+            error: 'Request failed',
+            message: err
+        }
+    }
 }
 
 export default {

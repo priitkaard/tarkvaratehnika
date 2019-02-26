@@ -1,15 +1,22 @@
 <template>
     <div class="QuestionSearch">
         <div class="search">
-            <input type="text" placeholder="Ask a question" v-model="query" v-on:input="updateAutoComplete" v-on:/>
-            <arrow-right-icon class="icon-button"/>
+            <input type="text"
+                   placeholder="Ask a question"
+                   v-model="searchInput"
+                   v-on:input="updateAutoComplete"
+                   v-on:keyup.enter="startQuestionCreate" />
+
+            <arrow-right-icon
+                    class="icon-button"
+                    v-on:click="startQuestionCreate()"/>
         </div>
 
         <div class="suggestions" v-if="suggestions.length > 0">
             <em>Already asked questions:</em>
 
             <div v-for="(suggestion, index) in suggestions" v-bind:key="index" class="answer">
-                {{ suggestion }}
+                {{ suggestion.title }}
             </div>
         </div>
     </div>
@@ -23,7 +30,7 @@
         name: "QuestionSearch",
         data() {
             return {
-                query: '',
+                searchInput: '',
                 suggestions: []
             }
         },
@@ -32,18 +39,28 @@
         },
         methods: {
             async updateAutoComplete() {
-                if (this.query.length === 0) {
+                if (this.searchInput.length === 0) {
                     this.suggestions = [];
                     return;
                 }
-                this.suggestions = await QuestionsService.autoCompleteSuggestions(this.query);
+                this.suggestions = await QuestionsService.autoCompleteSuggestions(this.searchInput);
+            },
+
+            startQuestionCreate() {
+                this.$router.push({
+                    name: 'AddQuestionView',
+                    params: {
+                        userInput: this.searchInput
+                    }
+                });
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    @import '../../assets/styles/colors';
+    @import '../../assets/styles/_colors';
+    @import '../../assets/styles/_mixins';
 
     .QuestionSearch {
         display: inline-block;
@@ -100,7 +117,7 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 250px 100px rgba(0, 0, 0, 0.2);
+            @include shadow-depth;
 
             em {
                 display: block;

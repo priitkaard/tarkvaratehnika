@@ -1,8 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HomeView from './views/HomeView.vue'
-import QuestionView from './views/QuestionView.vue'
-import QuestionsListView from './views/QuestionsListView.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import HomeView from './views/HomeView.vue';
+import QuestionView from './views/QuestionView.vue';
+import QuestionListView from './views/QuestionListView.vue';
+import AddQuestionView from './views/AddQuestionView.vue';
 
 Vue.use(Router);
 
@@ -16,9 +17,16 @@ export default new Router({
             component: HomeView
         },
         {
-            name: 'QuestionsListView',
+            path: '/questions/create',
+            name: 'AddQuestionView',
+            component: AddQuestionView,
+            props: true
+        },
+        {
+            name: 'QuestionListView',
             path: '/questions',
-            component: QuestionsListView
+            component: QuestionListView,
+            props: true
         },
         {
             name: 'QuestionView',
@@ -26,4 +34,4 @@ export default new Router({
             component: QuestionView
         }
     ]
-})
+});

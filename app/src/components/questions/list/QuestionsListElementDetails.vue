@@ -2,19 +2,19 @@
     <div class="QuestionsListElementDetails">
         <div class="detail">
             <folder-icon :size="20"/>
-            Various
+            Unknown
         </div>
         <div class="detail">
             <clock-outline-icon :size="20"/>
-            2 days ago
+            {{ created }}
         </div>
         <div class="detail">
             <eye-icon :size="20"/>
-            1315 views
+            N/A views
         </div>
         <div class="detail">
             <comment-icon :size="20"/>
-            4 comments
+            {{ question.comments }} comments
         </div>
     </div>
 </template>
@@ -24,9 +24,16 @@
     import ClockOutlineIcon from "vue-material-design-icons/ClockOutline";
     import EyeIcon from "vue-material-design-icons/Eye";
     import CommentIcon from "vue-material-design-icons/Comment";
+    import moment from 'moment';
 
     export default {
         name: "QuestionsListElementDetails",
+        props: ['question'],
+        data() {
+            return {
+                created: moment(this.question.created).fromNow()
+            }
+        },
         components: {
             CommentIcon,
             EyeIcon,

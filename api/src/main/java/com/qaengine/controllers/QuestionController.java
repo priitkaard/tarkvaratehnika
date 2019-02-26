@@ -4,12 +4,13 @@ import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
-import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.models.outputs.QuestionListElement;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,8 +29,10 @@ public class QuestionController {
 
     @GetMapping("/questions")
     @CrossOrigin()
-    protected List<Question> listQuestions() {
-        return questionRepository.findAll();
+    protected List<QuestionListElement> listQuestions(
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "limit") Integer limit) {
+        return questionService.listQuestions(page, limit);
     }
 
     @PostMapping()
@@ -86,6 +89,12 @@ public class QuestionController {
         Question question = getQuestion(id);
         question.setScore(question.getScore() - 1);
         return questionRepository.save(question);
+    }
+
+    @CrossOrigin()
+    @GetMapping("questions/auto-complete")
+    public List<Question> autoCompleteQuestion(@RequestParam String query) {
+        return questionService.autoCompleteQuestion(query);
     }
 
 }
