@@ -8,10 +8,10 @@
 
         <div class="body" v-on:click="openQuestion">
             <h3>{{ question.title }}</h3>
-            <p>{{ question.description }}</p>
+            <p>{{ question.text }}</p>
         </div>
 
-        <QuestionsListElementDetails/>
+        <QuestionsListElementDetails :question="question" />
 
     </div>
 </template>
@@ -40,19 +40,17 @@
             },
 
             vote(direction) {
-                if (direction === 'UP') {
-                    this.question.score++;
-                } else if (direction === 'DOWN') {
-                    this.question.score--;
-                }
-                this.question.canVote = false;
+                this.$emit('vote', {
+                    id: this.question.id,
+                    direction
+                });
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    @import '../../assets/styles/_colors.scss';
+    @import '../../../assets/styles/colors';
 
     .QuestionsListElement {
         width: 100%;

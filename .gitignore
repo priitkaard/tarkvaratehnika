@@ -4,3 +4,4 @@ node_modules/
 build/
 .DS_STORE
 api/out
+api/src/main/resources/application-production.properties

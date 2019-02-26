@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,8 @@ public class Question {
     private String title;
     private String text;
     private Integer score = 0;
+    private Date created;
+    private Date updated;
 
     @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "fk_answer")
@@ -26,4 +29,14 @@ public class Question {
     @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "fk_question_comment")
     private List<Comment> comments = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated = new Date();
+    }
 }
