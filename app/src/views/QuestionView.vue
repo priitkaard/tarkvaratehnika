@@ -4,10 +4,10 @@
     {{ $route.params.id }}
     <div class = "questionTitle">{{title}}</div>
     -->
-    <div class = "questionBox"><p id = "title">{{question.title}}</p>
+    <div class = "questionBox"><span id = "title"><span v-html="question.title"></span></span>
     <br>
     <VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:type="'question'" v-bind:canVote="true"/>
-    <p>{{question.text}}</p></div>
+    <span id = "qText" v-html="question.text"></span></div>
     <!-- Old code with best answer
     <div class = "bestAnswer" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
     <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div></div>
@@ -24,7 +24,7 @@
 
     <!-- v-bind:canVote="true" is temporary -->
     <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id" >
-    <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><p>{{answer.text}}</p>
+    <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><span v-html="answer.text"></span>
     <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
     <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
     <div class = "commentButton"><button type="button" @click = "postComment(answer)">Comment</button></div>
@@ -134,7 +134,7 @@ export default {
   font-size: 20px;
   margin-left: 2%;
 }
-.answerBox p, .questionBox p
+.answerBox >>> p, .questionBox >>> p
 {
   display: inline-flex;
   margin-right: 3%;
