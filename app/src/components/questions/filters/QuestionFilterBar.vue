@@ -1,6 +1,10 @@
 <template>
     <div class="QuestionFilterBar">
-        <div class="option" v-for="option in options" v-bind:key="option">{{ option }}</div>
+        <div class="QuestionFilterBar__option"
+             v-for="option in options"
+             v-bind:class="{'QuestionFilterBar__option_active': current === option}"
+             v-bind:key="option.key"
+             v-on:click="onClick(option)">{{ option.name }}</div>
     </div>
 </template>
 
@@ -10,13 +14,26 @@
         data() {
             return {
                 options: [
-                    'Most popular',
-                    'Most responses',
-                    'Recently answered',
-                    'Most views',
-                    'Recently viewed',
-                    'No answers'
-                ]
+                    {key: 'SCORE_DESC', name: 'Most popular'},
+                    {key: 'ANSWER_COUNT', name: 'Most responses'},
+                    {key: 'ANSWER_TIME', name: 'Recently answered'},
+                    {key: 'VIEW_COUNT', name: 'Most views'},
+                    {key: 'VIEW_TIME', name: 'Recently viewed'},
+                    {key: 'NO_ANSWER', name: 'No answers'}
+                ],
+                current: null,
+            }
+        },
+        created() {
+            this.current = this.options[0];
+        },
+        methods: {
+            onClick(option) {
+                if (this.current === option) {
+                    return;
+                }
+                this.current = option;
+                this.$emit('sort-by-changed', option.key);
             }
         }
     }
@@ -38,7 +55,7 @@
         border-top: 2px solid $color-primary;
         overflow: hidden;
 
-        .option {
+        &__option {
             display: inline-block;
             height: $questions-sort-bar-height;
             line-height: $questions-sort-bar-height;
@@ -48,7 +65,7 @@
             padding: 0 20px;
             transition: 0.4s background-color;
 
-            &:first-child {
+            &_active {
                 background-color: $color-primary;
                 color: white;
                 font-weight: bold;

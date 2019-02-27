@@ -1,6 +1,8 @@
 <template>
     <div class="QuestionFilterCategory">
-        <UISelect :options="categories" />
+        <UISelect
+                v-on:selected-changed="onChange"
+                :options="categories" />
     </div>
 </template>
 
@@ -13,6 +15,7 @@
         components: {UISelect},
         data() {
             return {
+                currentCategory: 0,
                 categories: []
             }
         },
@@ -21,6 +24,14 @@
                 {id: 0, name: 'All lectures'},
                 ... await questionService.getQuestionCategories()
             ]
+        },
+        methods: {
+            onChange(category) {
+                if (this.currentCategory !== category.id) {
+                    this.$emit('category-changed', category.id);
+                    this.currentCategory = category.id;
+                }
+            }
         }
     }
 </script>

@@ -1,13 +1,17 @@
 <template>
     <div class="QuestionListView container">
-        <QuestionFilterBar />
+        <QuestionFilterBar v-on:sort-by-changed="updateSortBy" />
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionFilterSearch :initialValue="filters.query" />
+                <QuestionFilterSearch
+                        v-on:execute-search="updateQuery"
+                        :initialValue="filters.query" />
             </div>
             <div class="col-md-4">
-                <QuestionFilterCategory/>
+                <QuestionFilterCategory
+                        v-on:category-changed="updateCategory"
+                        :initialValue="filters.categoryId" />
             </div>
         </div>
 
@@ -42,8 +46,22 @@
         data() {
             return {
                 filters: {
-                    query: this.query
+                    query: this.query,
+                    categoryId: 3,
+                    sortBy: 'score' // score DESC, count(answers) DESC, max(answer_created) DESC, views DESC, max(view_created) DESC,
+                    // where count(answers) == 0 and created DESC
                 }
+            }
+        },
+        methods: {
+            updateSortBy(sortBy) {
+                this.filters.sortBy = sortBy;
+            },
+            updateQuery(query) {
+                this.filters.query = query;
+            },
+            updateCategory(categoryId) {
+                this.filters.categoryId = categoryId;
             }
         }
     }
