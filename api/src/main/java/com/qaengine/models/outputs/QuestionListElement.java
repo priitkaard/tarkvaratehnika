@@ -14,4 +14,7 @@ public class QuestionListElement {
     private int score;
     private Date created;
     private long comments;
+    private Date lastComment;
+    private long answers;
+    private Date lastAnswer;
 }

@@ -14,12 +14,11 @@
         data() {
             return {
                 options: [
-                    {key: 'SCORE_DESC', name: 'Most popular'},
-                    {key: 'ANSWER_COUNT', name: 'Most responses'},
-                    {key: 'ANSWER_TIME', name: 'Recently answered'},
-                    {key: 'VIEW_COUNT', name: 'Most views'},
-                    {key: 'VIEW_TIME', name: 'Recently viewed'},
-                    {key: 'NO_ANSWER', name: 'No answers'}
+                    {key: 'score', name: 'Most popular'},
+                    {key: 'answers', name: 'Most responses'},
+                    {key: 'last_answer', name: 'Recently answered'},
+                    {key: 'comments', name: 'Most comments'},
+                    {key: 'last_comment', name: 'Recently commented'}
                 ],
                 current: null,
             }

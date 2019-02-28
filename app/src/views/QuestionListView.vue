@@ -1,6 +1,6 @@
 <template>
     <div class="QuestionListView container">
-        <QuestionFilterBar v-on:sort-by-changed="updateSortBy" />
+        <QuestionFilterBar v-on:sort-by-changed="updateSort" />
 
         <div class="row">
             <div class="col-md-8">
@@ -8,16 +8,16 @@
                         v-on:execute-search="updateQuery"
                         :initialValue="filters.query" />
             </div>
+
             <div class="col-md-4">
                 <QuestionFilterCategory
-                        v-on:category-changed="updateCategory"
-                        :initialValue="filters.categoryId" />
+                        v-on:category-changed="updateCategory" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionsList :filters="filters" />
+                <QuestionsList :filters.sync="filters" />
             </div>
             <div class="col-md-4">
                 <QuestionStatistics />
@@ -46,22 +46,31 @@
         data() {
             return {
                 filters: {
-                    query: this.query,
-                    categoryId: 3,
-                    sortBy: 'score' // score DESC, count(answers) DESC, max(answer_created) DESC, views DESC, max(view_created) DESC,
-                    // where count(answers) == 0 and created DESC
+                    query: this.query || '',
+                    categoryId: 0,
+                    sort: 'score',
+                    direction: 'DESC'
                 }
             }
         },
         methods: {
-            updateSortBy(sortBy) {
-                this.filters.sortBy = sortBy;
+            updateSort(sort) {
+                this.filters = {
+                    ...this.filters,
+                    sort
+                }
             },
             updateQuery(query) {
-                this.filters.query = query;
+                this.filters = {
+                    ...this.filters,
+                    query
+                }
             },
             updateCategory(categoryId) {
-                this.filters.categoryId = categoryId;
+                this.filters = {
+                    ...this.filters,
+                    categoryId
+                }
             }
         }
     }

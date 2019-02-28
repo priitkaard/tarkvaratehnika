@@ -1,35 +1,29 @@
 <template>
   <div class="container">
-    <!--
-    {{ $route.params.id }}
-    <div class = "questionTitle">{{title}}</div>
-    -->
-    <div class = "questionBox"><span id = "title"><span v-html="question.title"></span></span>
-    <br>
-    <VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:type="'question'" v-bind:canVote="true"/>
-    <span id = "qText" v-html="question.text"></span></div>
-    <!-- Old code with best answer
-    <div class = "bestAnswer" v-if="answers.length>0"><h2>Most highly rated answer:</h2><VoteChoice v-bind:id="answers[0].id" v-bind:type="post"/>{{answers[0].text}}
-    <div class = "comment" v-for="comment in answers[0].comments"><VoteChoice v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div></div>
-    <div class = "answerBox" v-for="answer in answers" v-if="answer != answers[0]"><VoteChoice v-bind:id="answer.id" v-bind:type="post"/><p>{{answer.text}}</p>
-    <div class = "comment" v-for="comment in answer.comments">
-    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>-->
-    <div class = "sorting">
-        Sort by:
-        <select>
-            <option selected>Time</option>
-            <option>Score</option>
-        </select>
-    </div>
 
-    <!-- v-bind:canVote="true" is temporary -->
-    <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id" >
-    <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><span v-html="answer.text"></span>
-    <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
-    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
-    <div class = "commentButton"><button type="button" @click = "postComment(answer)">Comment</button></div>
+    <div class="questionBox">
+      <span id="title" style="color: black">{{question.title}}</span>
+      <br>
+      <VoteChoice  v-bind:id="question.id" v-bind:score="question.score" v-bind:type="'question'" v-bind:canVote="true"/>
+      <span id="qText" v-html="question.text"></span></div>
+      <div class = "sorting">
+          Sort by:
+          <select>
+              <option selected>Time</option>
+              <option>Score</option>
+          </select>
+      </div>
+
+      <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id" >
+      <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/>
+      <span v-html="answer.text"></span>
+      <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
+      <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
+    <div class = "commentButton">
+      <button type="button" @click = "postComment(answer)">Comment</button>
     </div>
-    <div class = "post_section">
+    </div>
+    <div class="post_section">
     <form @submit.prevent="addAnswer" >
       <textarea v-model="text" name = "text" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>
       <br>
@@ -46,8 +40,8 @@ export default {
   name: 'QuestionView',
   methods: {
     getData: function () {
-      return apiService.get('questions/'+this.$route.params.id)
-      },
+      return apiService.get('questions/' + this.$route.params.id)
+    },
     addAnswer() {
       apiService.post('questions/'+this.$route.params.id+'/answers', {text: this.text}).then(res => this.answers = [...this.answers, res])
       this.text = ''
@@ -60,7 +54,7 @@ export default {
         }
   },
   async created() {
-    this.question = await this.getData()
+    this.question = await this.getData();
     this.answers = this.question.answers
   },  
   data () {

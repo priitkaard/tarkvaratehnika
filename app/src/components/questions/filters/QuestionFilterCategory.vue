@@ -1,14 +1,14 @@
 <template>
     <div class="QuestionFilterCategory">
         <UISelect
-                v-on:selected-changed="onChange"
+                v-on:select-changed="onChange"
                 :options="categories" />
     </div>
 </template>
 
 <script>
     import UISelect from "../../UISelect";
-    import questionService from '../../../services/QuestionsService';
+    import categoryService from '../../../services/CategoryService';
 
     export default {
         name: "QuestionFilterCategory",
@@ -22,8 +22,8 @@
         async created() {
             this.categories = [
                 {id: 0, name: 'All lectures'},
-                ... await questionService.getQuestionCategories()
-            ]
+                ... await categoryService.listCategories()
+            ];
         },
         methods: {
             onChange(category) {

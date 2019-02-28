@@ -2,7 +2,7 @@
     <div class="QuestionsListElementDetails">
         <div class="detail">
             <folder-icon :size="20"/>
-            Unknown
+            {{ question.category.name }}
         </div>
         <div class="detail">
             <clock-outline-icon :size="20"/>

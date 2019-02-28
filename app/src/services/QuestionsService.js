@@ -12,7 +12,8 @@ export default {
     postQuestion(data) {
         return apiService.post('questions', {
             title: data.title,
-            text: data.description
+            text: data.description,
+            categoryId: data.categoryId
         });
     },
 

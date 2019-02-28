@@ -15,12 +15,32 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(
-        "SELECT new com.qaengine.models.outputs.QuestionListElement(q.id, q.title, q.text, q.score, q.created, COUNT(c)) " +
-        "FROM Question q LEFT JOIN q.comments c " +
-        "GROUP BY q.id, q.title, q.text, q.score, q.created " +
-        "ORDER BY q.created DESC"
+            "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
+            "       q.id, q.title, q.text, q.score, q.created, COUNT(c), MAX(c.created), " +
+            "       COUNT(a), MAX(a.created)" +
+            ")" +
+            "FROM Question q " +
+            "LEFT JOIN q.comments c " +
+            "LEFT JOIN q.answers a " +
+            "WHERE lower(q.title) LIKE lower(concat('%', :query, '%')) " +
+            "GROUP BY q.id, q.title, q.text, q.score, q.created"
     )
-    List<QuestionListElement> listQuestions(Pageable pageable);
+    List<QuestionListElement> listQuestions(String query, Pageable pageable);
+
+    @Query(
+            "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
+            "       q.id, q.title, q.text, q.score, q.created, COUNT(c), MAX(c.created), " +
+            "       COUNT(a), MAX(a.created)" +
+            ")" +
+            "FROM Question q " +
+            "LEFT JOIN q.comments c " +
+            "LEFT JOIN q.answers a " +
+            "WHERE lower(q.title) LIKE lower(concat('%', :query, '%')) " +
+            "  AND q.category.id = :categoryId " +
+            "GROUP BY q.id, q.title, q.text, q.score, q.created"
+    )
+    List<QuestionListElement> listQuestionsByCategory(Long categoryId, String query, Pageable pageable);
+
 
     @Modifying
     @Transactional

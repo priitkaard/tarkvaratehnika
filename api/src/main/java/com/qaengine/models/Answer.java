@@ -1,9 +1,11 @@
 package com.qaengine.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -17,6 +19,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonIgnore
     private Question question;
 
     @Column(nullable = false)
@@ -28,10 +31,27 @@ public class Answer {
     @Column(nullable = false)
     private boolean accepted = false;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updated;
+
     @OneToMany(
             mappedBy = "answer",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<Comment> comments = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated = new Date();
+    }
 }

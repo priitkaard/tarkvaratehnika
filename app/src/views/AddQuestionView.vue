@@ -44,6 +44,7 @@
     import UISelect from '../components/UISelect';
     import UIButton from '../components/UIButton';
     import questionService from '../services/QuestionsService';
+    import categoryService from '../services/CategoryService';
 
     export default {
         name: "AddQuestionView",
@@ -53,7 +54,8 @@
         },
         async created() {
             this.question.title = this.$route.params.userInput;
-            this.categories = await questionService.getQuestionCategories();
+            this.categories = await categoryService.listCategories();
+            this.question.categoryId = this.categories[0].id;
         },
         data() {
             return {
@@ -73,9 +75,10 @@
             }
         },
         methods: {
-            onCategoryChange(value) {
-                this.question.categoryId = value;
+            onCategoryChange(category) {
+                this.question.categoryId = category.id;
             },
+
             async postQuestion() {
                 const response = await questionService.postQuestion({
                     title: this.question.title,

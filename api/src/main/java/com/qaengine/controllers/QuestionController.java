@@ -3,9 +3,12 @@ package com.qaengine.controllers;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
+import com.qaengine.models.Category;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionListElement;
+import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,26 +28,30 @@ import java.util.List;
 public class QuestionController {
     private QuestionRepository questionRepository;
     private QuestionService questionService;
+    private CategoryService categoryService;
 
     @Autowired
-    public QuestionController(QuestionRepository questionRepository, QuestionService questionService) {
+    public QuestionController(QuestionRepository questionRepository, QuestionService questionService, CategoryService categoryService) {
         this.questionRepository = questionRepository;
         this.questionService = questionService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/questions")
     @CrossOrigin()
-    protected List<QuestionListElement> listQuestions(
-            @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "limit") Integer limit) {
-        return questionService.listQuestions(page, limit);
+    protected List<QuestionListElement> listQuestions(QuestionListInput input) {
+        return questionService.listQuestions(input);
     }
 
     @PostMapping("/questions")
     @CrossOrigin()
     protected Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
-        Question question = new Question();
-        HelperFunctions.copyProperties(question, questionInput);
+        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
+        Question question = Question.builder()
+                .title(questionInput.getTitle())
+                .text(questionInput.getText())
+                .category(category)
+                .build();
         return questionRepository.save(question);
     }
 

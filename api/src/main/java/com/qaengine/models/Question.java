@@ -1,6 +1,8 @@
 package com.qaengine.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,13 +27,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Question {
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id") //  nullable = false
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(nullable = false)
@@ -39,11 +44,14 @@ public class Question {
     private String text;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer score = 0;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date created;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
     @OneToMany(
@@ -51,6 +59,7 @@ public class Question {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(
@@ -58,6 +67,7 @@ public class Question {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @PrePersist

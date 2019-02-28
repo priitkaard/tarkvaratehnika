@@ -18,7 +18,7 @@
             <div class="HomeView__or">or</div>
 
             <button v-on:click="$router.push({name: 'AddQuestionView'})"
-                    class="HomeView__new_question_button">
+                    class="form-control HomeView__new_question_button">
                 Create new question
             </button>
 
@@ -106,7 +106,7 @@
         }
 
         &__new_question_button {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.8);
             color: black;
             width: auto;
             padding: 0 20px;

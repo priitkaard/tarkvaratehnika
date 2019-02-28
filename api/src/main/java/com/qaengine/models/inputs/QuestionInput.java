@@ -13,4 +13,6 @@ public class QuestionInput {
     private String text;
     @NotNull
     private String title;
+    @NotNull
+    private Long categoryId;
 }

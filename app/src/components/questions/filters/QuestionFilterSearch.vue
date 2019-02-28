@@ -46,6 +46,7 @@
         methods: {
             executeSearch() {
                 this.$emit('execute-search', this.query);
+                this.suggestions = [];
             },
             selectSuggestion(suggestion) {
                 this.$router.push({

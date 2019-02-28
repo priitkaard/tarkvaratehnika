@@ -59,6 +59,7 @@
         },
         watch: {
             async filters() {
+                console.log('filters changed!');
                 this.updateQuestions();
             }
         },
