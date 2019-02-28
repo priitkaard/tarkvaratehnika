@@ -1,34 +1,45 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.CommentRepository;
-import com.qaengine.database.QuestionRepository;
-import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.CommentInput;
 import com.qaengine.services.AnswerService;
+import com.qaengine.services.CommentService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 public class CommentController {
+    private CommentRepository commentRepository;
+    private QuestionService questionService;
+    private AnswerService answerService;
+    private CommentService commentService;
+
     @Autowired
-    QuestionRepository questionRepository;
-    @Autowired
-    AnswerRepository answerRepository;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    QuestionService questionService;
-    @Autowired
-    AnswerService answerService;
+    public CommentController(
+            CommentRepository commentRepository,
+            QuestionService questionService,
+            AnswerService answerService,
+            CommentService commentService
+    ) {
+        this.commentRepository = commentRepository;
+        this.questionService = questionService;
+        this.answerService = answerService;
+        this.commentService = commentService;
+    }
 
     @CrossOrigin()
     @PostMapping("questions/{questionId}/comments")
@@ -38,13 +49,10 @@ public class CommentController {
     ) {
         Question question = questionService.getQuestion(questionId);
         Comment comment = new Comment();
-        comment.setQuestionId(questionId);
+        comment.setQuestion(question);
 
         HelperFunctions.copyProperties(comment, commentInput);
-        comment = commentRepository.save(comment);
-        question.getComments().add(comment);
-        questionRepository.save(question);
-        return comment;
+        return commentRepository.save(comment);
     }
 
     @CrossOrigin()
@@ -55,23 +63,16 @@ public class CommentController {
     ) {
         Answer answer = answerService.getAnswer(answerId);
         Comment comment = new Comment();
-        comment.setAnswerid(answerId);
+        comment.setAnswer(answer);
+
         HelperFunctions.copyProperties(comment, commentInput);
-        comment = commentRepository.save(comment);
-        answer.getComments().add(comment);
-        answerRepository.save(answer);
-        return comment;
+        return commentRepository.save(comment);
     }
 
     @CrossOrigin()
     @GetMapping("comments/{id}")
     protected Comment getComment(@PathVariable Long id) {
-        Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isPresent()) {
-            return comment.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return commentService.getCommentById(id);
     }
 
     @CrossOrigin()
@@ -80,7 +81,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody @Valid CommentInput commentInput
     ) {
-        Comment comment = getComment(commentId);
+        Comment comment = commentService.getCommentById(commentId);
         HelperFunctions.copyProperties(comment, commentInput);
         return commentRepository.save(comment);
     }
@@ -90,16 +91,7 @@ public class CommentController {
     protected Long deleteComment(
             @PathVariable Long commentId
     ) {
-        Comment comment = getComment(commentId);
-        if (comment.getAnswerid() != null) {
-            Answer answer = answerService.getAnswer(comment.getAnswerid());
-            answer.getComments().remove(comment);
-            answerRepository.save(answer);
-        } else if (comment.getQuestionId() != null) {
-            Question question = questionService.getQuestion(comment.getQuestionId());
-            question.getComments().remove(comment);
-            questionRepository.save(question);
-        }
+        commentService.deleteComment(commentId);
         return commentId;
     }
 
@@ -109,7 +101,7 @@ public class CommentController {
     protected Comment upvoteComment(
             @PathVariable Long id
     ) {
-        Comment comment = getComment(id);
+        Comment comment = commentService.getCommentById(id);
         comment.setScore(comment.getScore() + 1);
         return commentRepository.save(comment);
     }
@@ -119,7 +111,7 @@ public class CommentController {
     protected Comment downvoteComment(
             @PathVariable Long id
     ) {
-        Comment comment = getComment(id);
+        Comment comment = commentService.getCommentById(id);
         comment.setScore(comment.getScore() - 1);
         return commentRepository.save(comment);
     }

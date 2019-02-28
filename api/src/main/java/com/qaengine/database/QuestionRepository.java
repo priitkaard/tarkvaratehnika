@@ -24,8 +24,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Answer a set a.accepted = false where a.questionId=:questionId")
-    void revertAnswerAccepted(@Param("questionId") Long questionId);
+    @Query("update Answer a set a.accepted = false where a.question = :question")
+    void revertAnswerAccepted(Question question);
 
     @Query("SELECT q FROM Question q WHERE lower(q.title) LIKE lower(concat('%', ?1,'%'))")
     List<Question> getSimilarQuestions(String input, Pageable pageable);

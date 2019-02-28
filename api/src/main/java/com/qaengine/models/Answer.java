@@ -15,16 +15,23 @@ public class Answer {
     @GeneratedValue
     private Long id;
 
-    private Long questionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
+
+    @Column(nullable = false)
     private String text;
+
+    @Column(nullable = false)
     private Integer score = 0;
+
+    @Column(nullable = false)
     private boolean accepted = false;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JoinColumn(name = "fk_answer_comment")
+    @OneToMany(
+            mappedBy = "answer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Comment> comments = new ArrayList<>();
-
-    public Answer(Long questionId) {
-        this.questionId = questionId;
-    }
 }

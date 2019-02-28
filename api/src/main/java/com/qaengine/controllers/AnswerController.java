@@ -9,20 +9,36 @@ import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 public class AnswerController {
+    private QuestionRepository questionRepository;
+    private AnswerRepository answerRepository;
+    private AnswerService answerService;
+    private QuestionService questionService;
+
     @Autowired
-    QuestionRepository questionRepository;
-    @Autowired
-    AnswerRepository answerRepository;
-    @Autowired
-    AnswerService answerService;
-    @Autowired
-    QuestionService questionService;
+    public AnswerController(
+            QuestionRepository questionRepository,
+            AnswerRepository answerRepository,
+            AnswerService answerService,
+            QuestionService questionService
+    ) {
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
+        this.answerService = answerService;
+        this.questionService = questionService;
+    }
 
     @CrossOrigin()
     @PostMapping("questions/{questionId}/answers")
@@ -31,12 +47,12 @@ public class AnswerController {
             @RequestBody @Valid AnswerInput answerinput
     ) {
         Question question = questionService.getQuestion(questionId);
-        Answer answer = new Answer(questionId);
+
+        Answer answer = new Answer();
         HelperFunctions.copyProperties(answer, answerinput);
-        answer = answerRepository.save(answer);
-        question.getAnswers().add(answer);
-        questionRepository.save(question);
-        return answer;
+        answer.setQuestion(question);
+
+        return answerRepository.save(answer);
     }
 
 
@@ -49,10 +65,8 @@ public class AnswerController {
     @CrossOrigin()
     @DeleteMapping("answers/{id}")
     protected Long deleteAnswer(@PathVariable Long id) {
-        Answer answer = getAnswer(id);
-        Question question = questionService.getQuestion(answer.getQuestionId());
-        question.getAnswers().remove(answer);
-        questionRepository.save(question);
+        Answer answer = answerService.getAnswer(id);
+        answerRepository.delete(answer);
         return id;
     }
 
@@ -62,7 +76,7 @@ public class AnswerController {
             @PathVariable Long id,
             @RequestBody @Valid AnswerInput answerInput
     ) {
-        Answer answer = getAnswer(id);
+        Answer answer = answerService.getAnswer(id);
         HelperFunctions.copyProperties(answer, answerInput);
         return answerRepository.save(answer);
     }
@@ -94,8 +108,10 @@ public class AnswerController {
             @PathVariable Long answerId
     ) {
         Answer answer = answerService.getAnswer(answerId);
-        Question question = questionService.getQuestion(answer.getQuestionId());
-        questionRepository.revertAnswerAccepted(question.getId());
+
+        Question question = answer.getQuestion();
+        questionRepository.revertAnswerAccepted(question);
+
         answer.setAccepted(true);
         return answerRepository.save(answer);
     }
@@ -106,7 +122,7 @@ public class AnswerController {
             @PathVariable Long questionId
     ) {
         Question question = questionService.getQuestion(questionId);
-        questionRepository.revertAnswerAccepted(question.getId());
+        questionRepository.revertAnswerAccepted(question);
         return question;
     }
 

@@ -1,31 +1,36 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
 import com.qaengine.models.outputs.QuestionListElement;
-import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 public class QuestionController {
+    private QuestionRepository questionRepository;
+    private QuestionService questionService;
+
     @Autowired
-    QuestionRepository questionRepository;
-    @Autowired
-    AnswerRepository answerRepository;
-    @Autowired
-    AnswerService answerService;
-    @Autowired
-    QuestionService questionService;
+    public QuestionController(QuestionRepository questionRepository, QuestionService questionService) {
+        this.questionRepository = questionRepository;
+        this.questionService = questionService;
+    }
 
     @GetMapping("/questions")
     @CrossOrigin()
@@ -66,7 +71,7 @@ public class QuestionController {
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
     ) {
-        Question question = getQuestion(id);
+        Question question = questionService.getQuestion(id);
         HelperFunctions.copyProperties(question, questionInput);
         return questionRepository.save(question);
     }
@@ -76,7 +81,7 @@ public class QuestionController {
     protected Question upvoteQuestion(
             @PathVariable Long id
     ) {
-        Question question = getQuestion(id);
+        Question question = questionService.getQuestion(id);
         question.setScore(question.getScore() + 1);
         return questionRepository.save(question);
     }
@@ -86,7 +91,7 @@ public class QuestionController {
     protected Question downvoteQuestion(
             @PathVariable Long id
     ) {
-        Question question = getQuestion(id);
+        Question question = questionService.getQuestion(id);
         question.setScore(question.getScore() - 1);
         return questionRepository.save(question);
     }
