@@ -29,7 +29,7 @@ public class Question {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id") //  nullable = false
     private Category category;
 
     @Column(nullable = false)
