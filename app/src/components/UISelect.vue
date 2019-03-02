@@ -26,16 +26,15 @@
     export default {
         name: "UISelect",
         components: {ChevronUpIcon, ChevronDownIcon},
-        props: ['options'],
+        props: ['options', 'value'],
         data() {
             return {
                 selectClosed: true,
-                selected: this.options[0]
             }
         },
-        watch: {
-            options() {
-                this.selected = this.options[0]
+        computed: {
+            selected() {
+                return this.options.filter(option => option.id === this.value)[0]
             }
         },
         methods: {
@@ -44,7 +43,6 @@
             },
             onChange(option) {
                 this.$emit('select-changed', option);
-                this.selected = option;
                 this.selectClosed = true;
             },
             onClickEvent(event) {

@@ -1,5 +1,6 @@
 package com.qaengine.models.outputs;
 
+import com.qaengine.models.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ public class QuestionListElement {
     private long id;
     private String title;
     private String text;
+    private Category category;
     private int score;
     private Date created;
     private long comments;

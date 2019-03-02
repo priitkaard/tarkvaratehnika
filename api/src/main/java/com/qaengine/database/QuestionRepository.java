@@ -16,7 +16,7 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.created, COUNT(c), MAX(c.created), " +
+            "       q.id, q.title, q.text, q.category, q.score, q.created, COUNT(c), MAX(c.created), " +
             "       COUNT(a), MAX(a.created)" +
             ")" +
             "FROM Question q " +
@@ -29,7 +29,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.created, COUNT(c), MAX(c.created), " +
+            "       q.id, q.title, q.text, q.category, q.score, q.created, COUNT(c), MAX(c.created), " +
             "       COUNT(a), MAX(a.created)" +
             ")" +
             "FROM Question q " +

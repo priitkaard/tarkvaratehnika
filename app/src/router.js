@@ -4,6 +4,7 @@ import HomeView from './views/HomeView.vue';
 import QuestionView from './views/QuestionView.vue';
 import QuestionListView from './views/QuestionListView.vue';
 import AddQuestionView from './views/AddQuestionView.vue';
+import TestView from './views/TestView.vue';
 
 Vue.use(Router);
 
@@ -32,6 +33,11 @@ export default new Router({
             name: 'QuestionView',
             path: '/question/:id',
             component: QuestionView
+        },
+        {
+            name: 'TestView',
+            path: '/test',
+            component: TestView
         }
     ]
 });

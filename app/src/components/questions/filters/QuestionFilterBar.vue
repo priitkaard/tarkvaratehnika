@@ -2,13 +2,15 @@
     <div class="QuestionFilterBar">
         <div class="QuestionFilterBar__option"
              v-for="option in options"
-             v-bind:class="{'QuestionFilterBar__option_active': current === option}"
+             v-bind:class="{'QuestionFilterBar__option_active': filters.sort === option.key}"
              v-bind:key="option.key"
-             v-on:click="onClick(option)">{{ option.name }}</div>
+             v-on:click="onClick(option.key)">{{ option.name }}</div>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from 'vuex';
+
     export default {
         name: "QuestionFilterBar",
         data() {
@@ -19,20 +21,17 @@
                     {key: 'last_answer', name: 'Recently answered'},
                     {key: 'comments', name: 'Most comments'},
                     {key: 'last_comment', name: 'Recently commented'}
-                ],
-                current: null,
+                ]
             }
         },
-        created() {
-            this.current = this.options[0];
+        computed: {
+            ...mapGetters('question', ['filters'])
         },
         methods: {
-            onClick(option) {
-                if (this.current === option) {
-                    return;
+            onClick(sort) {
+                if (this.filters.sort !== sort) {
+                    this.$store.dispatch('question/updateSort', sort);
                 }
-                this.current = option;
-                this.$emit('sort-by-changed', option.key);
             }
         }
     }

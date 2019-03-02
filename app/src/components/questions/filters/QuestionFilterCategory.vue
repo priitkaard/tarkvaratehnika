@@ -2,20 +2,24 @@
     <div class="QuestionFilterCategory">
         <UISelect
                 v-on:select-changed="onChange"
-                :options="categories" />
+                :options="categories"
+                :value="filters.categoryId" />
     </div>
 </template>
 
 <script>
     import UISelect from "../../UISelect";
     import categoryService from '../../../services/CategoryService';
+    import {mapGetters, mapActions} from 'vuex';
 
     export default {
         name: "QuestionFilterCategory",
         components: {UISelect},
+        computed: {
+            ...mapGetters('question', ['filters'])
+        },
         data() {
             return {
-                currentCategory: 0,
                 categories: []
             }
         },
@@ -26,11 +30,9 @@
             ];
         },
         methods: {
+            ...mapActions('question', ['updateCategoryId']),
             onChange(category) {
-                if (this.currentCategory !== category.id) {
-                    this.$emit('category-changed', category.id);
-                    this.currentCategory = category.id;
-                }
+                this.updateCategoryId(category.id);
             }
         }
     }

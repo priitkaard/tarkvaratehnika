@@ -1,17 +1,14 @@
 <template>
     <div class="QuestionListView container">
-        <QuestionFilterBar v-on:sort-by-changed="updateSort" />
+        <QuestionFilterBar />
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionFilterSearch
-                        v-on:execute-search="updateQuery"
-                        :initialValue="filters.query" />
+                <QuestionFilterSearch />
             </div>
 
             <div class="col-md-4">
-                <QuestionFilterCategory
-                        v-on:category-changed="updateCategory" />
+                <QuestionFilterCategory />
             </div>
         </div>
 

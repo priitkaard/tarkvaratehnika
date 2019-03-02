@@ -2,13 +2,16 @@
     <div class="QuestionFilterSearch">
         <div class="QuestionFilterSearch__search"
              v-bind:class="{'QuestionFilterSearch__search_rounded': rounded}">
-            <form v-on:submit.prevent="executeSearch">
+
+            <form v-on:submit.prevent="search">
                 <input class="QuestionFilterSearch__search_input"
                        type="text"
-                       v-model="query"
-                       v-on:input="updateSuggestions"
+                       :value="query"
+                       v-on:input="onQueryChanged"
+                       v-on:blur="clearSuggestions"
                        placeholder="Search..." />
-                <magnify-icon class="QuestionFilterSearch__search_icon" v-on:click="executeSearch()" />
+
+                <magnify-icon class="QuestionFilterSearch__search_icon" v-on:click="search" />
             </form>
         </div>
 
@@ -32,21 +35,31 @@
 <script>
     import MagnifyIcon from "vue-material-design-icons/Magnify";
     import questionService from '../../../services/QuestionsService';
+    import {mapActions} from 'vuex';
 
     export default {
         name: "QuestionFilterSearch",
-        props: ['rounded', 'initialValue'],
+        props: ['rounded'],
         components: {MagnifyIcon},
         data() {
             return {
-                query: this.initialValue || '',
                 suggestions: []
             }
         },
+        computed: {
+            query() {
+                return this.$store.state.question.filters.query;
+            }
+        },
         methods: {
-            executeSearch() {
-                this.$emit('execute-search', this.query);
+            ...mapActions('question', ['updateQuery', 'updateQuestionList']),
+            clearSuggestions() {
                 this.suggestions = [];
+            },
+            search() {
+                this.$emit('search');
+                this.updateQuestionList();
+                this.clearSuggestions();
             },
             selectSuggestion(suggestion) {
                 this.$router.push({
@@ -56,11 +69,12 @@
                     }
                 })
             },
-            async updateSuggestions() {
-                this.$emit('input', this.query);
+            async onQueryChanged(e) {
+                const query = e.target.value;
+                this.updateQuery(query);
 
-                if (this.query) {
-                    this.suggestions = await questionService.autoCompleteSuggestions(this.query);
+                if (query) {
+                    this.suggestions = await questionService.autoCompleteSuggestions(query);
                 } else {
                     this.suggestions = [];
                 }
