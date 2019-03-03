@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -14,33 +13,30 @@ import java.util.List;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.category, q.score, q.created, COUNT(c), MAX(c.created), " +
-            "       COUNT(a), MAX(a.created)" +
-            ")" +
+            "       q.id, q.title, q.text, q.score, q.created, q.category, " +
+            "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
-            "LEFT JOIN q.comments c " +
-            "LEFT JOIN q.answers a " +
-            "WHERE lower(q.title) LIKE lower(concat('%', :query, '%')) " +
-            "GROUP BY q.id, q.title, q.text, q.score, q.created"
+            "LEFT JOIN Comment c ON c.question = q " +
+            "LEFT JOIN Answer a ON a.question = q " +
+            "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') " +
+            "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
     List<QuestionListElement> listQuestions(String query, Pageable pageable);
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.category, q.score, q.created, COUNT(c), MAX(c.created), " +
-            "       COUNT(a), MAX(a.created)" +
-            ")" +
+            "       q.id, q.title, q.text, q.score, q.created, q.category, " +
+            "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
-            "LEFT JOIN q.comments c " +
-            "LEFT JOIN q.answers a " +
-            "WHERE lower(q.title) LIKE lower(concat('%', :query, '%')) " +
-            "  AND q.category.id = :categoryId " +
-            "GROUP BY q.id, q.title, q.text, q.score, q.created"
+            "LEFT JOIN Comment c ON c.question = q " +
+            "LEFT JOIN Answer a ON a.question = q " +
+            "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') AND q.category.id = :categoryId " +
+            "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
     List<QuestionListElement> listQuestionsByCategory(Long categoryId, String query, Pageable pageable);
-
 
     @Modifying
     @Transactional

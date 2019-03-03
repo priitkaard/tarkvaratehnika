@@ -12,9 +12,9 @@ public class QuestionListElement {
     private long id;
     private String title;
     private String text;
-    private Category category;
     private int score;
     private Date created;
+    private Category category;
     private long comments;
     private Date lastComment;
     private long answers;

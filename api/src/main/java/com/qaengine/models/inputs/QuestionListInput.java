@@ -19,6 +19,5 @@ public class QuestionListInput {
     private String direction;
     @NotNull
     private String query;
-    @NotNull
     private Long categoryId;
 }

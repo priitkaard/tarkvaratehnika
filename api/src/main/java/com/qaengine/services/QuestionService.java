@@ -1,90 +1,68 @@
 package com.qaengine.services;
 
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
-import com.qaengine.models.Category;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionListElement;
-import org.jsoup.Jsoup;
-import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
     private QuestionRepository questionRepository;
-    private CategoryService categoryService;
-
-    private static final Map<String, String> SORT_OPTIONS = new HashMap<String, String>() {
-        {
-            put("SCORE_DESC", "score,desc");
-            put("ANSWER_COUNT", "answer_count DESC");
-            put("ANSWER_TIME", "");
-        }
-    };
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository, CategoryService categoryService) {
+    public QuestionService(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
-        this.categoryService = categoryService;
-    }
-
-    private String mapSortKeyword(String sortKeyword) {
-        String sort = sortKeyword;
-        switch (sortKeyword) {
-            case "comments":
-                sort = "COUNT(c)";
-                break;
-            case "answers":
-                sort = "COUNT(a)";
-                break;
-            case "last_comment":
-                sort = "MAX(c.created)";
-                break;
-            case "last_answer":
-                sort = "MAX(a.created)";
-                break;
-        }
-        return sort;
     }
 
     public List<QuestionListElement> listQuestions(QuestionListInput input) {
-        Sort.Direction direction = input.getDirection() != null && input.getDirection().toUpperCase().equals("DESC")
-                ? Sort.Direction.DESC
-                : Sort.Direction.ASC;
+        Map<String, Sort.Direction> sortDirections = new HashMap<String, Sort.Direction>() {{
+            put("DESC", Sort.Direction.DESC);
+            put("ASC", Sort.Direction.ASC);
+        }};
 
-        Sort sort;
-        String sortInput = this.mapSortKeyword(input.getSort());
-        if (sortInput.equals(input.getSort())) {
-            sort = Sort.by(direction, sortInput);
-        } else {
-            sort = JpaSort.unsafe(direction, sortInput);
+        if (!sortDirections.keySet().contains(input.getDirection().toUpperCase())) {
+            throw new BadRequestException("Invalid sort direction!");
         }
 
-        PageRequest pageRequest = PageRequest.of(input.getPage(), input.getLimit(), sort);
-        List<QuestionListElement> questions;
-        if (input.getCategoryId() != 0) {
-            questions = questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
-        } else {
-            questions = questionRepository.listQuestions(input.getQuery(), pageRequest);
+        Map<String, String> sortOptions = new HashMap<String, String>() {{
+            put("score", "score");
+            put("created", "created");
+            put("answers", "COUNT(a)");
+            put("last_answer", "COALESCE(MAX(a.created), q.created)");
+            put("comments", "COUNT(c)");
+            put("last_comment", "COALESCE(MAX(c.created), q.created)");
+        }};
+
+        if (!sortOptions.keySet().contains(input.getSort())) {
+            throw new BadRequestException("Invalid sort argument!");
         }
 
-        return questions.stream()
-                .peek(question -> question.setText(
-                        Parser.unescapeEntities(Jsoup.parse(question.getText()).text(), false))
-                )
-                .collect(Collectors.toList());
+        Sort sort = JpaSort.unsafe(
+                sortDirections.get(input.getDirection().toUpperCase()),
+                sortOptions.get(input.getSort())
+        );
+        Pageable pageRequest = PageRequest.of(input.getPage(), input.getLimit(), sort);
+
+        if (input.getCategoryId() != null) {
+            return questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
+        }
+        return questionRepository.listQuestions(input.getQuery(), pageRequest);
     }
 
     public Question getQuestion(@PathVariable Long id) throws ResourceNotFoundException {
