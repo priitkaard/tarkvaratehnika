@@ -12,19 +12,18 @@ const state = {
     questions: {
         questions: [],
         totalPages: 0
-    }
+    },
+    categories: null
 };
 
 const getters = {
-    filters: (state) => {
-        return state.filters;
-    },
-    questions: (state) => {
-        return state.questions;
-    }
+    filters: (state) => state.filters,
+    questions: (state) => state.questions,
+    categories: (state) => state.categories
 };
 
 const actions = {
+    updateQuery({ commit }, query) { commit('updateQuery', query) },
     updatePage(context, page) {
         context.commit('updatePage', page);
         context.dispatch('updateQuestionList');
@@ -32,9 +31,6 @@ const actions = {
     updateSort(context, sort) {
         context.commit('updateSort', sort);
         context.dispatch('updateQuestionList');
-    },
-    updateQuery(context, query) {
-        context.commit('updateQuery', query);
     },
     updateCategoryId(context, categoryId) {
         context.commit('updateCategoryId', categoryId);

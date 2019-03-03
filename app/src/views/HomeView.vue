@@ -99,7 +99,7 @@
             transition: all 0.4s;
 
             &:hover {
-                background-color: rgba(255, 255, 255, 0.6);
+                background-color: white;
                 color: #424242;
                 border: none;
                 cursor: pointer;
