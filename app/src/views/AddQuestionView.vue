@@ -77,7 +77,6 @@
         },
         methods: {
             onCategoryChange(category) {
-                console.log('category changed to ' + category.id);
                 this.question.categoryId = category.id;
             },
 
