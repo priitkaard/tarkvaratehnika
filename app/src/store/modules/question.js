@@ -31,12 +31,14 @@ const actions = {
     },
     updateSort(context, sort) {
         context.commit('updateSort', sort);
+        context.dispatch('updateQuestionList');
     },
     updateQuery(context, query) {
         context.commit('updateQuery', query);
     },
     updateCategoryId(context, categoryId) {
         context.commit('updateCategoryId', categoryId);
+        context.dispatch('updateQuestionList');
     },
     async updateQuestionList({ state, commit }) {
         let questions = await questionService.getQuestions(state.filters);

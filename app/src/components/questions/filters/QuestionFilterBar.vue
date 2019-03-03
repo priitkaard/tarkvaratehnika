@@ -32,7 +32,6 @@
             onClick(sort) {
                 if (this.filters.sort !== sort) {
                     this.updateSort(sort);
-                    this.updateQuestionList();
                 }
             }
         }
