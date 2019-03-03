@@ -5,10 +5,12 @@ import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionListInput;
+import com.qaengine.models.outputs.QuestionList;
 import com.qaengine.models.outputs.QuestionListElement;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,7 +33,7 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public List<QuestionListElement> listQuestions(QuestionListInput input) {
+    public QuestionList listQuestions(QuestionListInput input) {
         Map<String, Sort.Direction> sortDirections = new HashMap<String, Sort.Direction>() {{
             put("DESC", Sort.Direction.DESC);
             put("ASC", Sort.Direction.ASC);
@@ -60,18 +62,22 @@ public class QuestionService {
         );
         Pageable pageRequest = PageRequest.of(input.getPage(), input.getLimit(), sort);
 
-        List<QuestionListElement> questions;
+        Page<QuestionListElement> questions;
         if (input.getCategoryId() != null) {
             questions = questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
         } else {
             questions = questionRepository.listQuestions(input.getQuery(), pageRequest);
         }
 
-        return questions.stream()
+        QuestionList list = new QuestionList();
+        list.setTotalPages(questions.getTotalPages());
+        list.setQuestions(questions.getContent()
+                .stream()
                 .peek(question -> question.setText(
                         Parser.unescapeEntities(Jsoup.parse(question.getText()).text(), false))
                 )
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        return list;
     }
 
     public Question getQuestion(@PathVariable Long id) throws ResourceNotFoundException {

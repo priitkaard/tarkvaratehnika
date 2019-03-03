@@ -2,17 +2,19 @@ package com.qaengine.database;
 
 import com.qaengine.models.Question;
 import com.qaengine.models.outputs.QuestionListElement;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Long> {
+public interface QuestionRepository extends PagingAndSortingRepository<Question, Long> {
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
@@ -24,7 +26,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') " +
             "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
-    List<QuestionListElement> listQuestions(String query, Pageable pageable);
+    Page<QuestionListElement> listQuestions(String query, Pageable pageable);
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
@@ -36,7 +38,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') AND q.category.id = :categoryId " +
             "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
-    List<QuestionListElement> listQuestionsByCategory(Long categoryId, String query, Pageable pageable);
+    Page<QuestionListElement> listQuestionsByCategory(Long categoryId, String query, Pageable pageable);
 
     @Modifying
     @Transactional

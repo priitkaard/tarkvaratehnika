@@ -7,10 +7,12 @@ import com.qaengine.models.Category;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
 import com.qaengine.models.inputs.QuestionListInput;
+import com.qaengine.models.outputs.QuestionList;
 import com.qaengine.models.outputs.QuestionListElement;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +41,7 @@ public class QuestionController {
 
     @GetMapping("/questions")
     @CrossOrigin()
-    protected List<QuestionListElement> listQuestions(QuestionListInput input) {
+    protected QuestionList listQuestions(QuestionListInput input) {
         return questionService.listQuestions(input);
     }
 

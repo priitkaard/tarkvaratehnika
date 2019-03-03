@@ -16,6 +16,7 @@ public class QuestionListInput {
     private int limit;
     @NotNull
     private String sort;
+    @NotNull
     private String direction;
     @NotNull
     private String query;

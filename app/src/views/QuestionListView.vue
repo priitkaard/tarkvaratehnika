@@ -31,7 +31,6 @@
 
     export default {
         name: "QuestionListView",
-        props: ['query'],
         components: {
             QuestionFilterCategory,
             QuestionStatistics,

@@ -2,12 +2,17 @@ import questionService from '../../services/QuestionsService';
 
 const state = {
     filters: {
+        page: 0,
+        limit: 10,
         query: '',
         sort: 'score',
         direction: 'DESC',
         categoryId: 0
     },
-    questions: []
+    questions: {
+        questions: [],
+        totalPages: 0
+    }
 };
 
 const getters = {
@@ -20,6 +25,10 @@ const getters = {
 };
 
 const actions = {
+    updatePage(context, page) {
+        context.commit('updatePage', page);
+        context.dispatch('updateQuestionList');
+    },
     updateSort(context, sort) {
         context.commit('updateSort', sort);
     },
@@ -34,7 +43,7 @@ const actions = {
 
         // TODO: Implement correct solution in backend after authentication is implemented.
         const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
-        questions = questions.map(question => {
+        questions.questions = questions.questions.map(question => {
             question.canVote = !votedQuestions.includes(question.id);
             return question;
         });
@@ -56,6 +65,9 @@ const actions = {
     }
 };
 const mutations = {
+    updatePage(state, page) {
+        state.filters.page = page;
+    },
     updateSort(state, sort) {
         state.filters.sort = sort;
     },
@@ -69,7 +81,7 @@ const mutations = {
         state.questions = questions
     },
     updateQuestionScore(state, {id, relativeScore}) {
-        state.questions = state.questions.map(question => {
+        state.questions.questions = state.questions.questions.map(question => {
             if (question.id !== id) {
                 return question;
             }
