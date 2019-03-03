@@ -28,6 +28,7 @@
     import QuestionStatistics from "../components/questions/sidebars/QuestionStatistics";
     import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
     import QuestionFilterCategory from "../components/questions/filters/QuestionFilterCategory";
+    import { mapActions } from 'vuex';
 
     export default {
         name: "QuestionListView",
@@ -37,6 +38,12 @@
             QuestionFilterBar,
             QuestionsList,
             QuestionFilterSearch
+        },
+        methods: {
+            ...mapActions('question', ['updateQuestionList'])
+        },
+        created() {
+            this.updateQuestionList();
         }
     }
 </script>
