@@ -89,6 +89,12 @@ public class QuestionService {
         }
     }
 
+    public void incrementViews(Long questionId) {
+        Question question = getQuestion(questionId);
+        question.setViews(question.getViews() + 1);
+        questionRepository.save(question);
+    }
+
     public List<Question> autoCompleteQuestion(String input) {
         return questionRepository.getSimilarQuestions(input, PageRequest.of(0, 5));
     }

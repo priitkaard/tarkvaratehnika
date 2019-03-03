@@ -13,6 +13,7 @@ public class QuestionListElement {
     private String title;
     private String text;
     private int score;
+    private int views;
     private Date created;
     private Category category;
     private long comments;

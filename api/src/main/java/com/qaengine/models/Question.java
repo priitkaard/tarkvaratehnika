@@ -46,6 +46,10 @@ public class Question {
     @Builder.Default
     private Integer score = 0;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer views = 0;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date created;

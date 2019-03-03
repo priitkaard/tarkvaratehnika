@@ -18,7 +18,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.created, q.category, " +
+            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, " +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
             "LEFT JOIN Comment c ON c.question = q " +
@@ -30,7 +30,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.created, q.category, " +
+            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, " +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
             "LEFT JOIN Comment c ON c.question = q " +

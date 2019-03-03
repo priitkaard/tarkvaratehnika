@@ -10,7 +10,7 @@
         </div>
         <div class="detail">
             <eye-icon :size="20"/>
-            N/A views
+            {{ question.views }} view(s)
         </div>
         <div class="detail">
             <comment-icon :size="20"/>

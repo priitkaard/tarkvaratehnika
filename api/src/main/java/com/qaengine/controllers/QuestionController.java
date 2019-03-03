@@ -60,6 +60,7 @@ public class QuestionController {
     @CrossOrigin()
     @GetMapping("questions/{id}")
     protected Question getQuestion(@PathVariable Long id) {
+        questionService.incrementViews(id);
         return questionService.getQuestion(id);
     }
 
