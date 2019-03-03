@@ -30,9 +30,10 @@
             ];
         },
         methods: {
-            ...mapActions('question', ['updateCategoryId']),
+            ...mapActions('question', ['updateCategoryId', 'updateQuestionList']),
             onChange(category) {
                 this.updateCategoryId(category.id);
+                this.updateQuestionList();
             }
         }
     }

@@ -6,6 +6,8 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionListElement;
+import org.jsoup.Jsoup;
+import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +16,11 @@ import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -59,10 +60,18 @@ public class QuestionService {
         );
         Pageable pageRequest = PageRequest.of(input.getPage(), input.getLimit(), sort);
 
+        List<QuestionListElement> questions;
         if (input.getCategoryId() != null) {
-            return questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
+            questions = questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
+        } else {
+            questions = questionRepository.listQuestions(input.getQuery(), pageRequest);
         }
-        return questionRepository.listQuestions(input.getQuery(), pageRequest);
+
+        return questions.stream()
+                .peek(question -> question.setText(
+                        Parser.unescapeEntities(Jsoup.parse(question.getText()).text(), false))
+                )
+                .collect(Collectors.toList());
     }
 
     public Question getQuestion(@PathVariable Long id) throws ResourceNotFoundException {

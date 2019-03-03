@@ -1,18 +1,13 @@
 <template>
     <div class="HomeView" :style="{ backgroundImage: 'url(' + require('../assets/img/hero-image.jpg') + ')' }">
         <div class="HomeView__overlay">
-            <!--div class="HomeView__header">
-                <h1>TUTKit</h1>
-                <p>Answers to your education questions</p>
-            </div-->
             <div class="HomeView__header">
                 <img src="@/assets/img/logo.png" />
             </div>
 
             <QuestionFilterSearch
                     class="HomeView__searchbar"
-                    v-on:execute-search="startSearch"
-                    v-on:input="updateQuery"
+                    v-on:search="startSearch"
                     :rounded="true" />
 
             <div class="HomeView__or">or</div>
@@ -34,22 +29,11 @@
         components: {
             QuestionFilterSearch
         },
-        data() {
-            return {
-                query: ''
-            }
-        },
         methods: {
             startSearch() {
                 this.$router.push({
-                    name: 'QuestionListView',
-                    params: {
-                        query: this.query
-                    }
+                    name: 'QuestionListView'
                 });
-            },
-            updateQuery(value) {
-                this.query = value;
             }
         }
     }

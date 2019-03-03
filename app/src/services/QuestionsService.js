@@ -18,11 +18,13 @@ export default {
     },
 
     getQuestions(filters) {
+        const categoryId = filters.categoryId !== 0 ? filters.categoryId : null;
         return apiService.get('questions', {
             params: {
                 page: 0,
                 limit: 20,
-                ...filters
+                ...filters,
+                categoryId
             }
         });
     },

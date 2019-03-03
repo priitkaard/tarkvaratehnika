@@ -3,66 +3,22 @@
         <QuestionsListElement
                 v-for="question in questions"
                 v-bind:key="question.id"
-                v-bind:question="question"
-                v-on:vote="voteQuestion" />
+                v-bind:question="question" />
     </div>
 </template>
 
 <script>
     import QuestionsListElement from './QuestionsListElement';
-    import questionService from '../../../services/QuestionsService';
+    import {mapGetters} from 'vuex';
 
     export default {
         name: "QuestionsList",
-        props: ['filters'],
         components: {
             QuestionsListElement
         },
-        data() {
-            return {
-                questions: []
-            }
-        },
-        methods: {
-            async updateQuestions() {
-                const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
-
-                this.questions = await questionService.getQuestions(this.filters);
-                this.questions = this.questions.map(question => {
-                    question.canVote = !votedQuestions.includes(question.id);
-                    return question;
-                })
-            },
-            voteQuestion({id, direction}) {
-                this.questions.map(question => {
-                    if (question.id !== id) {
-                        return question;
-                    }
-
-                    if (direction === 'UP') {
-                        question.score += 1;
-                    } else if (direction === 'DOWN') {
-                        question.score -= 1;
-                    } else {
-                        return question;
-                    }
-
-                    questionService.vote(id, direction);
-
-                    question.canVote = false;
-                    return question;
-                })
-            }
-        },
-        created() {
-            this.updateQuestions();
-        },
-        watch: {
-            async filters() {
-                console.log('filters changed!');
-                this.updateQuestions();
-            }
-        },
+        computed: {
+            ...mapGetters('question', ['questions'])
+        }
     }
 </script>
 

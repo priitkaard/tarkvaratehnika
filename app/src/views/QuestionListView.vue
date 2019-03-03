@@ -6,7 +6,6 @@
             <div class="col-md-8">
                 <QuestionFilterSearch />
             </div>
-
             <div class="col-md-4">
                 <QuestionFilterCategory />
             </div>
@@ -14,7 +13,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionsList :filters.sync="filters" />
+                <QuestionsList />
             </div>
             <div class="col-md-4">
                 <QuestionStatistics />
@@ -39,36 +38,6 @@
             QuestionFilterBar,
             QuestionsList,
             QuestionFilterSearch
-        },
-        data() {
-            return {
-                filters: {
-                    query: this.query || '',
-                    categoryId: 0,
-                    sort: 'score',
-                    direction: 'DESC'
-                }
-            }
-        },
-        methods: {
-            updateSort(sort) {
-                this.filters = {
-                    ...this.filters,
-                    sort
-                }
-            },
-            updateQuery(query) {
-                this.filters = {
-                    ...this.filters,
-                    query
-                }
-            },
-            updateCategory(categoryId) {
-                this.filters = {
-                    ...this.filters,
-                    categoryId
-                }
-            }
         }
     }
 </script>

@@ -20,6 +20,7 @@
     import MenuUpIcon from "vue-material-design-icons/MenuUp.vue"
     import MenuDownIcon from "vue-material-design-icons/MenuDown.vue"
     import QuestionsListElementDetails from './QuestionsListElementDetails';
+    import { mapActions } from 'vuex';
 
     export default {
         name: "QuestionsListElement",
@@ -30,6 +31,7 @@
             QuestionsListElementDetails
         },
         methods: {
+            ...mapActions('question', ['voteQuestion']),
             openQuestion() {
                 this.$router.push({
                     name: 'QuestionView',
@@ -38,9 +40,8 @@
                     }
                 });
             },
-
             vote(direction) {
-                this.$emit('vote', {
+                this.voteQuestion({
                     id: this.question.id,
                     direction
                 });

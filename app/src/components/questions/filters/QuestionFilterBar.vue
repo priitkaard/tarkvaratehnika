@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapActions} from 'vuex';
 
     export default {
         name: "QuestionFilterBar",
@@ -28,9 +28,11 @@
             ...mapGetters('question', ['filters'])
         },
         methods: {
+            ...mapActions('question', ['updateSort', 'updateQuestionList']),
             onClick(sort) {
                 if (this.filters.sort !== sort) {
-                    this.$store.dispatch('question/updateSort', sort);
+                    this.updateSort(sort);
+                    this.updateQuestionList();
                 }
             }
         }

@@ -22,6 +22,7 @@
 
                     <UISelect class="AddQuestionView__box_categories"
                               :options="categories"
+                              :value="question.categoryId"
                               v-on:select-changed="onCategoryChange" />
 
                     <div class="row">
@@ -62,20 +63,21 @@
                 question: {
                     title: '',
                     description: '',
-                    categoryId: null
+                    categoryId: 1
                 },
+                categories: [],
                 editor: {
                     type: ClassicEditor,
                     config: {
                         removePlugins: [ 'Heading', 'Link' ],
                         toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
                     },
-                },
-                categories: []
+                }
             }
         },
         methods: {
             onCategoryChange(category) {
+                console.log('category changed to ' + category.id);
                 this.question.categoryId = category.id;
             },
 
