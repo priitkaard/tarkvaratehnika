@@ -38,7 +38,7 @@ public class Comment {
     @JsonIgnore
     private Answer answer;
 
-    @ManyToOne()
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
 

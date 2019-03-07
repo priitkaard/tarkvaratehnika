@@ -56,6 +56,9 @@ public class QuestionController {
     ) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
         ApplicationUser user = userService.getUser(principal.getName());
+        if (user == null) {
+            throw new ResourceNotFoundException("Could not find user. Cannot create.");
+        }
         Question question = Question.builder()
                 .title(questionInput.getTitle())
                 .text(questionInput.getText())
