@@ -8,7 +8,7 @@
                 :config="editor.config"> 
             </ckeditor>
             <br>
-            <input type = "submit" value = "Post" @click="$emit('postCmnt', txt1, id)">
+            <button @click="$emit('postCmnt', txt1, id)"> POST </button>
         </div>
     </div>
 </template>
@@ -54,7 +54,7 @@ export default {
     margin-right: 7%
    
 }
-.commentButton button{
+button{
     background: rgb(250, 129, 0);
     width: 165px;
     height: 41px;

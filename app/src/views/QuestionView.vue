@@ -26,7 +26,7 @@
     <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id" >
       <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><span v-html="answer.text"></span>
       <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
-      <!--<VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>-->{{comment.text}}</div>
+      <!--<VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>--><span v-html="comment.text"></span></div>
       <CommentSection @postCmnt = "postComment" v-bind:id = "answer.id"/>
     </div>
     <div class = "post_section">
@@ -144,6 +144,11 @@ export default {
   background: rgb(235, 235, 235);;
   vertical-align: middle;
   text-align: left;
+}
+.comment >>> p
+{
+   display: inline-flex;
+   margin-bottom: 0%;
 }
 #title{
   font-size: 20px;
