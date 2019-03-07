@@ -45,7 +45,7 @@ public class QuestionController {
         return questionService.listQuestions(input);
     }
 
-    @PostMapping("/questions")
+    @PostMapping()
     @CrossOrigin()
     protected Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
@@ -57,15 +57,15 @@ public class QuestionController {
         return questionRepository.save(question);
     }
 
-    @CrossOrigin()
-    @GetMapping("questions/{id}")
+    @CrossOrigin("/questions")
+    @GetMapping("{id}")
     protected Question getQuestion(@PathVariable Long id) {
         questionService.incrementViews(id);
         return questionService.getQuestion(id);
     }
 
     @CrossOrigin()
-    @DeleteMapping("questions/{id}")
+    @DeleteMapping("{id}")
     protected Long deleteQuestion(@PathVariable Long id) {
         try {
             questionRepository.deleteById(id);
@@ -76,7 +76,7 @@ public class QuestionController {
     }
 
     @CrossOrigin()
-    @PutMapping("questions/{id}")
+    @PutMapping("/questions{id}")
     protected Question updateQuestion(
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
@@ -87,7 +87,7 @@ public class QuestionController {
     }
 
     @CrossOrigin()
-    @PutMapping("questions/{id}/upvote")
+    @PutMapping("/questions{id}/upvote")
     protected Question upvoteQuestion(
             @PathVariable Long id
     ) {
@@ -97,7 +97,7 @@ public class QuestionController {
     }
 
     @CrossOrigin()
-    @PutMapping("questions/{id}/downvote")
+    @PutMapping("/questions{id}/downvote")
     protected Question downvoteQuestion(
             @PathVariable Long id
     ) {
