@@ -25,7 +25,7 @@ export default {
             }
             this.score++;
             this.canVote = false;
-           
+            //questionService.vote(this.id, 'UP');
         },
         voteDown: function () {
             if(this.type === 'post'){
@@ -36,6 +36,7 @@ export default {
             }
             this.score--;
             this.canVote = false;
+            //questionService.vote(this.id, 'DOWN')
         }
     },
     props: ['id', 'type', 'score', 'canVote']

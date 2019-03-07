@@ -24,14 +24,19 @@
 
     <!-- v-bind:canVote="true" is temporary -->
     <div class = "answerBox" v-for="answer in answers" v-bind:key="answer.id" >
-    <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><span v-html="answer.text"></span>
-    <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
-    <VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>{{comment.text}}</div>
-    <div class = "commentButton"><button type="button" @click = "postComment(answer)">Comment</button></div>
+      <VoteChoice v-bind:id="answer.id" v-bind:type="'post'" v-bind:score="answer.score" v-bind:canVote="true"/><span v-html="answer.text"></span>
+      <div class = "comment" v-for="comment in answer.comments" v-bind:key="comment.id">
+      <!--<VoteChoice  v-bind:id="comment.id" v-bind:type="comment"/>-->{{comment.text}}</div>
+      <CommentSection @postCmnt = "postComment" v-bind:id = "answer.id"/>
     </div>
     <div class = "post_section">
     <form @submit.prevent="addAnswer" >
-      <textarea v-model="text" name = "text" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>
+      <!--<textarea v-model="text" name = "text" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>-->
+      <ckeditor
+        :editor="editor.type"
+        v-model="text"
+        :config="editor.config"> 
+      </ckeditor>
       <br>
       <input type = "submit" value = "Post" >
     </form>
@@ -40,8 +45,10 @@
 </template>
 
 <script>
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import apiService from '../services/ApiService.js'
 import VoteChoice from '../components/VoteChoice.vue'
+import CommentSection from '../components/CommentSection.vue'
 export default {
   name: 'QuestionView',
   methods: {
@@ -52,12 +59,13 @@ export default {
       apiService.post('questions/'+this.$route.params.id+'/answers', {text: this.text}).then(res => this.answers = [...this.answers, res])
       this.text = ''
     },
-    postComment: function (answer){
-            apiService.post('answers/'+answer.id+'/comments', {text: this.text}).then(res=>[...answer.comments, res])
-            this.text = ''
+    postComment: function (txt, id){
+      console.log(id + " " + txt)
+            apiService.post('answers/'+id+'/comments', {text: txt})
+            //.then(res=>[...answer.comments, res])
             //Refreshes page, couldn't find better solution right now, how to equal upper answer to this answer.
             this.$router.go()
-        }
+        },
   },
   async created() {
     this.question = await this.getData()
@@ -67,11 +75,19 @@ export default {
     return {
       question: {},
       answers: {},
-      text: ''
+      text: '',
+      editor: {
+          type: ClassicEditor,
+          config: {
+              removePlugins: [ 'Heading', 'Link' ],
+              toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
+          },
+      },
     }
   },
   components: {
     VoteChoice,
+    CommentSection
   }
 }
 </script>
@@ -148,26 +164,5 @@ export default {
     margin-top:2%;
     margin-left:8%;
 }
-.commentButton
-{
-    margin-top: 2.5%;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 7%
-   
-}
-.commentButton button{
-    background: rgb(250, 129, 0);
-    width: 165px;
-    height: 41px;
-    mix-blend-mode: normal;
-    color: rgb(255, 255, 255);
-    font-size: 14px;
-    text-align: center;
-    font-weight: bold;
-    font-style: normal;
-    border-radius: 0px;
-    border-width: 0px;
-    border-style: solid;
-}
+
 </style>
