@@ -1,14 +1,19 @@
 <template>
     <div>
         <div class = "commentButton"><button type="button" @click = "openComment()">Comment</button></div>
-        <div class = "formArea"v-if="this.toggled === true">
-            <textarea v-model="txt1" name = "text" style = "width: 80%; height: 118px;" placeholder="Insert text here"></textarea>
+        <div class = "formArea" v-if="this.toggled === true">
+           <ckeditor
+                :editor="editor.type"
+                v-model="txt1"
+                :config="editor.config"> 
+            </ckeditor>
             <br>
             <input type = "submit" value = "Post" @click="$emit('postCmnt', txt1, id)">
         </div>
     </div>
 </template>
 <script>
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 export default {
     name: 'CommentSection',
     props:['id'],
@@ -16,13 +21,21 @@ export default {
         return {
             toggled:false,
             txt1: '',
+             editor: {
+                type: ClassicEditor,
+                config: {
+                    removePlugins: [ 'Heading', 'Link' ],
+                    toolbar: []
+                }
+    }
         }
     },
     methods: {
         openComment() {
             this.toggled = ! this.toggled
         }
-    }
+    },
+   
     
 }
 </script>
@@ -31,6 +44,7 @@ export default {
 {
     margin-top:2%;
     margin-left: 6%;
+    margin-right: 2%;
 }
 .commentButton
 {

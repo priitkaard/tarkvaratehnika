@@ -60,11 +60,10 @@ export default {
       this.text = ''
     },
     postComment: function (txt, id){
-      console.log(id + " " + txt)
-            apiService.post('answers/'+id+'/comments', {text: txt})
-            //.then(res=>[...answer.comments, res])
-            //Refreshes page, couldn't find better solution right now, how to equal upper answer to this answer.
-            this.$router.go()
+        apiService.post('answers/'+id+'/comments', {text: txt})
+        //.then(res=>[...answer.comments, res])
+        //Refreshes page, couldn't find better solution right now, how to equal upper answer to this answer.
+        this.$router.go()
         },
   },
   async created() {
