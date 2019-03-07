@@ -57,6 +57,10 @@ public class Question {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private ApplicationUser user;
+
     @OneToMany(
             mappedBy = "question",
             cascade = CascadeType.ALL,

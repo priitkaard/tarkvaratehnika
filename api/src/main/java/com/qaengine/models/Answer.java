@@ -1,6 +1,7 @@
 package com.qaengine.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qaengine.models.ApplicationUser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +31,10 @@ public class Answer {
 
     @Column(nullable = false)
     private boolean accepted = false;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private ApplicationUser user;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
