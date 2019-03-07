@@ -32,7 +32,7 @@ public class Answer {
     @Column(nullable = false)
     private boolean accepted = false;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
 

@@ -57,7 +57,7 @@ public class Question {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
 
