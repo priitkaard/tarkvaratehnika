@@ -34,6 +34,11 @@ export default new Router({
             name: 'QuestionView',
             path: '/question/:id',
             component: QuestionView
+        },
+        {
+            name: 'LoginView',
+            path: '/login',
+            component: () => import('./views/LoginView.vue')
         }
     ]
 });
