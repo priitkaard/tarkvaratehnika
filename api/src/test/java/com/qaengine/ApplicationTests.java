@@ -2,9 +2,12 @@ package com.qaengine;
 
 import com.qaengine.controllers.QuestionController;
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
 import static org.junit.Assert.*;
+
+import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import org.junit.Assert;
@@ -24,6 +27,7 @@ public class ApplicationTests {
 	@Autowired
 	QuestionService questionService;
 
+
 	@Test
 	public void contextLoads() {
 	}
@@ -37,7 +41,7 @@ public class ApplicationTests {
 		Long questionId = question.getId();
 		assertEquals(questionId, questionController.getQuestion(questionId).getId());
 		//assertEquals(question.getAnswers(), questionController.getQuestion(questionId).getAnswers());
-		//assertEquals(question.getCategory(), questionController.getQuestion(questionId).getCategory());
+		assertEquals(question.getCategory().getId().longValue(), questionController.getQuestion(questionId).getCategory().getId().longValue());
 		assertEquals(question.getText(), questionController.getQuestion(questionId).getText());
 		assertEquals(question.getTitle(), questionController.getQuestion(questionId).getTitle());
 	}
@@ -57,6 +61,60 @@ public class ApplicationTests {
 		}
 
 	}
+	/*@Test
+    public void questionList()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        questionController.postQuestion(questionInput);
+        questionController.postQuestion(new QuestionInput("def", "hji", 2L));
+        //assertEquals(questionController.listQuestions(new QuestionListInput()).getQuestions().size(),2);
+
+    }*/
+
+    @Test
+    public void upVote()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        assertEquals(question.getScore().longValue(), 0);
+        questionController.upvoteQuestion(question.getId());
+        assertEquals(questionController.getQuestion(question.getId()).getScore().longValue(), 1L);
+    }
+    @Test
+    public void downVote()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        assertEquals(question.getScore().longValue(), 0);
+        questionController.downvoteQuestion(question.getId());
+        assertEquals(questionController.getQuestion(question.getId()).getScore().longValue(), -1L);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteQuestion()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        questionController.deleteQuestion(question.getId());
+        questionController.getQuestion(question.getId());
+    }
+
+    @Test
+    public void updateQuestion(){
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        questionController.updateQuestion(question.getId(), new QuestionInput("ddd", "gff", 2L));
+        Question question2 = questionController.getQuestion(question.getId());
+        assertEquals(question2.getText(), "ddd");
+        assertEquals(question2.getTitle(), "gff");
+        //UPDATE DOES NOT UPDATE CATEGORY
+        assertEquals(question2.getCategory().getId().longValue(), 2L);
+    }
 
 	/*@Test
 	public void getQuestionFromService()
