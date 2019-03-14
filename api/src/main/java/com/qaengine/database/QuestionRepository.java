@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -18,7 +19,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, " +
+            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
             "LEFT JOIN Comment c ON c.question = q " +
@@ -26,11 +27,11 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') " +
             "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
-    Page<QuestionListElement> listQuestions(String query, Pageable pageable);
+    Page<QuestionListElement> listQuestions(@Param("query") String query, Pageable pageable);
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, " +
+            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
             "LEFT JOIN Comment c ON c.question = q " +
@@ -38,7 +39,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') AND q.category.id = :categoryId " +
             "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
-    Page<QuestionListElement> listQuestionsByCategory(Long categoryId, String query, Pageable pageable);
+    Page<QuestionListElement> listQuestionsByCategory(@Param("categoryId") Long categoryId, @Param("query") String query, Pageable pageable);
 
     @Modifying
     @Transactional
