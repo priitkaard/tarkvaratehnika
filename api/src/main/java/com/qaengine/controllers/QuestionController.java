@@ -41,13 +41,13 @@ public class QuestionController {
 
     @GetMapping("/questions")
     @CrossOrigin()
-    protected QuestionList listQuestions(QuestionListInput input) {
+    public QuestionList listQuestions(QuestionListInput input) {
         return questionService.listQuestions(input);
     }
 
     @PostMapping()
     @CrossOrigin()
-    protected Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
+    public Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
         Question question = Question.builder()
                 .title(questionInput.getTitle())
@@ -59,14 +59,14 @@ public class QuestionController {
 
     @CrossOrigin("/questions")
     @GetMapping("{id}")
-    protected Question getQuestion(@PathVariable Long id) {
+    public Question getQuestion(@PathVariable Long id) {
         questionService.incrementViews(id);
         return questionService.getQuestion(id);
     }
 
     @CrossOrigin()
     @DeleteMapping("{id}")
-    protected Long deleteQuestion(@PathVariable Long id) {
+    public Long deleteQuestion(@PathVariable Long id) {
         try {
             questionRepository.deleteById(id);
             return id;
@@ -77,7 +77,7 @@ public class QuestionController {
 
     @CrossOrigin()
     @PutMapping("/questions{id}")
-    protected Question updateQuestion(
+    public Question updateQuestion(
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
     ) {
@@ -88,7 +88,7 @@ public class QuestionController {
 
     @CrossOrigin()
     @PutMapping("/questions{id}/upvote")
-    protected Question upvoteQuestion(
+    public Question upvoteQuestion(
             @PathVariable Long id
     ) {
         Question question = questionService.getQuestion(id);
@@ -98,7 +98,7 @@ public class QuestionController {
 
     @CrossOrigin()
     @PutMapping("/questions{id}/downvote")
-    protected Question downvoteQuestion(
+    public Question downvoteQuestion(
             @PathVariable Long id
     ) {
         Question question = questionService.getQuestion(id);
