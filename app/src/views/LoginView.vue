@@ -3,15 +3,15 @@
         <form @submit.prevent="submitLogin" class="LoginView__form">
             <img src="../assets/img/logo.png" alt="" />
             <div>
-                <input type="text" placeholder="Username" />
+                <input type="text" placeholder="Username" v-model="inputs.username"/>
             </div>
             <div>
-                <input type="text" placeholder="Password" />
+                <input type="text" placeholder="Password" v-model="inputs.password"/>
             </div>
 
             <div>
                 <UIButton text="Register" style="margin-bottom: 10px"/>
-                <UIButton text="Log in" />
+                <UIButton text="Log in" @click="submitLogin"/>
             </div>
         </form>
     </div>
@@ -19,17 +19,23 @@
 
 <script>
     import UIButton from "../components/UIButton";
+    import authService from '../services/AuthService';
+
     export default {
         name: "LoginView",
         components: {UIButton},
         data() {
             return {
-
+                inputs: {
+                    username: '',
+                    password: '',
+                }
             };
         },
         methods: {
-            submitLogin() {
-
+            async submitLogin() {
+                const token = await authService.tryLogin(this.inputs.username, this.inputs.password);
+                this.inputs.password = '';
             },
         },
     }
