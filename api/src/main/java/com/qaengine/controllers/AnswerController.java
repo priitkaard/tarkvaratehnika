@@ -42,7 +42,7 @@ public class AnswerController {
 
     @CrossOrigin()
     @PostMapping("questions/{questionId}/answers")
-    protected Answer addAnswer(
+    public Answer addAnswer(
             @PathVariable Long questionId,
             @RequestBody @Valid AnswerInput answerinput
     ) {
@@ -58,13 +58,13 @@ public class AnswerController {
 
     @CrossOrigin()
     @GetMapping("answers/{id}")
-    protected Answer getAnswer(@PathVariable Long id) {
+    public Answer getAnswer(@PathVariable Long id) {
         return answerService.getAnswer(id);
     }
 
     @CrossOrigin()
     @DeleteMapping("answers/{id}")
-    protected Long deleteAnswer(@PathVariable Long id) {
+    public Long deleteAnswer(@PathVariable Long id) {
         Answer answer = answerService.getAnswer(id);
         answerRepository.delete(answer);
         return id;
@@ -72,7 +72,7 @@ public class AnswerController {
 
     @CrossOrigin()
     @PutMapping("answers/{id}")
-    protected Answer updateAnswer(
+    public Answer updateAnswer(
             @PathVariable Long id,
             @RequestBody @Valid AnswerInput answerInput
     ) {
@@ -83,7 +83,7 @@ public class AnswerController {
 
     @CrossOrigin()
     @PutMapping("answers/{id}/upvote")
-    protected Answer upvoteAnswer(
+    public Answer upvoteAnswer(
             @PathVariable Long id
     ) {
         Answer answer = getAnswer(id);
@@ -93,7 +93,7 @@ public class AnswerController {
 
     @CrossOrigin()
     @PutMapping("answers/{id}/downvote")
-    protected Answer downvoteAnswer(
+    public Answer downvoteAnswer(
             @PathVariable Long id
     ) {
         Answer answer = getAnswer(id);
@@ -104,7 +104,7 @@ public class AnswerController {
 
     @CrossOrigin()
     @PutMapping("answers/{answerId}/accept")
-    protected Answer acceptAnswer(
+    public Answer acceptAnswer(
             @PathVariable Long answerId
     ) {
         Answer answer = answerService.getAnswer(answerId);
@@ -118,7 +118,7 @@ public class AnswerController {
 
     @CrossOrigin()
     @PutMapping("questions/{questionId}/revertAnswerAccepted")
-    protected Question revertAnswerAccepted(
+    public Question revertAnswerAccepted(
             @PathVariable Long questionId
     ) {
         Question question = questionService.getQuestion(questionId);
