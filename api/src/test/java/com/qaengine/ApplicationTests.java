@@ -5,6 +5,7 @@ import com.qaengine.controllers.QuestionController;
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
+import com.qaengine.models.Answer;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.models.inputs.QuestionInput;
@@ -144,13 +145,85 @@ public class ApplicationTests {
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput);
         AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
-        answerController.addAnswer(question.getId(), new AnswerInput("test"));
-        Question question2 = questionController.getQuestion(question.getId());
-        System.out.println(question2.getTitle());
-        Hibernate.initialize(question2.getAnswers());
-        assertEquals(question2.getAnswers().size(), 1);
-
-        //assertEquals(question.getAnswers().get(0).getText().toString(), "test");
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        assertEquals(question.getId(), answer.getQuestion().getId());
+        assertEquals(answer.getText(), "test");
     }
+
+    @Test
+    public void getAnswerTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        assertEquals(answer.getId(), answerController.getAnswer(answer.getId()).getId());
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteAnswerTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        answerController.deleteAnswer(answer.getId());
+        answerController.getAnswer(answer.getId());
+    }
+
+    @Test
+    public void updateAnswerTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        answerController.updateAnswer(answer.getId(), new AnswerInput("tst2"));
+        Answer answer1 = answerController.getAnswer(answer.getId());
+        assertEquals(answer.getId(), answer1.getId());
+        assertEquals(answer1.getText(), "tst2");
+    }
+
+    @Test
+    public void upvoteAnswerTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        answerController.upvoteAnswer(answer.getId());
+        answer = answerController.getAnswer(answer.getId());
+        assertEquals(answer.getScore().longValue(), 1L);
+    }
+
+    @Test
+    public void downvoteAnswerTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        answerController.downvoteAnswer(answer.getId());
+        answer = answerController.getAnswer(answer.getId());
+        assertEquals(answer.getScore().longValue(), -1L);
+    }
+
+    /*@Test
+    public void acceptAnswerTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        answerController.acceptAnswer(answer.getId());
+        answer = answerController.getAnswer(answer.getId());
+        assertTrue(answer.isAccepted());
+    }*/
 }
 
