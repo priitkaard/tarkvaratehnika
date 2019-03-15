@@ -43,7 +43,7 @@ public class CommentController {
 
     @CrossOrigin()
     @PostMapping("questions/{questionId}/comments")
-    protected Comment addCommentToQuestion(
+    public Comment addCommentToQuestion(
             @PathVariable Long questionId,
             @RequestBody @Valid CommentInput commentInput
     ) {
@@ -57,7 +57,7 @@ public class CommentController {
 
     @CrossOrigin()
     @PostMapping("answers/{answerId}/comments")
-    protected Comment addCommentToAnswer(
+    public Comment addCommentToAnswer(
             @PathVariable Long answerId,
             @RequestBody @Valid CommentInput commentInput
     ) {
@@ -71,13 +71,13 @@ public class CommentController {
 
     @CrossOrigin()
     @GetMapping("comments/{id}")
-    protected Comment getComment(@PathVariable Long id) {
+    public Comment getComment(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
 
     @CrossOrigin()
     @PutMapping("comments/{commentId}")
-    protected Comment updateComment(
+    public Comment updateComment(
             @PathVariable Long commentId,
             @RequestBody @Valid CommentInput commentInput
     ) {
@@ -88,7 +88,7 @@ public class CommentController {
 
     @CrossOrigin()
     @DeleteMapping("comments/{commentId}")
-    protected Long deleteComment(
+    public Long deleteComment(
             @PathVariable Long commentId
     ) {
         commentService.deleteComment(commentId);
@@ -98,7 +98,7 @@ public class CommentController {
 
     @CrossOrigin()
     @PutMapping("comments/{id}/upvote")
-    protected Comment upvoteComment(
+    public Comment upvoteComment(
             @PathVariable Long id
     ) {
         Comment comment = commentService.getCommentById(id);
@@ -108,7 +108,7 @@ public class CommentController {
 
     @CrossOrigin()
     @PutMapping("comments/{id}/downvote")
-    protected Comment downvoteComment(
+    public Comment downvoteComment(
             @PathVariable Long id
     ) {
         Comment comment = commentService.getCommentById(id);

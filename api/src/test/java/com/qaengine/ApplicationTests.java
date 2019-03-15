@@ -1,19 +1,24 @@
 package com.qaengine;
 
 import com.qaengine.controllers.AnswerController;
+import com.qaengine.controllers.CommentController;
 import com.qaengine.controllers.QuestionController;
 import com.qaengine.database.AnswerRepository;
+import com.qaengine.database.CommentRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Answer;
+import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
+import com.qaengine.models.inputs.CommentInput;
 import com.qaengine.models.inputs.QuestionInput;
 import static org.junit.Assert.*;
 
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.CategoryService;
+import com.qaengine.services.CommentService;
 import com.qaengine.services.QuestionService;
 import org.hibernate.Hibernate;
 import org.junit.Assert;
@@ -26,6 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ApplicationTests {
+
 	@Autowired
 	QuestionRepository questionRepository;
 	@Autowired
@@ -36,6 +42,10 @@ public class ApplicationTests {
     AnswerService answerService;
 	@Autowired
     AnswerRepository answerRepository;
+	@Autowired
+    CommentService commentService;
+	@Autowired
+    CommentRepository commentRepository;
 
 
 	@Test
@@ -225,5 +235,37 @@ public class ApplicationTests {
         answer = answerController.getAnswer(answer.getId());
         assertTrue(answer.isAccepted());
     }*/
+
+
+    // CommentController TESTS
+    @Test
+    public void addCommentTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        CommentController commentController = new CommentController(commentRepository,questionService, answerService, commentService);
+        Comment comment = commentController.addCommentToAnswer(answer.getId(), new CommentInput("test"));
+        Comment comment1 = commentController.addCommentToQuestion(question.getId(), new CommentInput("test2"));
+        assertEquals(comment.getAnswer().getId(), answer.getId());
+        assertEquals(comment1.getQuestion().getId(), question.getId());
+        assertEquals(comment.getText(), "test");
+    }
+
+    @Test
+    public void getCommentTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        CommentController commentController = new CommentController(commentRepository,questionService, answerService, commentService);
+        Comment comment = commentController.addCommentToAnswer(answer.getId(), new CommentInput("test"));
+        assertEquals(comment.getText(), commentController.getComment(comment.getId()).getText());
+    }
+
 }
 
