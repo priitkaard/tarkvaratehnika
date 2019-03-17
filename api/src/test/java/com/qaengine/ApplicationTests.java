@@ -3,24 +3,21 @@ package com.qaengine;
 import com.qaengine.controllers.AnswerController;
 import com.qaengine.controllers.CommentController;
 import com.qaengine.controllers.QuestionController;
+import com.qaengine.controllers.UserController;
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.CommentRepository;
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
-import com.qaengine.models.inputs.CommentInput;
-import com.qaengine.models.inputs.QuestionInput;
+import com.qaengine.models.inputs.*;
 import static org.junit.Assert.*;
-
-import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.CommentService;
 import com.qaengine.services.QuestionService;
-import org.hibernate.Hibernate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -326,5 +323,15 @@ public class ApplicationTests {
         assertEquals(comment.getScore().longValue(), -1);
     }
 
+    //UserController TEST
+    //Can not test that, @autowired
+    /*@Test()
+    public void signUpWithSameNameTest()
+    {
+        UserController userController = new UserController();
+        System.out.println(new ApplicationUserInput("te", "te").getUsername());
+        userController.signUp(new ApplicationUserInput("test", "test"));
+        userController.signUp(new ApplicationUserInput("test", "test"));
+    }*/
 }
 
