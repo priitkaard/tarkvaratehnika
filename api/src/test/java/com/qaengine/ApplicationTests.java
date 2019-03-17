@@ -267,5 +267,64 @@ public class ApplicationTests {
         assertEquals(comment.getText(), commentController.getComment(comment.getId()).getText());
     }
 
+    @Test
+    public void updateCommentTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        CommentController commentController = new CommentController(commentRepository,questionService, answerService, commentService);
+        Comment comment = commentController.addCommentToAnswer(answer.getId(), new CommentInput("test"));
+        commentController.updateComment(comment.getId(), new CommentInput("new"));
+        comment = commentController.getComment(comment.getId());
+        assertEquals(comment.getText(), "new");
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteCommentTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        CommentController commentController = new CommentController(commentRepository,questionService, answerService, commentService);
+        Comment comment = commentController.addCommentToAnswer(answer.getId(), new CommentInput("test"));
+        commentController.deleteComment(comment.getId());
+        commentController.getComment(comment.getId());
+    }
+
+    @Test
+    public void upvoteCommentTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        CommentController commentController = new CommentController(commentRepository,questionService, answerService, commentService);
+        Comment comment = commentController.addCommentToAnswer(answer.getId(), new CommentInput("test"));
+        commentController.upvoteComment(comment.getId());
+        comment = commentController.getComment(comment.getId());
+        assertEquals(comment.getScore().longValue(), 1);
+    }
+
+    @Test
+    public void downvoteCommentTest()
+    {
+        QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        Question question = questionController.postQuestion(questionInput);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService);
+        Answer answer = answerController.addAnswer(question.getId(), new AnswerInput("test"));
+        CommentController commentController = new CommentController(commentRepository,questionService, answerService, commentService);
+        Comment comment = commentController.addCommentToAnswer(answer.getId(), new CommentInput("test"));
+        commentController.downvoteComment(comment.getId());
+        comment = commentController.getComment(comment.getId());
+        assertEquals(comment.getScore().longValue(), -1);
+    }
+
 }
 
