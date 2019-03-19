@@ -32,7 +32,7 @@
 
 <script>
     import QuestionsListElement from './QuestionsListElement';
-    import UIButton from '../../UIButton';
+    import UIButton from '../../common/UIButton';
     import {mapGetters} from 'vuex';
 
     export default {

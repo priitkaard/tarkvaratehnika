@@ -42,8 +42,8 @@
 
 <script>
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    import UISelect from '../components/UISelect';
-    import UIButton from '../components/UIButton';
+    import UISelect from '../components/common/UISelect';
+    import UIButton from '../components/common/UIButton';
     import questionService from '../services/QuestionsService';
     import categoryService from '../services/CategoryService';
 

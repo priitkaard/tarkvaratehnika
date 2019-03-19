@@ -8,7 +8,12 @@
             </div>
 
             <div class="NavigationDrawer__menu_list">
-                <div class="NavigationDrawer__menu_list_item" v-for="item in menuItems" :key="item.id">
+                <div
+                    class="NavigationDrawer__menu_list_item"
+                    v-for="item in getMenuItems()"
+                    :key="item.id"
+                    @click="chooseItem(item)"
+                >
                     {{ item.name }}
                 </div>
             </div>
@@ -17,8 +22,8 @@
 </template>
 
 <script>
-    import ChevronRightIcon from "vue-material-design-icons/ChevronRight";
-    import {mapActions, mapState} from "vuex";
+    import ChevronRightIcon from 'vue-material-design-icons/ChevronRight';
+    import { mapActions, mapGetters, mapState } from 'vuex';
 
     export default {
         name: "NavigationDrawer",
@@ -27,7 +32,8 @@
             ...mapState('navigation', ['drawer', 'menuItems']),
         },
         methods: {
-            ...mapActions('navigation', ['closeDrawer']),
+            ...mapActions('navigation', ['closeDrawer', 'chooseItem']),
+            ...mapGetters('navigation', ['getMenuItems']),
         },
     }
 </script>

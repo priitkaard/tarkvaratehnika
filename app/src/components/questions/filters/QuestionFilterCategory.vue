@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import UISelect from "../../UISelect";
+    import UISelect from "../../common/UISelect";
     import categoryService from '../../../services/CategoryService';
     import {mapGetters, mapActions} from 'vuex';
 

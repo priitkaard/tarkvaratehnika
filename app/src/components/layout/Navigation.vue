@@ -1,5 +1,5 @@
 <template>
-    <div class="Navigation">
+    <div class="Navigation" :class="{'Navigation__transparent': transparent}">
         <div class="container">
             
             <div class="Navigation__mobile">
@@ -15,7 +15,7 @@
 
                 <div class="Navigation__desktop_menu">
                     <ul>
-                        <li v-for="item in menuItems" :key="item.id">
+                        <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
                             {{ item.name }}
                         </li>
                     </ul>
@@ -27,17 +27,18 @@
 
 <script>
     import MenuIcon from "vue-material-design-icons/Menu";
-    import {mapActions, mapState} from "vuex";
+    import {mapActions, mapGetters, mapState} from "vuex";
 
     export default {
         name: "Navigation",
-        components: {MenuIcon},
-        computed: {
-            ...mapState('navigation', ['menuItems']),
+        props: {
+            transparent: Boolean
         },
+        components: {MenuIcon},
         methods: {
-            ...mapActions('navigation', ['openDrawer']),
-        }
+            ...mapActions('navigation', ['openDrawer', 'chooseItem']),
+            ...mapGetters('navigation', ['getMenuItems']),
+        },
     }
 </script>
 
@@ -56,6 +57,10 @@
         position: fixed;
         top: 0;
         z-index: 9999;
+
+        &__transparent {
+            background-color: transparent;
+        }
 
         &__mobile {
             display: none;
