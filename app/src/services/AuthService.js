@@ -23,7 +23,7 @@ export default {
     },
 
     async register(username, password) {
-        await axios.post(`${apiService.API_URL}users/sign-up`, {
+        await axios.post(`${apiService.API_URL}user/sign-up`, {
             username,
             password
         });

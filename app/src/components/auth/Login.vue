@@ -65,7 +65,7 @@
             async submitRegister() {
                 try {
                     await authService.register(this.inputs.username, this.inputs.password);
-                    this.message = 'Registered successfully. You can now log in.';
+                    this.setMessage('Registered successfully. You can now log in.');
                 } catch (err) {
                     if (err.response.status === 400) {
                         this.setError('This username already exists!');
