@@ -9,7 +9,6 @@ import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,9 +39,8 @@ public class AnswerController {
         this.questionService = questionService;
     }
 
-    // @CrossOrigin()
-    @PostMapping("questions/{questionId}/answers")
-    protected Answer addAnswer(
+    @PostMapping("question/{questionId}/answer")
+    public Answer answerQuestion (
             @PathVariable Long questionId,
             @RequestBody @Valid AnswerInput answerinput
     ) {
@@ -56,22 +54,19 @@ public class AnswerController {
     }
 
 
-    // @CrossOrigin()
-    @GetMapping("answers/{id}")
-    protected Answer getAnswer(@PathVariable Long id) {
+    @GetMapping("/answer/{id}")
+    public Answer getAnswer(@PathVariable Long id) {
         return answerService.getAnswer(id);
     }
 
-    // @CrossOrigin()
-    @DeleteMapping("answers/{id}")
-    protected Long deleteAnswer(@PathVariable Long id) {
+    @DeleteMapping("/answers/{id}")
+    public Long deleteAnswer(@PathVariable Long id) {
         Answer answer = answerService.getAnswer(id);
         answerRepository.delete(answer);
         return id;
     }
 
-    // @CrossOrigin()
-    @PutMapping("answers/{id}")
+    @PutMapping("/answer/{id}")
     protected Answer updateAnswer(
             @PathVariable Long id,
             @RequestBody @Valid AnswerInput answerInput
@@ -81,8 +76,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    // @CrossOrigin()
-    @PutMapping("answers/{id}/upvote")
+    @PutMapping("/answer/{id}/upvote")
     protected Answer upvoteAnswer(
             @PathVariable Long id
     ) {
@@ -91,8 +85,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    // @CrossOrigin()
-    @PutMapping("answers/{id}/downvote")
+    @PutMapping("/answer/{id}/downvote")
     protected Answer downvoteAnswer(
             @PathVariable Long id
     ) {
@@ -102,8 +95,7 @@ public class AnswerController {
     }
 
 
-    // @CrossOrigin()
-    @PutMapping("answers/{answerId}/accept")
+    @PutMapping("/answer/{answerId}/accept")
     protected Answer acceptAnswer(
             @PathVariable Long answerId
     ) {
@@ -116,8 +108,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    // @CrossOrigin()
-    @PutMapping("questions/{questionId}/revertAnswerAccepted")
+    @PutMapping("/question/{questionId}/revertAnswerAccepted")
     protected Question revertAnswerAccepted(
             @PathVariable Long questionId
     ) {
@@ -125,5 +116,4 @@ public class AnswerController {
         questionRepository.revertAnswerAccepted(question);
         return question;
     }
-
 }
