@@ -68,15 +68,15 @@
                 background-color: $color-primary;
                 color: white;
                 font-weight: bold;
+                &:hover {
+                    background-color: $color-primary-darker;
+                }
             }
 
             &:hover {
                 cursor: pointer;
                 background-color: $color-background;
                 transition: 0.4s background-color;
-                &:first-child {
-                    background-color: $color-primary-darker;
-                }
             }
         }
         @media (max-width: 1024px) {

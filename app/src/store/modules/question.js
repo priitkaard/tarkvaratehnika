@@ -30,10 +30,12 @@ const actions = {
     },
     updateSort(context, sort) {
         context.commit('updateSort', sort);
+        context.commit('updatePage', 0);
         context.dispatch('updateQuestionList');
     },
     updateCategoryId(context, categoryId) {
         context.commit('updateCategoryId', categoryId);
+        context.commit('updatePage', 0);
         context.dispatch('updateQuestionList');
     },
     async updateQuestionList({ state, commit }) {
