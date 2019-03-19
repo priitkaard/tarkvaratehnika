@@ -1,6 +1,8 @@
 package com.qaengine.security;
 
+import com.google.common.collect.ImmutableList;
 import com.qaengine.services.UserDetailsSecurityServiceImplementation;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static com.qaengine.security.SecurityConstants.SIGN_UP_URL;
 
@@ -32,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers(HttpMethod.GET, "/questions/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/question/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/answers/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/comments/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/category/**").permitAll()
@@ -51,20 +56,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-    // @Bean
-    // CorsConfigurationSource corsConfigurationSource() {
-    //     // final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     // source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-    //     // return source;
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(ImmutableList.of("*"));
+        configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setExposedHeaders(ImmutableList.of("Authorization"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
 
-    //     final CorsConfiguration configuration = new CorsConfiguration();
-    //     configuration.setAllowedOrigins(ImmutableList.of("*"));
-    //     configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
-    //     configuration.setAllowCredentials(true);
-    //     configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
-    //     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", configuration);
-    //     return source;
-
-    // }
+    }
 }

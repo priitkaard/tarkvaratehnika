@@ -2,7 +2,7 @@ import apiService from './ApiService';
 
 export default {
     autoCompleteSuggestions(input) {
-        return apiService.get('questions/auto-complete', {
+        return apiService.get('question/auto-complete', {
             params: {
                 query: input
             }
@@ -10,7 +10,7 @@ export default {
     },
 
     postQuestion(data) {
-        return apiService.post('questions', {
+        return apiService.post('question', {
             title: data.title,
             text: data.description,
             categoryId: data.categoryId
@@ -19,12 +19,16 @@ export default {
 
     getQuestions(filters) {
         const categoryId = filters.categoryId !== 0 ? filters.categoryId : null;
-        return apiService.get('questions', {
+        return apiService.get('question/list', {
             params: {
                 ...filters,
                 categoryId
             }
         });
+    },
+
+    getQuestion(id) {
+        return apiService.get(`question/${id}`);
     },
 
     vote(questionId, direction) {
@@ -39,9 +43,9 @@ export default {
         localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
 
         if (direction === 'UP') {
-            return apiService.put(`questions/${questionId}/upvote`);
+            return apiService.put(`question/${questionId}/upvote`);
         } else if (direction === 'DOWN') {
-            return apiService.put(`questions/${questionId}/downvote`);
+            return apiService.put(`question/${questionId}/downvote`);
         } else {
             throw {
                 error: 'Invalid vote direction!'

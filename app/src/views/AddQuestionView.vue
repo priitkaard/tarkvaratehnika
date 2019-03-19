@@ -44,7 +44,7 @@
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
     import UISelect from '../components/common/UISelect';
     import UIButton from '../components/common/UIButton';
-    import questionService from '../services/QuestionsService';
+    import questionService from '../services/QuestionService';
     import categoryService from '../services/CategoryService';
 
     export default {

@@ -1,4 +1,4 @@
-import questionService from '../../services/QuestionsService';
+import questionService from '../../services/QuestionService';
 
 const state = {
     filters: {

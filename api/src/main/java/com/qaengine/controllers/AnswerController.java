@@ -40,7 +40,7 @@ public class AnswerController {
         this.questionService = questionService;
     }
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @PostMapping("questions/{questionId}/answers")
     protected Answer addAnswer(
             @PathVariable Long questionId,
@@ -56,13 +56,13 @@ public class AnswerController {
     }
 
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @GetMapping("answers/{id}")
     protected Answer getAnswer(@PathVariable Long id) {
         return answerService.getAnswer(id);
     }
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @DeleteMapping("answers/{id}")
     protected Long deleteAnswer(@PathVariable Long id) {
         Answer answer = answerService.getAnswer(id);
@@ -70,7 +70,7 @@ public class AnswerController {
         return id;
     }
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @PutMapping("answers/{id}")
     protected Answer updateAnswer(
             @PathVariable Long id,
@@ -81,7 +81,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @PutMapping("answers/{id}/upvote")
     protected Answer upvoteAnswer(
             @PathVariable Long id
@@ -91,7 +91,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @PutMapping("answers/{id}/downvote")
     protected Answer downvoteAnswer(
             @PathVariable Long id
@@ -102,7 +102,7 @@ public class AnswerController {
     }
 
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @PutMapping("answers/{answerId}/accept")
     protected Answer acceptAnswer(
             @PathVariable Long answerId
@@ -116,7 +116,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    @CrossOrigin()
+    // @CrossOrigin()
     @PutMapping("questions/{questionId}/revertAnswerAccepted")
     protected Question revertAnswerAccepted(
             @PathVariable Long questionId

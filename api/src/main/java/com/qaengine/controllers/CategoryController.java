@@ -22,7 +22,7 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
-    @CrossOrigin()
+    // @CrossOrigin()
     public List<Category> listCategories() {
         return categoryService.listCategories();
     }

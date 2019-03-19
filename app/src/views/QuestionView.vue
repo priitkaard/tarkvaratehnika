@@ -36,11 +36,13 @@
 <script>
 import apiService from '../services/ApiService.js'
 import VoteChoice from '../components/VoteChoice.vue'
+import questionService from '../services/QuestionService';
+
 export default {
   name: 'QuestionView',
   methods: {
     getData: function () {
-      return apiService.get('questions/' + this.$route.params.id)
+      return questionService.getQuestion(this.$route.params.id);
     },
     addAnswer() {
       apiService.post('questions/'+this.$route.params.id+'/answers', {text: this.text}).then(res => this.answers = [...this.answers, res])
