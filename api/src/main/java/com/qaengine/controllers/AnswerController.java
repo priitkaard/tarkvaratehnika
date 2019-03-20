@@ -4,10 +4,12 @@ import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
+import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
+import com.qaengine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 public class AnswerController {
@@ -25,30 +28,35 @@ public class AnswerController {
     private AnswerRepository answerRepository;
     private AnswerService answerService;
     private QuestionService questionService;
+    private UserService userService;
 
     @Autowired
     public AnswerController(
             QuestionRepository questionRepository,
             AnswerRepository answerRepository,
             AnswerService answerService,
-            QuestionService questionService
-    ) {
+            QuestionService questionService,
+            UserService userService) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.answerService = answerService;
         this.questionService = questionService;
+        this.userService = userService;
     }
 
     @PostMapping("question/{questionId}/answer")
     public Answer answerQuestion (
             @PathVariable Long questionId,
-            @RequestBody @Valid AnswerInput answerinput
+            @RequestBody @Valid AnswerInput answerinput,
+            Principal principal
     ) {
+        ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(questionId);
 
         Answer answer = new Answer();
         HelperFunctions.copyProperties(answer, answerinput);
         answer.setQuestion(question);
+        answer.setUser(user);
 
         return answerRepository.save(answer);
     }

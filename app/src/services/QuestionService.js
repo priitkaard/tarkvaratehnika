@@ -30,8 +30,10 @@ export default {
     getQuestion(id) {
         return apiService.get(`question/${id}`);
     },
-
-    vote(questionId, direction) {
+    answerQuestion(questionId, text) {
+        return apiService.post(`question/${questionId}/answer`, { text });
+    },
+    async upVote(questionId) {
         // TODO: Instead send request to backend with authenticated user.
         const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
         if (votedQuestions.includes(questionId)) {
@@ -42,29 +44,19 @@ export default {
         votedQuestions.push(questionId);
         localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
 
-        if (direction === 'UP') {
-            return apiService.put(`question/${questionId}/upvote`);
-        } else if (direction === 'DOWN') {
-            return apiService.put(`question/${questionId}/downvote`);
-        } else {
+        return await apiService.put(`/question/${questionId}/upvote`);
+    },
+    async downVote(questionId) {
+        // TODO: Instead send request to backend with authenticated user.
+        const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
+        if (votedQuestions.includes(questionId)) {
             throw {
-                error: 'Invalid vote direction!'
+                error: 'Shouldn\'t be allowed to vote'
             }
         }
+        votedQuestions.push(questionId);
+        localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
 
+        return await apiService.put(`/question/${questionId}/downvote`);
     },
-
-    getQuestionCategories() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve([
-                    {id: 1, name: 'Tarkaratehnika'},
-                    {id: 2, name: 'Tehisintellekti ja masinõppe alused'},
-                    {id: 3, name: 'Tõenäosusteooria ja statistiline matemaatika'},
-                    {id: 4, name: 'Kasutajaliidesed'},
-                    {id: 5, name: 'Andmbebaasid I'}
-                ])
-            }, 100);
-        })
-    }
 }

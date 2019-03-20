@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomeView from './views/HomeView.vue';
-import QuestionView from './views/QuestionView.vue';
+import QuestionDetailView from './views/QuestionDetailView.vue';
 import QuestionListView from './views/QuestionListView.vue';
 import AddQuestionView from './views/AddQuestionView.vue';
 
@@ -31,9 +31,9 @@ export default new Router({
             component: QuestionListView
         },
         {
-            name: 'QuestionView',
+            name: 'QuestionDetailView',
             path: '/question/:id',
-            component: QuestionView
+            component: QuestionDetailView
         },
     ]
 });

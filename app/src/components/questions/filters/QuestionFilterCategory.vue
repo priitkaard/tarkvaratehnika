@@ -1,9 +1,10 @@
 <template>
     <div class="QuestionFilterCategory">
         <UISelect
-                v-on:select-changed="onChange"
+                @onChange="onChange"
                 :options="categories"
-                :value="filters.categoryId" />
+                :value="filters.categoryId"
+                full />
     </div>
 </template>
 

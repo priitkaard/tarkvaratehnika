@@ -1,5 +1,5 @@
 <template>
-    <div class="UISelect" ref="UISelect">
+    <div class="UISelect" ref="UISelect" :class="{ 'UISelect__full': full }">
         <div class="UISelect__closed noselect" v-on:click="toggleSelect">
             {{ selected ? selected.name : '' }}
 
@@ -26,7 +26,11 @@
     export default {
         name: "UISelect",
         components: {ChevronUpIcon, ChevronDownIcon},
-        props: ['options', 'value'],
+        props: {
+            options: Array,
+            value: Object,
+            full: Boolean,
+        },
         data() {
             return {
                 selectClosed: true,
@@ -34,7 +38,7 @@
         },
         computed: {
             selected() {
-                return this.options.filter(option => option.id === this.value)[0]
+                return this.options.filter(option => option === this.value)[0]
             }
         },
         methods: {
@@ -42,7 +46,8 @@
                 this.selectClosed = !this.selectClosed;
             },
             onChange(option) {
-                this.$emit('select-changed', option);
+                this.$emit('update:value', option);
+                this.$emit('onChange', option);
                 this.selectClosed = true;
             },
             onClickEvent(event) {
@@ -78,10 +83,13 @@
         @include shadow-box;
         position: relative;
         height: 40px;
-        width: 100%;
+        width: 200px;
+        max-width: 100%;
         background-color: white;
         text-align: center;
         line-height: 40px;
+
+        &__full { width: 100% }
 
 
         &__closed {

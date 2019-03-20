@@ -1,5 +1,9 @@
 import questionService from '../../services/QuestionService';
 
+function getQuestionById(state, questionId) {
+    return state.questions.questions.filter(q => q.id === questionId)[0];
+}
+
 const state = {
     filters: {
         page: 0,
@@ -50,18 +54,21 @@ const actions = {
 
         commit('updateQuestionList', questions);
     },
-    async voteQuestion(context, { id, direction }) {
+    async upVote(context, questionId) {
+        await questionService.upVote(questionId);
+        context.commit('incrementQuestionScore', questionId);
+        context.commit('setCanVote', {questionId, canVote: false});
+    },
+    async downVote(context, questionId) {
+        await questionService.downVote(questionId);
+        context.commit('decrementQuestionScore', questionId);
+        context.commit('setCanVote', {questionId, canVote: false});
+    },
+    async upVoteAnswer(context, answerId) {
 
-        if (!['UP', 'DOWN'].includes(direction)) {
-            throw {
-                error: 'Programming error',
-                message: 'Invalid question vote direction!'
-            };
-        }
+    },
+    async downVoteAnswer(context, answerId) {
 
-        await questionService.vote(id, direction);
-        const relativeScore = direction === 'UP' ? 1 : -1;
-        context.commit('updateQuestionScore', {id, relativeScore});
     }
 };
 const mutations = {
@@ -80,16 +87,17 @@ const mutations = {
     updateQuestionList(state, questions) {
         state.questions = questions
     },
-    updateQuestionScore(state, {id, relativeScore}) {
-        state.questions.questions = state.questions.questions.map(question => {
-            if (question.id !== id) {
-                return question;
-            }
-            question.score += relativeScore;
-            question.canVote = false;
-            return question;
-        })
-
+    incrementQuestionScore(state, questionId) {
+        const question = getQuestionById(state, questionId);
+        question.score += 1;
+    },
+    decrementQuestionScore(state, questionId) {
+        const question = getQuestionById(state, questionId);
+        question.score -= 1;
+    },
+    setCanVote(state, {questionId, value}) {
+        const question = getQuestionById(state, questionId);
+        question.canVote = value;
     }
 };
 

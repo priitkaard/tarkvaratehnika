@@ -1,6 +1,6 @@
 <template>
     <div class="UIButton">
-        <button @click.prevent="$emit('click')" :class="{'UIButton__outline': outline}">
+        <button @click.prevent="$emit('click')" :class="{'UIButton__outline': outline, 'UIButton__full': full}">
             {{ text }}
         </button>
     </div>
@@ -10,8 +10,9 @@
     export default {
         name: "UIButton",
         props: {
-            'text': String,
-            'outline': Boolean,
+            text: String,
+            outline: Boolean,
+            full: Boolean,
         }
     }
 </script>
@@ -48,6 +49,7 @@
                     color: white;
                 }
             }
+            &.UIButton__full { width: 100% }
         }
     }
 </style>

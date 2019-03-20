@@ -63,7 +63,7 @@
             },
             selectSuggestion(suggestion) {
                 this.$router.push({
-                    name: 'QuestionView',
+                    name: 'QuestionDetailView',
                     params: {
                         id: suggestion.id
                     }
