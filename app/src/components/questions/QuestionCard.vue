@@ -12,6 +12,14 @@
         </div>
 
         <div class="QuestionCard__details">
+            <div class="detail" v-if="views">
+                <eye-icon :size="20"/>
+                {{ views }}
+            </div>
+            <div class="detail" v-if="comments !== undefined">
+                <comment-icon :size="20"/>
+                {{ comments }}
+            </div>
             <div class="detail" v-if="question.user">
                 <account-icon />
                 {{ question.user.username }}
@@ -19,14 +27,6 @@
             <div class="detail" v-if="created">
                 <clock-outline-icon :size="20"/>
                 {{ created }}
-            </div>
-            <div class="detail" v-if="views">
-                <eye-icon :size="20"/>
-                {{ views }} view(s)
-            </div>
-            <div class="detail" v-if="comments !== undefined">
-                <comment-icon :size="20"/>
-                {{ comments }} comments
             </div>
             <div class="detail" v-if="question.category">
                 <folder-icon :size="20"/>
@@ -62,7 +62,7 @@
         computed: {
             created() {
                 if (this.question && this.question.created) {
-                    return moment(this.question.created).fromNow();
+                    return moment(this.question.created).fromNow(true);
                 }
                 return null;
             }
@@ -122,7 +122,9 @@
                 .UIButton { margin-right: -20px }
             }
             @media (max-width: 768px) {
-                position: initial;
+                position: relative;
+                height: auto;
+                line-height: 20px;
                 .detail {
                     display: block;
                     width: 100%;

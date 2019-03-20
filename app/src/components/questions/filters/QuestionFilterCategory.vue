@@ -33,7 +33,7 @@
         methods: {
             ...mapActions('question', ['updateCategory', 'updateQuestionList']),
             onChange(category) {
-                this.updateCategory(category);
+                this.updateCategory(category.id === 0 ? null : category);
             }
         }
     }
