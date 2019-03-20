@@ -39,6 +39,7 @@
 
     .QuestionCardVote {
         display: inline-flex;
+        vertical-align: top;
         flex-direction: column;
         text-align: center;
         width: 40px;

@@ -3,7 +3,7 @@
         <UISelect
                 @onChange="onChange"
                 :options="categories"
-                :value="filters.categoryId"
+                :value="filters.category"
                 full />
     </div>
 </template>
@@ -31,9 +31,9 @@
             ];
         },
         methods: {
-            ...mapActions('question', ['updateCategoryId', 'updateQuestionList']),
+            ...mapActions('question', ['updateCategory', 'updateQuestionList']),
             onChange(category) {
-                this.updateCategoryId(category.id);
+                this.updateCategory(category);
             }
         }
     }

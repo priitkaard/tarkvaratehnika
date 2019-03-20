@@ -1,4 +1,5 @@
 import apiService from './ApiService';
+import _ from 'lodash';
 
 export default {
     autoCompleteSuggestions(input) {
@@ -18,10 +19,17 @@ export default {
     },
 
     getQuestions(filters) {
-        const categoryId = filters.categoryId !== 0 ? filters.categoryId : null;
+        const questionFilters = _.clone(filters, true);
+
+        let categoryId = null;
+        if (questionFilters.category) {
+            categoryId = questionFilters.category.id;
+            delete questionFilters.category;
+        }
+
         return apiService.get('question/list', {
             params: {
-                ...filters,
+                ...questionFilters,
                 categoryId
             }
         });
@@ -58,5 +66,17 @@ export default {
         localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
 
         return await apiService.put(`/question/${questionId}/downvote`);
+    },
+    async upVoteAnswer(answerId) {
+        return await apiService.put(`/answer/${answerId}/upvote`);
+    },
+    async downVoteAnswer(answerId) {
+        return await apiService.put(`/answer/${answerId}/downvote`);
+    },
+    async commentAnswer(answerId, text) {
+        return await apiService.post(`/answer/${answerId}/comment`, {text});
+    },
+    async commentQuestion(questionId, text) {
+        return await apiService.post(`/question/${questionId}/comment`, {text});
     },
 }

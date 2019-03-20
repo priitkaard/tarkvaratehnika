@@ -7,14 +7,20 @@
                 @onDownVote="downVoteAnswer(answer.id)" />
 
         <div class="QuestionAnswerCard__body">
-            <h3>{{ answer.title }}</h3>
             <p v-html="answer.text"></p>
         </div>
 
         <div class="QuestionAnswerCard__details">
+            <div class="detail" v-if="answer.user">
+                <account-icon />
+                {{ answer.user.username }}
+            </div>
             <div class="detail" v-if="created">
                 <clock-outline-icon :size="20"/>
                 {{ created }}
+            </div>
+            <div class="detail">
+                <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
         </div>
     </div>
@@ -22,13 +28,15 @@
 
 <script>
     import QuestionCardVote from "./QuestionCardVote";
+    import UIButton from "../common/UIButton";
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import moment from 'moment';
     import {mapActions} from "vuex";
+    import AccountIcon from "vue-material-design-icons/Account";
 
     export default {
         name: "QuestionAnswerCard",
-        components: {QuestionCardVote, ClockOutlineIcon},
+        components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton},
         props: {
             'answer': Object,
         },
@@ -51,18 +59,17 @@
     @import '../../assets/styles/mixins';
 
     .QuestionAnswerCard {
-        display: flex;
         width: 100%;
         padding: 20px;
         background-color: white;
-        min-height: 150px;
+        min-height: 100px;
         margin: 10px 0;
         position: relative;
         @include shadow-box;
 
         &__body {
             display: inline-block;
-            width: 100%;
+            width: calc(100% - 40px);
             padding: 10px;
             vertical-align: middle;
             h3 {
@@ -82,8 +89,8 @@
         }
         &__details {
             position: absolute;
-            bottom: 10px;
-            right: 20px;
+            bottom: 0;
+            right: 0;
 
             .detail {
                 display: inline-flex;
@@ -92,11 +99,11 @@
                 margin-left: 20px;
                 .material-design-icon { margin-right: 5px }
             }
-            @media (max-width: 1000px) {
+            @media (max-width: 768px) {
                 position: initial;
                 .detail {
-                    display: inline-block;
-                    width: 50%;
+                    display: block;
+                    width: 100%;
                     margin-left: 0;
                     text-align: center;
                     margin-top: 10px;

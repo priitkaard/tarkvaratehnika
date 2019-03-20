@@ -33,6 +33,7 @@
 
 <style scoped lang="scss">
     .UITextField {
+        flex: 1;
         input {
             height: 40px;
             line-height: 40px;

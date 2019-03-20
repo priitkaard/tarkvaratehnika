@@ -12,9 +12,9 @@
         </div>
 
         <div class="QuestionCard__details">
-            <div class="detail" v-if="question.category">
-                <folder-icon :size="20"/>
-                {{ question.category.name }}
+            <div class="detail" v-if="question.user">
+                <account-icon />
+                {{ question.user.username }}
             </div>
             <div class="detail" v-if="created">
                 <clock-outline-icon :size="20"/>
@@ -28,26 +28,36 @@
                 <comment-icon :size="20"/>
                 {{ comments }} comments
             </div>
+            <div class="detail" v-if="question.category">
+                <folder-icon :size="20"/>
+                {{ question.category.name }}
+            </div>
+            <div class="detail" v-if="commentButton">
+                <UIButton text="Comment" @click="$emit('onCommentClick')"/>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
     import QuestionCardVote from "./QuestionCardVote";
+    import UIButton from "../common/UIButton";
     import FolderIcon from 'vue-material-design-icons/Folder';
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import EyeIcon from 'vue-material-design-icons/Eye';
     import CommentIcon from 'vue-material-design-icons/Comment';
     import moment from 'moment';
     import {mapActions} from "vuex";
+    import AccountIcon from "vue-material-design-icons/Account";
 
     export default {
         name: "QuestionCard",
-        components: {QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon},
+        components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton},
         props: {
             'question': Object,
             'views': Number,
-            'comments': Number
+            'comments': Number,
+            commentButton: Boolean,
         },
         computed: {
             created() {
@@ -68,7 +78,6 @@
     @import '../../assets/styles/mixins';
 
     .QuestionCard {
-        display: flex;
         width: 100%;
         padding: 20px;
         background-color: white;
@@ -79,9 +88,9 @@
 
         &__body {
             display: inline-block;
-            width: 100%;
+            width: calc(100% - 40px);
             padding: 10px;
-            vertical-align: middle;
+            vertical-align: top;
             h3 {
                 font-size: 20px;
                 white-space: nowrap;
@@ -99,8 +108,10 @@
         }
         &__details {
             position: absolute;
-            bottom: 10px;
+            bottom: 0;
             right: 20px;
+            height: 40px;
+            line-height: 40px;
 
             .detail {
                 display: inline-flex;
@@ -108,12 +119,13 @@
                 font-size: 14px;
                 margin-left: 20px;
                 .material-design-icon { margin-right: 5px }
+                .UIButton { margin-right: -20px }
             }
-            @media (max-width: 1000px) {
+            @media (max-width: 768px) {
                 position: initial;
                 .detail {
-                    display: inline-block;
-                    width: 50%;
+                    display: block;
+                    width: 100%;
                     margin-left: 0;
                     text-align: center;
                     margin-top: 10px;

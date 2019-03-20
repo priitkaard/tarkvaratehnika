@@ -27,7 +27,7 @@
 
 <script>
     import MenuIcon from "vue-material-design-icons/Menu";
-    import {mapActions, mapGetters, mapState} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "Navigation",
