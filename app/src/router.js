@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomeView from './views/HomeView.vue';
-import QuestionView from './views/QuestionView.vue';
+import QuestionDetailView from './views/QuestionDetailView.vue';
 import QuestionListView from './views/QuestionListView.vue';
 import AddQuestionView from './views/AddQuestionView.vue';
 
@@ -14,7 +14,10 @@ export default new Router({
         {
             path: '/',
             name: 'HomeView',
-            component: HomeView
+            component: HomeView,
+            meta: {
+                layout: 'full',
+            }
         },
         {
             path: '/questions/create',
@@ -25,13 +28,12 @@ export default new Router({
         {
             name: 'QuestionListView',
             path: '/questions',
-            component: QuestionListView,
-            props: true
+            component: QuestionListView
         },
         {
-            name: 'QuestionView',
+            name: 'QuestionDetailView',
             path: '/question/:id',
-            component: QuestionView
-        }
+            component: QuestionDetailView
+        },
     ]
 });

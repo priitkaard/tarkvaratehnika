@@ -1,24 +1,21 @@
 <template>
     <div class="HomeView" :style="{ backgroundImage: 'url(' + require('../assets/img/hero-image.jpg') + ')' }">
+        <navigation transparent />
+
         <div class="HomeView__overlay">
-            <!--div class="HomeView__header">
-                <h1>TUTKit</h1>
-                <p>Answers to your education questions</p>
-            </div-->
             <div class="HomeView__header">
                 <img src="@/assets/img/logo.png" />
             </div>
 
             <QuestionFilterSearch
                     class="HomeView__searchbar"
-                    v-on:execute-search="startSearch"
-                    v-on:input="updateQuery"
+                    v-on:search="startSearch"
                     :rounded="true" />
 
             <div class="HomeView__or">or</div>
 
             <button v-on:click="$router.push({name: 'AddQuestionView'})"
-                    class="HomeView__new_question_button">
+                    class="form-control HomeView__new_question_button">
                 Create new question
             </button>
 
@@ -28,28 +25,19 @@
 
 <script>
     import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
+    import Navigation from "../components/layout/Navigation";
 
     export default {
         name: "HomeView",
         components: {
+            Navigation,
             QuestionFilterSearch
-        },
-        data() {
-            return {
-                query: ''
-            }
         },
         methods: {
             startSearch() {
                 this.$router.push({
-                    name: 'QuestionListView',
-                    params: {
-                        query: this.query
-                    }
+                    name: 'QuestionListView'
                 });
-            },
-            updateQuery(value) {
-                this.query = value;
             }
         }
     }
@@ -106,18 +94,20 @@
         }
 
         &__new_question_button {
-            background-color: rgba(255, 255, 255, 0.9);
-            color: black;
+            color: white;
+            border: 1px solid white;
+            background-color: transparent;
             width: auto;
             padding: 0 20px;
             border-radius: 20px;
-            transition: background-color 0.4s;
-            @include shadow-box;
+            transition: all 0.4s;
 
             &:hover {
                 background-color: white;
+                color: #424242;
+                border: none;
                 cursor: pointer;
-                transition: background-color 0.4s;
+                transition: all 0.4s;
             }
         }
 

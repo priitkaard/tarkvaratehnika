@@ -1,9 +1,12 @@
 package com.qaengine.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qaengine.models.ApplicationUser;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,16 +18,45 @@ public class Answer {
     @GeneratedValue
     private Long id;
 
-    private Long questionId;
-    private String text;
-    private Integer score = 0;
-    private boolean accepted = false;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
+    @JsonIgnore
+    private Question question;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JoinColumn(name = "fk_answer_comment")
+    @Column(nullable = false)
+    private String text;
+
+    @Column(nullable = false)
+    private Integer score = 0;
+
+    @Column(nullable = false)
+    private boolean accepted = false;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
+    private ApplicationUser user;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updated;
+
+    @OneToMany(
+            mappedBy = "answer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Comment> comments = new ArrayList<>();
 
-    public Answer(Long questionId) {
-        this.questionId = questionId;
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated = new Date();
     }
 }

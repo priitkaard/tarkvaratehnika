@@ -1,18 +1,22 @@
 <template>
     <div id="app">
+        <navigation-drawer />
+
         <transition name="fade">
-            <Navigation v-if="!isHomeView"/>
+            <Navigation v-if="$route.meta.layout !== 'full'"/>
         </transition>
 
-        <div class="page-content" v-bind:class="{'nav-offset': !isHomeView}">
+        <div class="page-content" v-bind:class="{'nav-offset': $route.meta.layout !== 'full'}">
             <transition name="router-animation">
                 <router-view></router-view>
             </transition>
         </div>
 
         <transition name="fade">
-            <Footer v-if="!isHomeView"/>
+            <Footer v-if="$route.meta.layout !== 'full'"/>
         </transition>
+
+        <modal />
     </div>
 </template>
 
@@ -20,22 +24,16 @@
 
     import Navigation from "./components/layout/Navigation";
     import Footer from "./components/layout/Footer";
+    import NavigationDrawer from "./components/layout/NavigationDrawer";
+    import Modal from "./components/modal/Modal";
 
     export default {
         name: 'app',
         components: {
+            Modal,
+            NavigationDrawer,
             Footer,
             Navigation
-        },
-        data() {
-            return {
-                isHomeView: this.$route.name === 'HomeView'
-            }
-        },
-        watch: {
-            '$route'(to) {
-                this.isHomeView = to.name === 'HomeView';
-            }
         }
     }
 </script>

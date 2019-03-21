@@ -1,22 +1,38 @@
 <template>
     <div class="QuestionFilterBar">
-        <div class="option" v-for="option in options" v-bind:key="option">{{ option }}</div>
+        <div class="QuestionFilterBar__option"
+             v-for="option in options"
+             v-bind:class="{'QuestionFilterBar__option_active': filters.sort === option.key}"
+             v-bind:key="option.key"
+             v-on:click="onClick(option.key)">{{ option.name }}</div>
     </div>
 </template>
 
 <script>
+    import {mapGetters, mapActions} from 'vuex';
+
     export default {
         name: "QuestionFilterBar",
         data() {
             return {
                 options: [
-                    'Most popular',
-                    'Most responses',
-                    'Recently answered',
-                    'Most views',
-                    'Recently viewed',
-                    'No answers'
+                    {key: 'score', name: 'Most popular'},
+                    {key: 'answers', name: 'Most responses'},
+                    {key: 'last_answer', name: 'Recently answered'},
+                    {key: 'comments', name: 'Most comments'},
+                    {key: 'last_comment', name: 'Recently commented'}
                 ]
+            }
+        },
+        computed: {
+            ...mapGetters('question', ['filters'])
+        },
+        methods: {
+            ...mapActions('question', ['updateSort', 'updateQuestionList']),
+            onClick(sort) {
+                if (this.filters.sort !== sort) {
+                    this.updateSort(sort);
+                }
             }
         }
     }
@@ -38,7 +54,7 @@
         border-top: 2px solid $color-primary;
         overflow: hidden;
 
-        .option {
+        &__option {
             display: inline-block;
             height: $questions-sort-bar-height;
             line-height: $questions-sort-bar-height;
@@ -48,19 +64,19 @@
             padding: 0 20px;
             transition: 0.4s background-color;
 
-            &:first-child {
+            &_active {
                 background-color: $color-primary;
                 color: white;
                 font-weight: bold;
+                &:hover {
+                    background-color: $color-primary-darker;
+                }
             }
 
             &:hover {
                 cursor: pointer;
                 background-color: $color-background;
                 transition: 0.4s background-color;
-                &:first-child {
-                    background-color: $color-primary-darker;
-                }
             }
         }
         @media (max-width: 1024px) {

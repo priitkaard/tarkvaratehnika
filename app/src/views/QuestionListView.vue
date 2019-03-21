@@ -4,16 +4,16 @@
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionFilterSearch :initialValue="filters.query" />
+                <QuestionFilterSearch />
             </div>
             <div class="col-md-4">
-                <QuestionFilterCategory/>
+                <QuestionFilterCategory />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-8">
-                <QuestionsList :filters="filters" />
+                <QuestionsList />
             </div>
             <div class="col-md-4">
                 <QuestionStatistics />
@@ -28,10 +28,10 @@
     import QuestionStatistics from "../components/questions/sidebars/QuestionStatistics";
     import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
     import QuestionFilterCategory from "../components/questions/filters/QuestionFilterCategory";
+    import { mapActions } from 'vuex';
 
     export default {
         name: "QuestionListView",
-        props: ['query'],
         components: {
             QuestionFilterCategory,
             QuestionStatistics,
@@ -39,12 +39,11 @@
             QuestionsList,
             QuestionFilterSearch
         },
-        data() {
-            return {
-                filters: {
-                    query: this.query
-                }
-            }
+        methods: {
+            ...mapActions('question', ['updateQuestionList'])
+        },
+        created() {
+            this.updateQuestionList();
         }
     }
 </script>

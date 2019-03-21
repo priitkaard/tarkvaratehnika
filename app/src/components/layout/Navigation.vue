@@ -1,20 +1,23 @@
 <template>
-    <div class="Navigation">
+    <div class="Navigation" :class="{'Navigation__transparent': transparent}">
         <div class="container">
-            <div class="mobile-view">
-                <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo-inline.png"/>
-                <menu-icon/>
+            
+            <div class="Navigation__mobile">
+                <img @click="$router.push({name: 'HomeView'})" src="../../assets/img/logo-inline.png" alt="" />
+                <menu-icon @click="openDrawer" class="Navigation__mobile_hamburger" />
             </div>
 
-            <div class="desktop-view">
-                <div class="nav-logo">
-                    <img v-on:click="$router.push({name: 'HomeView'})" src="@/assets/img/logo-inline.png"/>
+            <div class="Navigation__desktop">
+                <div class="Navigation__desktop_logo">
+                    <img @click="$router.push({name: 'HomeView'})" src="../../assets/img/logo-inline.png" alt="" />
                 </div>
 
 
-                <div class="Navigation__menu">
+                <div class="Navigation__desktop_menu">
                     <ul>
-                        <li>Log in</li>
+                        <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
+                            {{ item.name }}
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -24,10 +27,18 @@
 
 <script>
     import MenuIcon from "vue-material-design-icons/Menu";
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "Navigation",
-        components: {MenuIcon}
+        props: {
+            transparent: Boolean
+        },
+        components: {MenuIcon},
+        methods: {
+            ...mapActions('navigation', ['openDrawer', 'chooseItem']),
+            ...mapGetters('navigation', ['getMenuItems']),
+        },
     }
 </script>
 
@@ -47,25 +58,50 @@
         top: 0;
         z-index: 9999;
 
-        &__menu {
-            ul {
-                li {
-                    display: inline-block;
-                    list-style-type: none;
-                    height: 50px;
-                    line-height: 50px;
-                    padding: 0 25px;
-                    border-bottom: 2px solid white;
-                    box-sizing: border-box;
-                    transition: background-color 0.4s;
+        &__transparent {
+            background-color: transparent;
+        }
 
-                    &:hover {
-                        cursor: pointer;
-                        background-color: rgba(255, 255, 255, 0.1);
+        &__mobile {
+            display: none;
+            width: 100%;
+            justify-content: space-between;
+            &_hamburger:hover {
+                cursor: pointer;
+            }
+        }
+
+        &__desktop {
+            display: flex;
+            justify-content: space-between;
+            &_logo, &_menu {
+                display: inline-block;
+            }
+            &_menu {
+                ul {
+                    li {
+                        display: inline-block;
+                        list-style-type: none;
+                        height: 50px;
+                        line-height: 50px;
+                        padding: 0 25px;
+                        border-bottom: 2px solid white;
+                        box-sizing: border-box;
                         transition: background-color 0.4s;
+
+                        &:hover {
+                            cursor: pointer;
+                            background-color: rgba(255, 255, 255, 0.1);
+                            transition: background-color 0.4s;
+                        }
                     }
                 }
             }
+        }
+        @media (max-width: 1024px) {
+            padding: 0 5%;
+            &__mobile {display: flex}
+            &__desktop {display: none}
         }
 
         img {
@@ -75,40 +111,6 @@
 
             &:hover {
                 cursor: pointer;
-            }
-        }
-
-        .desktop-view {
-            display: flex;
-            justify-content: space-between;
-            .nav-logo, .nav-menu {
-                display: inline-block;
-            }
-
-            .nav-search {
-                display: inline-block;
-                width: 50%;
-                line-height: 50px;
-                .QuestionSearch {
-                    width: 100%;
-                    margin-top: 5px;
-                }
-            }
-        }
-
-        .mobile-view {
-            display: none;
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        @media (max-width: 1024px) {
-            padding: 0 5%;
-            .mobile-view {
-                display: flex;
-            }
-            .desktop-view {
-                display: none;
             }
         }
     }

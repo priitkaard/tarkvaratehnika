@@ -1,16 +1,24 @@
 <template>
     <div class="QuestionFilterCategory">
-        <UISelect :options="categories" />
+        <UISelect
+                @onChange="onChange"
+                :options="categories"
+                :value="filters.category"
+                full />
     </div>
 </template>
 
 <script>
-    import UISelect from "../../UISelect";
-    import questionService from '../../../services/QuestionsService';
+    import UISelect from "../../common/UISelect";
+    import categoryService from '../../../services/CategoryService';
+    import {mapGetters, mapActions} from 'vuex';
 
     export default {
         name: "QuestionFilterCategory",
         components: {UISelect},
+        computed: {
+            ...mapGetters('question', ['filters'])
+        },
         data() {
             return {
                 categories: []
@@ -19,8 +27,14 @@
         async created() {
             this.categories = [
                 {id: 0, name: 'All lectures'},
-                ... await questionService.getQuestionCategories()
-            ]
+                ... await categoryService.listCategories()
+            ];
+        },
+        methods: {
+            ...mapActions('question', ['updateCategory', 'updateQuestionList']),
+            onChange(category) {
+                this.updateCategory(category.id === 0 ? null : category);
+            }
         }
     }
 </script>

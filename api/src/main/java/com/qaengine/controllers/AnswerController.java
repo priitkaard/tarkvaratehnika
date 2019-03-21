@@ -4,71 +4,87 @@ import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
+import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
+import com.qaengine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 public class AnswerController {
-    @Autowired
-    QuestionRepository questionRepository;
-    @Autowired
-    AnswerRepository answerRepository;
-    @Autowired
-    AnswerService answerService;
-    @Autowired
-    QuestionService questionService;
+    private QuestionRepository questionRepository;
+    private AnswerRepository answerRepository;
+    private AnswerService answerService;
+    private QuestionService questionService;
+    private UserService userService;
 
-    @CrossOrigin()
-    @PostMapping("questions/{questionId}/answers")
-    protected Answer addAnswer(
+    @Autowired
+    public AnswerController(
+            QuestionRepository questionRepository,
+            AnswerRepository answerRepository,
+            AnswerService answerService,
+            QuestionService questionService,
+            UserService userService) {
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
+        this.answerService = answerService;
+        this.questionService = questionService;
+        this.userService = userService;
+    }
+
+    @PostMapping("question/{questionId}/answer")
+    public Answer answerQuestion (
             @PathVariable Long questionId,
-            @RequestBody @Valid AnswerInput answerinput
+            @RequestBody @Valid AnswerInput answerinput,
+            Principal principal
     ) {
+        ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(questionId);
-        Answer answer = new Answer(questionId);
+
+        Answer answer = new Answer();
         HelperFunctions.copyProperties(answer, answerinput);
-        answer = answerRepository.save(answer);
-        question.getAnswers().add(answer);
-        questionRepository.save(question);
-        return answer;
+        answer.setQuestion(question);
+        answer.setUser(user);
+
+        return answerRepository.save(answer);
     }
 
 
-    @CrossOrigin()
-    @GetMapping("answers/{id}")
-    protected Answer getAnswer(@PathVariable Long id) {
+    @GetMapping("/answer/{id}")
+    public Answer getAnswer(@PathVariable Long id) {
         return answerService.getAnswer(id);
     }
 
-    @CrossOrigin()
-    @DeleteMapping("answers/{id}")
-    protected Long deleteAnswer(@PathVariable Long id) {
-        Answer answer = getAnswer(id);
-        Question question = questionService.getQuestion(answer.getQuestionId());
-        question.getAnswers().remove(answer);
-        questionRepository.save(question);
+    @DeleteMapping("/answers/{id}")
+    public Long deleteAnswer(@PathVariable Long id) {
+        Answer answer = answerService.getAnswer(id);
+        answerRepository.delete(answer);
         return id;
     }
 
-    @CrossOrigin()
-    @PutMapping("answers/{id}")
+    @PutMapping("/answer/{id}")
     protected Answer updateAnswer(
             @PathVariable Long id,
             @RequestBody @Valid AnswerInput answerInput
     ) {
-        Answer answer = getAnswer(id);
+        Answer answer = answerService.getAnswer(id);
         HelperFunctions.copyProperties(answer, answerInput);
         return answerRepository.save(answer);
     }
 
-    @CrossOrigin()
-    @PutMapping("answers/{id}/upvote")
+    @PutMapping("/answer/{id}/upvote")
     protected Answer upvoteAnswer(
             @PathVariable Long id
     ) {
@@ -77,8 +93,7 @@ public class AnswerController {
         return answerRepository.save(answer);
     }
 
-    @CrossOrigin()
-    @PutMapping("answers/{id}/downvote")
+    @PutMapping("/answer/{id}/downvote")
     protected Answer downvoteAnswer(
             @PathVariable Long id
     ) {
@@ -88,26 +103,25 @@ public class AnswerController {
     }
 
 
-    @CrossOrigin()
-    @PutMapping("answers/{answerId}/accept")
+    @PutMapping("/answer/{answerId}/accept")
     protected Answer acceptAnswer(
             @PathVariable Long answerId
     ) {
         Answer answer = answerService.getAnswer(answerId);
-        Question question = questionService.getQuestion(answer.getQuestionId());
-        questionRepository.revertAnswerAccepted(question.getId());
+
+        Question question = answer.getQuestion();
+        questionRepository.revertAnswerAccepted(question);
+
         answer.setAccepted(true);
         return answerRepository.save(answer);
     }
 
-    @CrossOrigin()
-    @PutMapping("questions/{questionId}/revertAnswerAccepted")
+    @PutMapping("/question/{questionId}/revertAnswerAccepted")
     protected Question revertAnswerAccepted(
             @PathVariable Long questionId
     ) {
         Question question = questionService.getQuestion(questionId);
-        questionRepository.revertAnswerAccepted(question.getId());
+        questionRepository.revertAnswerAccepted(question);
         return question;
     }
-
 }
