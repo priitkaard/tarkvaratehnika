@@ -1,8 +1,7 @@
 export default {
     namespaced: true,
     state: {
-        isLoggedIn: false,
-        user: null
+        isLoggedIn: !!localStorage.getItem('authToken'),
     },
     actions: {
         logIn(context) {
@@ -16,8 +15,5 @@ export default {
         setLoggedIn(state, value) {
             state.isLoggedIn = value;
         },
-        setUser(state, user) {
-            state.user = user;
-        }
     }
 }
