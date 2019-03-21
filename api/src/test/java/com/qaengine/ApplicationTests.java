@@ -79,16 +79,17 @@ public class ApplicationTests {
 		}
 
 	}
-	/*@Test
+	@Test
     public void questionList()
     {
         QuestionController questionController = new QuestionController(questionRepository, questionService,categoryService);
-        QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
+        QuestionInput questionInput = new QuestionInput("abc", "def", 5L);
         questionController.postQuestion(questionInput);
-        questionController.postQuestion(new QuestionInput("def", "hji", 2L));
-        //assertEquals(questionController.listQuestions(new QuestionListInput()).getQuestions().size(),2);
+        questionController.postQuestion(new QuestionInput("def", "hji", 5L));
+        QuestionListInput questionListInput = new QuestionListInput(0, 10, "score", "DESC", "", 5L);
+        assertEquals(questionController.listQuestions(questionListInput).getQuestions().size(),2);
 
-    }*/
+    }
 
     @Test
     public void upVote()
@@ -134,14 +135,6 @@ public class ApplicationTests {
         assertEquals(question2.getCategory().getId().longValue(), 2L);
     }
 
-	/*@Test
-	public void getQuestionFromService()
-	{
-		QuestionService questionService = new QuestionService(questionRepository);
-		QuestionController questionController = new QuestionController(questionRepository,questionService, categoryService);
-
-		System.out.println(questionService.getQuestion(1L));
-	}*/
 
 	//AnswerController
 
