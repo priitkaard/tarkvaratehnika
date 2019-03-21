@@ -3,6 +3,7 @@ package com.qaengine.services;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
+import com.qaengine.models.Category;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionList;
@@ -27,10 +28,13 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionService {
     private QuestionRepository questionRepository;
+    private CategoryService categoryService;
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository) {
+    public QuestionService(QuestionRepository questionRepository,
+                           CategoryService categoryService) {
         this.questionRepository = questionRepository;
+        this.categoryService = categoryService;
     }
 
     public QuestionList listQuestions(QuestionListInput input) {
@@ -97,5 +101,13 @@ public class QuestionService {
 
     public List<Question> autoCompleteQuestion(String input) {
         return questionRepository.getSimilarQuestions(input, PageRequest.of(0, 5));
+    }
+
+    public Long getTotalQuestions(Optional<Long> categoryId) {
+        if (categoryId.isPresent()) {
+            Category category = this.categoryService.getCategoryById(categoryId.get());
+            return questionRepository.countByCategory(category);
+        }
+        return questionRepository.count();
     }
 }

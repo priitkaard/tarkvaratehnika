@@ -30,4 +30,8 @@ public class CategoryService {
         }
         throw new ResourceNotFoundException();
     }
+
+    public Long getTotalCategories() {
+        return categoryRepository.count();
+    }
 }
