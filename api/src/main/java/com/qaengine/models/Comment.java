@@ -38,6 +38,10 @@ public class Comment {
     @JsonIgnore
     private Answer answer;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
+    private ApplicationUser user;
+
     @Column(nullable = false)
     private String text;
 

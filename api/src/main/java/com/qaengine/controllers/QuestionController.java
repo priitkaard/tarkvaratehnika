@@ -3,69 +3,80 @@ package com.qaengine.controllers;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
+import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.QuestionInput;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionList;
-import com.qaengine.models.outputs.QuestionListElement;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import com.qaengine.services.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
+@RequestMapping("/question")
 public class QuestionController {
     private QuestionRepository questionRepository;
     private QuestionService questionService;
     private CategoryService categoryService;
+    private UserService userService;
 
-    @Autowired
-    public QuestionController(QuestionRepository questionRepository, QuestionService questionService, CategoryService categoryService) {
+    public QuestionController(
+      QuestionRepository questionRepository,
+      QuestionService questionService,
+      CategoryService categoryService,
+      UserService userService
+    ) {
         this.questionRepository = questionRepository;
         this.questionService = questionService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
-    @GetMapping("/questions")
-    @CrossOrigin()
-    protected QuestionList listQuestions(QuestionListInput input) {
+    @GetMapping("/list")
+    protected QuestionList listQuestions(@Valid QuestionListInput input) {
         return questionService.listQuestions(input);
     }
 
-    @PostMapping()
-    @CrossOrigin()
-    protected Question postQuestion(@RequestBody @Valid QuestionInput questionInput) {
+    @PostMapping
+    protected Question postQuestion(
+      @RequestBody @Valid QuestionInput questionInput,
+      Principal principal
+    ) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
+        ApplicationUser user = userService.getUser(principal.getName());
+        if (user == null) {
+            throw new ResourceNotFoundException("Could not find user. Cannot create.");
+        }
         Question question = Question.builder()
                 .title(questionInput.getTitle())
                 .text(questionInput.getText())
                 .category(category)
+                .user(user)
                 .build();
         return questionRepository.save(question);
     }
 
-    @CrossOrigin("/questions")
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     protected Question getQuestion(@PathVariable Long id) {
         questionService.incrementViews(id);
         return questionService.getQuestion(id);
     }
 
-    @CrossOrigin()
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     protected Long deleteQuestion(@PathVariable Long id) {
         try {
             questionRepository.deleteById(id);
@@ -75,8 +86,7 @@ public class QuestionController {
         }
     }
 
-    @CrossOrigin()
-    @PutMapping("/questions{id}")
+    @PutMapping("/{id}")
     protected Question updateQuestion(
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
@@ -86,8 +96,7 @@ public class QuestionController {
         return questionRepository.save(question);
     }
 
-    @CrossOrigin()
-    @PutMapping("/questions{id}/upvote")
+    @PutMapping("/{id}/upvote")
     protected Question upvoteQuestion(
             @PathVariable Long id
     ) {
@@ -96,8 +105,7 @@ public class QuestionController {
         return questionRepository.save(question);
     }
 
-    @CrossOrigin()
-    @PutMapping("/questions{id}/downvote")
+    @PutMapping("/{id}/downvote")
     protected Question downvoteQuestion(
             @PathVariable Long id
     ) {
@@ -106,8 +114,7 @@ public class QuestionController {
         return questionRepository.save(question);
     }
 
-    @CrossOrigin()
-    @GetMapping("questions/auto-complete")
+    @GetMapping("/auto-complete")
     public List<Question> autoCompleteQuestion(@RequestParam String query) {
         return questionService.autoCompleteQuestion(query);
     }

@@ -15,6 +15,8 @@
         <transition name="fade">
             <Footer v-if="$route.meta.layout !== 'full'"/>
         </transition>
+
+        <modal />
     </div>
 </template>
 
@@ -23,10 +25,12 @@
     import Navigation from "./components/layout/Navigation";
     import Footer from "./components/layout/Footer";
     import NavigationDrawer from "./components/layout/NavigationDrawer";
+    import Modal from "./components/modal/Modal";
 
     export default {
         name: 'app',
         components: {
+            Modal,
             NavigationDrawer,
             Footer,
             Navigation

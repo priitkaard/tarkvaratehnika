@@ -1,4 +1,18 @@
-import questionService from '../../services/QuestionsService';
+import questionService from '../../services/QuestionService';
+
+function getQuestionById(state, questionId) {
+    return state.questions.questions.filter(q => q.id === questionId)[0];
+}
+function getAnswerById(state, answerId) {
+    state.questions.questions.forEach(question => {
+        question.answers.forEach(answer => {
+            if (answer.id === answerId) {
+                return answer;
+            }
+        });
+    });
+    return null;
+}
 
 const state = {
     filters: {
@@ -7,7 +21,7 @@ const state = {
         query: '',
         sort: 'score',
         direction: 'DESC',
-        categoryId: 0
+        category: null,
     },
     questions: {
         questions: [],
@@ -33,8 +47,8 @@ const actions = {
         context.commit('updatePage', 0);
         context.dispatch('updateQuestionList');
     },
-    updateCategoryId(context, categoryId) {
-        context.commit('updateCategoryId', categoryId);
+    updateCategory(context, category) {
+        context.commit('updateCategory', category);
         context.commit('updatePage', 0);
         context.dispatch('updateQuestionList');
     },
@@ -50,18 +64,25 @@ const actions = {
 
         commit('updateQuestionList', questions);
     },
-    async voteQuestion(context, { id, direction }) {
-
-        if (!['UP', 'DOWN'].includes(direction)) {
-            throw {
-                error: 'Programming error',
-                message: 'Invalid question vote direction!'
-            };
-        }
-
-        await questionService.vote(id, direction);
-        const relativeScore = direction === 'UP' ? 1 : -1;
-        context.commit('updateQuestionScore', {id, relativeScore});
+    async upVote(context, questionId) {
+        await questionService.upVote(questionId);
+        context.commit('incrementQuestionScore', questionId);
+        context.commit('setCanVote', {questionId, canVote: false});
+    },
+    async downVote(context, questionId) {
+        await questionService.downVote(questionId);
+        context.commit('decrementQuestionScore', questionId);
+        context.commit('setCanVote', {questionId, canVote: false});
+    },
+    async upVoteAnswer(context, answerId) {
+        await questionService.upVoteAnswer(answerId);
+        context.commit('incrementQuestionAnswerScore', answerId);
+        context.commit('setAnswerCanVote', {answerId, canVote: false});
+    },
+    async downVoteAnswer(context, answerId) {
+        await questionService.downVoteAnswer(answerId);
+        context.commit('decrementQuestionAnswerScore', answerId);
+        context.commit('setAnswerCanVote', {answerId, canVote: false});
     }
 };
 const mutations = {
@@ -74,23 +95,36 @@ const mutations = {
     updateQuery(state, query) {
         state.filters.query = query;
     },
-    updateCategoryId(state, categoryId) {
-        state.filters.categoryId = categoryId;
+    updateCategory(state, category) {
+        state.filters.category = category;
     },
     updateQuestionList(state, questions) {
         state.questions = questions
     },
-    updateQuestionScore(state, {id, relativeScore}) {
-        state.questions.questions = state.questions.questions.map(question => {
-            if (question.id !== id) {
-                return question;
-            }
-            question.score += relativeScore;
-            question.canVote = false;
-            return question;
-        })
-
-    }
+    incrementQuestionScore(state, questionId) {
+        const question = getQuestionById(state, questionId);
+        question.score += 1;
+    },
+    decrementQuestionScore(state, questionId) {
+        const question = getQuestionById(state, questionId);
+        question.score -= 1;
+    },
+    setCanVote(state, {questionId, value}) {
+        const question = getQuestionById(state, questionId);
+        question.canVote = value;
+    },
+    incrementQuestionAnswerScore(state, answerId) {
+        const answer = getAnswerById(state, answerId);
+        answer.score += 1;
+    },
+    decrementQuestionAnswerScore(state, answerId) {
+        const answer = getAnswerById(state, answerId);
+        answer.score -= 1;
+    },
+    setAnswerCanVote(state, {answerId, value}) {
+        const answer = getAnswerById(state, answerId);
+        answer.canVote = value;
+    },
 };
 
 export default {
