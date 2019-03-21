@@ -24,7 +24,7 @@
 
 <script>
     import ArrowRightIcon from "vue-material-design-icons/ArrowRight.vue"
-    import QuestionsService from '../../services/QuestionsService';
+    import QuestionService from '../../services/QuestionService';
 
     export default {
         name: "QuestionSearch",
@@ -43,7 +43,7 @@
                     this.suggestions = [];
                     return;
                 }
-                this.suggestions = await QuestionsService.autoCompleteSuggestions(this.searchInput);
+                this.suggestions = await QuestionService.autoCompleteSuggestions(this.searchInput);
             },
 
             startQuestionCreate() {

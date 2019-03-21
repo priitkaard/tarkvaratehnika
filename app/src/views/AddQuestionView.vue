@@ -14,23 +14,21 @@
                            type="text"
                            v-model="question.title" />
 
-                    <ckeditor class="AddQuestionView__box_description"
-                              :editor="editor.type"
-                              v-model="question.description"
-                              :config="editor.config">
-                    </ckeditor>
+                    <UITextArea :value.sync="question.description" />
 
                     <UISelect class="AddQuestionView__box_categories"
                               :options="categories"
-                              :value="question.categoryId"
-                              v-on:select-changed="onCategoryChange" />
+                              :value.sync="question.category"
+                              @onChange="onCategoryChange"
+                              full />
 
                     <div class="row">
                         <div class="col-md-7"></div>
                         <div class="col-md-5">
                             <UIButton class="AddQuestionView__box_submit"
                                       text="Post question"
-                                      v-on:click="postQuestion()" />
+                                      v-on:click="postQuestion()"
+                                      full />
                         </div>
                     </div>
                 </div>
@@ -41,38 +39,32 @@
 </template>
 
 <script>
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    import UISelect from '../components/UISelect';
-    import UIButton from '../components/UIButton';
-    import questionService from '../services/QuestionsService';
+    import UISelect from '../components/common/UISelect';
+    import UIButton from '../components/common/UIButton';
+    import UITextArea from '../components/common/UITextArea';
+    import questionService from '../services/QuestionService';
     import categoryService from '../services/CategoryService';
 
     export default {
         name: "AddQuestionView",
         components: {
             UISelect,
-            UIButton
+            UIButton,
+            UITextArea,
         },
         async created() {
             this.question.title = this.$route.params.userInput;
             this.categories = await categoryService.listCategories();
-            this.question.categoryId = this.categories[0].id;
+            this.question.category = this.categories[0];
         },
         data() {
             return {
                 question: {
                     title: '',
                     description: '',
-                    categoryId: 1
+                    category: null
                 },
                 categories: [],
-                editor: {
-                    type: ClassicEditor,
-                    config: {
-                        removePlugins: [ 'Heading', 'Link' ],
-                        toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
-                    },
-                }
             }
         },
         methods: {
@@ -87,7 +79,7 @@
                     categoryId: this.question.categoryId
                 });
                 this.$router.push({
-                    name: 'QuestionView',
+                    name: 'QuestionDetailView',
                     params: {
                         id: response.id
                     }

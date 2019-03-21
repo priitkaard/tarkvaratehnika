@@ -14,7 +14,7 @@ async function request(config) {
 
     // For future usage.
     if (localStorage.authToken) {
-        requestConfig.headers.authorization = `Bearer ${localStorage.authToken}`;
+        requestConfig.headers.authorization = localStorage.authToken;
     }
 
     try {
@@ -30,6 +30,8 @@ async function request(config) {
 }
 
 export default {
+    API_URL,
+
     get(url, config) {
         return request({
             ...config,
@@ -54,5 +56,5 @@ export default {
             url,
             data
         });
-    }
+    },
 }

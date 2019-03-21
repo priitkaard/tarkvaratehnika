@@ -1,14 +1,18 @@
 <template>
     <div class="QuestionsList">
-        <QuestionsListElement
+        <question-card
                 v-for="question in questions.questions"
-                v-bind:key="question.id"
-                v-bind:question="question" />
+                :key="question.id"
+                :question="question"
+                :comments="question.comments"
+                :views="question.views"
+                @onContentClick="openQuestionView(question.id)" />
 
         <div v-if="questions.questions.length === 0"
-            class="QuestionsList__no_results">
+             class="QuestionsList__no_results"
+        >
             <div>
-                <img src="../../../assets/img/travolta.gif" height="100" />
+                <img src="../../../assets/img/travolta.gif" height="100"  alt="No questions found" />
             </div>
             <div class="QuestionsList__no_results_text">
                 No questions found for your search...
@@ -31,14 +35,14 @@
 </template>
 
 <script>
-    import QuestionsListElement from './QuestionsListElement';
-    import UIButton from '../../UIButton';
+    import UIButton from '../../common/UIButton';
     import {mapGetters} from 'vuex';
+    import QuestionCard from "../QuestionCard";
 
     export default {
         name: "QuestionsList",
         components: {
-            QuestionsListElement,
+            QuestionCard,
             UIButton
         },
         computed: {
@@ -48,8 +52,11 @@
             updatePage(page) {
                 window.scrollTo(0,0);
                 this.$store.dispatch('question/updatePage', page);
-            }
-        }
+            },
+            openQuestionView(questionId) {
+                this.$router.push({ name: 'QuestionDetailView', params: { id: questionId } });
+            },
+        },
     }
 </script>
 

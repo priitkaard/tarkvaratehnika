@@ -1,5 +1,7 @@
 <template>
     <div class="HomeView" :style="{ backgroundImage: 'url(' + require('../assets/img/hero-image.jpg') + ')' }">
+        <navigation transparent />
+
         <div class="HomeView__overlay">
             <div class="HomeView__header">
                 <img src="@/assets/img/logo.png" />
@@ -23,10 +25,12 @@
 
 <script>
     import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
+    import Navigation from "../components/layout/Navigation";
 
     export default {
         name: "HomeView",
         components: {
+            Navigation,
             QuestionFilterSearch
         },
         methods: {
