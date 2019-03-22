@@ -13,5 +13,4 @@ public class Statistics {
     private long answers;
     private long comments;
     private long users;
-    private long categories;
 }
