@@ -4,19 +4,19 @@
             <div><chart-bar-icon :size="30  " /></div>
             <div>Statistics</div>
         </div>
-        <div class="listing mt-1 mb-2">
+        <div class="item mt-1 mb-2">
             <span>Total users:</span>
             <span>{{statistics.users}}</span>
         </div>
-        <div class="listing">
+        <div class="item">
             <span>Total questions:</span>
             <span>{{statistics.questions}}</span>
         </div>
-        <div class="listing">
+        <div class="item">
             <span>Total answers:</span>
             <span>{{statistics.answers}}</span>
         </div>
-        <div class="listing pb-4">
+        <div class="item pb-4">
             <span>Total comments:</span>
             <span>{{statistics.comments}}</span>
         </div>
@@ -52,7 +52,7 @@
             font-weight: bold;
         }
 
-        .listing{
+        .item{
             display: flex;
             justify-content: space-between;
             margin: 0px 15px 0px 15px;
