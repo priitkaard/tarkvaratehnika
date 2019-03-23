@@ -15,6 +15,6 @@ VALUES (1, 'Tehisintellekti ja masinõppe alused'),
        (14, 'Infosüsteemide arendus Javas'),
        (15, 'Programmeerimise algkursus'),
        (16, 'Programmeerimise põhikursus'),
-       (17, 'Algortimid ja andmestruktuurid'),
+       (17, 'Algoritmid ja andmestruktuurid'),
        (18, 'Robotite programmeerimine'),
        (19, 'Veebirakendused');

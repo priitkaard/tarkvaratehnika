@@ -79,4 +79,11 @@ export default {
     async commentQuestion(questionId, text) {
         return await apiService.post(`/question/${questionId}/comment`, {text});
     },
+
+    getStatistics(category) {
+        if (category) {
+            return apiService.get(`/statistics?category=${category}`);
+        }
+        return apiService.get('/statistics');
+    }
 }
