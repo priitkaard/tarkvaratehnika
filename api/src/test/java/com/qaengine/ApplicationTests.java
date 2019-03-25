@@ -1,6 +1,7 @@
 package com.qaengine;
 
 import com.qaengine.controllers.AnswerController;
+import com.qaengine.controllers.CategoryController;
 import com.qaengine.controllers.CommentController;
 import com.qaengine.controllers.QuestionController;
 import com.qaengine.database.AnswerRepository;
@@ -143,7 +144,7 @@ public class ApplicationTests {
         questionController.postQuestion(new QuestionInput("aa", "l", 2L));
         assertEquals(1, questionController.autoCompleteQuestion("l").size());
         assertEquals(0, questionController.autoCompleteQuestion("q").size());
-        
+
     }
 
     //AnswerController
@@ -325,5 +326,12 @@ public class ApplicationTests {
         userController.signUp(new ApplicationUserInput("test", "test"));
     }*/
 
+    //CategoryController
+    @Test
+    public void categoryControllerTest() {
+        CategoryController categoryController = new CategoryController(categoryService);
+        assert(categoryController.listCategories().size()>0);
+
+    }
 }
 
