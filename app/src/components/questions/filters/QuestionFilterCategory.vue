@@ -1,14 +1,15 @@
 <template>
     <div class="QuestionFilterCategory">
         <UISelect
-                v-on:select-changed="onChange"
+                @onChange="onChange"
                 :options="categories"
-                :value="filters.categoryId" />
+                :value="filters.category"
+                full />
     </div>
 </template>
 
 <script>
-    import UISelect from "../../UISelect";
+    import UISelect from "../../common/UISelect";
     import categoryService from '../../../services/CategoryService';
     import {mapGetters, mapActions} from 'vuex';
 
@@ -30,9 +31,9 @@
             ];
         },
         methods: {
-            ...mapActions('question', ['updateCategoryId', 'updateQuestionList']),
+            ...mapActions('question', ['updateCategory', 'updateQuestionList']),
             onChange(category) {
-                this.updateCategoryId(category.id);
+                this.updateCategory(category.id === 0 ? null : category);
             }
         }
     }

@@ -3,14 +3,15 @@ package com.qaengine.controllers;
 import com.qaengine.database.CommentRepository;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
+import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
 import com.qaengine.models.inputs.CommentInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.CommentService;
 import com.qaengine.services.QuestionService;
+import com.qaengine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 public class CommentController {
@@ -27,56 +29,62 @@ public class CommentController {
     private QuestionService questionService;
     private AnswerService answerService;
     private CommentService commentService;
+    private UserService userService;
 
     @Autowired
     public CommentController(
             CommentRepository commentRepository,
             QuestionService questionService,
             AnswerService answerService,
-            CommentService commentService
-    ) {
+            CommentService commentService,
+            UserService userService) {
         this.commentRepository = commentRepository;
         this.questionService = questionService;
         this.answerService = answerService;
         this.commentService = commentService;
+        this.userService = userService;
     }
 
-    @CrossOrigin()
-    @PostMapping("questions/{questionId}/comments")
-    public Comment addCommentToQuestion(
+    @PostMapping("/question/{questionId}/comment")
+    public Comment commentQuestion(
             @PathVariable Long questionId,
-            @RequestBody @Valid CommentInput commentInput
+            @RequestBody @Valid CommentInput commentInput,
+            Principal principal
     ) {
+        ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(questionId);
+
         Comment comment = new Comment();
         comment.setQuestion(question);
+        comment.setUser(user);
 
         HelperFunctions.copyProperties(comment, commentInput);
         return commentRepository.save(comment);
     }
 
-    @CrossOrigin()
-    @PostMapping("answers/{answerId}/comments")
-    public Comment addCommentToAnswer(
+    @PostMapping("answer/{answerId}/comment")
+    public Comment commentAnswer(
             @PathVariable Long answerId,
-            @RequestBody @Valid CommentInput commentInput
+            @RequestBody @Valid CommentInput commentInput,
+            Principal principal
     ) {
+        ApplicationUser user = userService.getUser(principal.getName());
         Answer answer = answerService.getAnswer(answerId);
+
         Comment comment = new Comment();
         comment.setAnswer(answer);
+        comment.setUser(user);
 
         HelperFunctions.copyProperties(comment, commentInput);
         return commentRepository.save(comment);
     }
 
-    @CrossOrigin()
-    @GetMapping("comments/{id}")
+    @GetMapping("/comment/{id}")
     public Comment getComment(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
 
-    @CrossOrigin()
-    @PutMapping("comments/{commentId}")
+    @PutMapping("/comment/{commentId}")
     public Comment updateComment(
             @PathVariable Long commentId,
             @RequestBody @Valid CommentInput commentInput
@@ -86,18 +94,14 @@ public class CommentController {
         return commentRepository.save(comment);
     }
 
-    @CrossOrigin()
-    @DeleteMapping("comments/{commentId}")
-    public Long deleteComment(
-            @PathVariable Long commentId
-    ) {
+    @DeleteMapping("/comment/{commentId}")
+    public Long deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
         return commentId;
     }
 
 
-    @CrossOrigin()
-    @PutMapping("comments/{id}/upvote")
+    @PutMapping("/comment/{id}/upvote")
     public Comment upvoteComment(
             @PathVariable Long id
     ) {
@@ -106,11 +110,8 @@ public class CommentController {
         return commentRepository.save(comment);
     }
 
-    @CrossOrigin()
-    @PutMapping("comments/{id}/downvote")
-    public Comment downvoteComment(
-            @PathVariable Long id
-    ) {
+    @PutMapping("/comment/{id}/downvote")
+    public Comment downvoteComment(@PathVariable Long id) {
         Comment comment = commentService.getCommentById(id);
         comment.setScore(comment.getScore() - 1);
         return commentRepository.save(comment);

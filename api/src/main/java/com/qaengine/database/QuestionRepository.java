@@ -1,5 +1,6 @@
 package com.qaengine.database;
 
+import com.qaengine.models.Category;
 import com.qaengine.models.Question;
 import com.qaengine.models.outputs.QuestionListElement;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, " +
+            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
             "LEFT JOIN Comment c ON c.question = q " +
@@ -31,7 +32,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query(
             "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
-            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, " +
+            "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
             "LEFT JOIN Comment c ON c.question = q " +
@@ -48,4 +49,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     @Query("SELECT q FROM Question q WHERE lower(q.title) LIKE lower(concat('%', ?1,'%'))")
     List<Question> getSimilarQuestions(String input, Pageable pageable);
+
+    @Query("SELECT count(q) FROM Question q WHERE q.category = :category")
+    Long countByCategory(@Param("category") Category category);
 }

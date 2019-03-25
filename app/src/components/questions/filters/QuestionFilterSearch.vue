@@ -34,7 +34,7 @@
 
 <script>
     import MagnifyIcon from "vue-material-design-icons/Magnify";
-    import questionService from '../../../services/QuestionsService';
+    import questionService from '../../../services/QuestionService';
     import {mapActions} from 'vuex';
 
     export default {
@@ -63,7 +63,7 @@
             },
             selectSuggestion(suggestion) {
                 this.$router.push({
-                    name: 'QuestionView',
+                    name: 'QuestionDetailView',
                     params: {
                         id: suggestion.id
                     }
