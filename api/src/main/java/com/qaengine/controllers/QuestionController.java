@@ -93,6 +93,8 @@ public class QuestionController {
     ) {
         Question question = questionService.getQuestion(id);
         HelperFunctions.copyProperties(question, questionInput);
+        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
+        question.setCategory(category);
         return questionRepository.save(question);
     }
 
