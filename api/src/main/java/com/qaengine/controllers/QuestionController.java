@@ -47,12 +47,12 @@ public class QuestionController {
     }
 
     @GetMapping("/list")
-    protected QuestionList listQuestions(@Valid QuestionListInput input) {
+    public QuestionList listQuestions(@Valid QuestionListInput input) {
         return questionService.listQuestions(input);
     }
 
     @PostMapping
-    protected Question postQuestion(
+    public Question postQuestion(
       @RequestBody @Valid QuestionInput questionInput,
       Principal principal
     ) {
@@ -71,13 +71,13 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    protected Question getQuestion(@PathVariable Long id) {
+    public Question getQuestion(@PathVariable Long id) {
         questionService.incrementViews(id);
         return questionService.getQuestion(id);
     }
 
     @DeleteMapping("/{id}")
-    protected Long deleteQuestion(@PathVariable Long id) {
+    public Long deleteQuestion(@PathVariable Long id) {
         try {
             questionRepository.deleteById(id);
             return id;
@@ -87,7 +87,7 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}")
-    protected Question updateQuestion(
+    public Question updateQuestion(
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
     ) {
@@ -97,7 +97,7 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}/upvote")
-    protected Question upvoteQuestion(
+    public Question upvoteQuestion(
             @PathVariable Long id
     ) {
         Question question = questionService.getQuestion(id);
@@ -106,7 +106,7 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}/downvote")
-    protected Question downvoteQuestion(
+    public Question downvoteQuestion(
             @PathVariable Long id
     ) {
         Question question = questionService.getQuestion(id);
