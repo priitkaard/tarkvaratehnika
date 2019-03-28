@@ -39,7 +39,8 @@ public class CommentService {
     public Long getTotalComments(Optional<Long> categoryId) {
         if (categoryId.isPresent()) {
             Category category = this.categoryService.getCategoryById(categoryId.get());
-            return commentRepository.countByCategory(category);
+            return commentRepository.countByQuestionCategory(category)
+                    + commentRepository.countByAnswerCategory(category);
         }
         return commentRepository.count();
     }
