@@ -18,6 +18,9 @@
                         <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
                             {{ item.name }}
                         </li>
+                        <li v-if="username != null">
+                            <span> <b> {{ username }} </b> points: X</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -33,6 +36,12 @@
         name: "Navigation",
         props: {
             transparent: Boolean
+        },
+        data ()
+        {
+            return {
+                username: localStorage.getItem('username')
+            }
         },
         components: {MenuIcon},
         methods: {
