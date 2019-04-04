@@ -369,7 +369,7 @@ public class ApplicationTests {
         assertEquals(statisticsController.getStatistics(4L).getQuestions(), 1);
         assertEquals(statisticsController.getStatistics(4L).getAnswers(), 1);
         //Right now does not count question comments
-        assertEquals(statisticsController.getStatistics(4L).getComments(), 2);
+        assertEquals(statisticsController.getStatistics(4L).getComments(), 3);
 
     }
 }

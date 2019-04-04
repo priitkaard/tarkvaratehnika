@@ -25,7 +25,6 @@ export default {
             }
             this.score++;
             this.canVote = false;
-           
         },
         voteDown: function () {
             if(this.type === 'post'){

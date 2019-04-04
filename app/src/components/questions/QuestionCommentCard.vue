@@ -20,12 +20,13 @@
     export default {
         name: "QuestionCommentCard",
         props: {
-            comment: Object,
-            created: null,
+            comment: Object
         },
         components: {AccountIcon},
-        created() {
-            this.created = moment(this.comment.created).fromNow();
+        data() {
+            return {
+                created: moment(this.comment.created).fromNow() 
+            }
         }
     }
 </script>
