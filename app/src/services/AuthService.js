@@ -6,7 +6,7 @@ export default {
     doLogin(token, username) {
         localStorage.setItem('authToken', token);
         localStorage.setItem('username', username);
-        store.dispatch('auth/logIn');
+        store.dispatch('auth/logIn', { username });
     },
 
     logOut() {

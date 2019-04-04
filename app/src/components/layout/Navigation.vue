@@ -18,8 +18,8 @@
                         <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
                             {{ item.name }}
                         </li>
-                        <li v-if="username != null">
-                            <span> <b> {{ username }} </b> points: X</span>
+                        <li v-if="username">
+                            {{ username }}
                         </li>
                     </ul>
                 </div>
@@ -30,18 +30,15 @@
 
 <script>
     import MenuIcon from "vue-material-design-icons/Menu";
-    import {mapActions, mapGetters} from "vuex";
+    import {mapActions, mapGetters, mapState} from "vuex";
 
     export default {
         name: "Navigation",
         props: {
             transparent: Boolean
         },
-        data ()
-        {
-            return {
-                username: localStorage.getItem('username')
-            }
+        computed: {
+            ...mapState('auth', ['username']),
         },
         components: {MenuIcon},
         methods: {
