@@ -47,9 +47,9 @@
 
         </div>
 
-        <h4 class="mt-5">Answer the question</h4>
+        <h4 class="mt-5" v-if="isLoggedIn">Answer the question</h4>
 
-        <form @submit.prevent="answerQuestion()">
+        <form @submit.prevent="answerQuestion()" v-if="isLoggedIn">
             <UITextArea :value.sync="answerInput" />
             <UIButton text="Answer" @click="answerQuestion()" />
         </form>
@@ -66,6 +66,7 @@
     import QuestionCard from "../components/questions/QuestionCard";
     import QuestionAnswerCard from "../components/questions/QuestionAnswerCard";
     import QuestionCommentCard from "../components/questions/QuestionCommentCard";
+    import {mapState} from "vuex";
 
     export default {
         name: 'QuestionDetailView',
@@ -97,6 +98,9 @@
                 ],
                 sortBy: null,
             }
+        },
+        computed: {
+            ...mapState('auth', ['isLoggedIn']),
         },
         methods: {
             async loadQuestion() {

@@ -12,10 +12,11 @@
                     v-on:search="startSearch"
                     :rounded="true" />
 
-            <div class="HomeView__or">or</div>
+            <div class="HomeView__or" v-if="isLoggedIn">or</div>
 
             <button v-on:click="$router.push({name: 'AddQuestionView'})"
-                    class="form-control HomeView__new_question_button">
+                    class="form-control HomeView__new_question_button"
+                    v-if="isLoggedIn">
                 Create new question
             </button>
 
@@ -26,12 +27,16 @@
 <script>
     import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
     import Navigation from "../components/layout/Navigation";
+    import {mapState} from "vuex";
 
     export default {
         name: "HomeView",
         components: {
             Navigation,
             QuestionFilterSearch
+        },
+        computed: {
+            ...mapState('auth', ['isLoggedIn']),
         },
         methods: {
             startSearch() {
