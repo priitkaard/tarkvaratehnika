@@ -46,6 +46,9 @@ public class Question {
     @Builder.Default
     private Integer score = 0;
 
+    @OneToMany(mappedBy = "question")
+    private List<Vote> votes;
+
     @Column(nullable = false)
     @Builder.Default
     private Integer views = 0;

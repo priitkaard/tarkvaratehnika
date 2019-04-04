@@ -1,11 +1,14 @@
 package com.qaengine.controllers;
 
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.database.VoteRepository;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.Question;
+import com.qaengine.models.Vote;
 import com.qaengine.models.inputs.QuestionInput;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionList;
@@ -30,17 +33,19 @@ import java.util.List;
 @RequestMapping("/question")
 public class QuestionController {
     private QuestionRepository questionRepository;
+    private VoteRepository voteRepository;
     private QuestionService questionService;
     private CategoryService categoryService;
     private UserService userService;
 
     public QuestionController(
-      QuestionRepository questionRepository,
-      QuestionService questionService,
-      CategoryService categoryService,
-      UserService userService
+            QuestionRepository questionRepository,
+            VoteRepository voteRepository, QuestionService questionService,
+            CategoryService categoryService,
+            UserService userService
     ) {
         this.questionRepository = questionRepository;
+        this.voteRepository = voteRepository;
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.userService = userService;
@@ -97,21 +102,55 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}/upvote")
-    protected Question upvoteQuestion(
-            @PathVariable Long id
+    protected Vote upvoteQuestion(
+            @PathVariable Long id,
+            Principal principal
     ) {
+        ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(id);
+
+        question.getVotes().forEach((Vote vote) -> {
+            if (vote.getUser() == user) {
+                throw new BadRequestException("You have already voted for this question");
+            }
+        });
+
         question.setScore(question.getScore() + 1);
-        return questionRepository.save(question);
+        questionRepository.save(question);
+
+        Vote vote = Vote.builder()
+                .question(question)
+                .user(user)
+                .relativeScore(1)
+                .build();
+        voteRepository.save(vote);
+        return vote;
     }
 
     @PutMapping("/{id}/downvote")
-    protected Question downvoteQuestion(
-            @PathVariable Long id
+    protected Vote downvoteQuestion(
+            @PathVariable Long id,
+            Principal principal
     ) {
+        ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(id);
+
+        question.getVotes().forEach((Vote vote) -> {
+            if (vote.getUser() == user) {
+                throw new BadRequestException("You have already voted for this question");
+            }
+        });
+
         question.setScore(question.getScore() - 1);
-        return questionRepository.save(question);
+        questionRepository.save(question);
+
+        Vote vote = Vote.builder()
+                .question(question)
+                .user(user)
+                .relativeScore(-1)
+                .build();
+        voteRepository.save(vote);
+        return vote;
     }
 
     @GetMapping("/auto-complete")

@@ -29,6 +29,9 @@ public class Answer {
     @Column(nullable = false)
     private Integer score = 0;
 
+    @OneToMany(mappedBy = "answer")
+    private List<Vote> votes;
+
     @Column(nullable = false)
     private boolean accepted = false;
     
