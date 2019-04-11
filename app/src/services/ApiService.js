@@ -1,6 +1,9 @@
 import Axios from 'axios';
 
-const API_URL = 'http://localhost:8080/';
+const API_URL =
+    process.env.NODE_ENV === 'production'
+        ? 'http://3.82.117.200:8080/'
+        : 'http://127.0.0.1:8080/';
 
 const axios = Axios.create({
     baseURL: API_URL
