@@ -23,11 +23,7 @@ public class CommentService {
 
     public Comment getCommentById(Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isPresent()) {
-            return comment.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return comment.orElseThrow(ResourceNotFoundException::new);
 
     }
 
@@ -37,11 +33,10 @@ public class CommentService {
     }
 
     public Long getTotalComments(Optional<Long> categoryId) {
-        if (categoryId.isPresent()) {
+        return categoryId.map(id -> {
             Category category = this.categoryService.getCategoryById(categoryId.get());
             return commentRepository.countByQuestionCategory(category)
                     + commentRepository.countByAnswerCategory(category);
-        }
-        return commentRepository.count();
+        }).orElse(commentRepository.count());
     }
 }

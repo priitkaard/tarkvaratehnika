@@ -86,11 +86,7 @@ public class QuestionService {
 
     public Question getQuestion(@PathVariable Long id) throws ResourceNotFoundException {
         Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            return question.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return question.orElseThrow(ResourceNotFoundException::new);
     }
 
     public void incrementViews(Long questionId) {
@@ -104,10 +100,9 @@ public class QuestionService {
     }
 
     public Long getTotalQuestions(Optional<Long> categoryId) {
-        if (categoryId.isPresent()) {
+        return categoryId.map(id -> {
             Category category = this.categoryService.getCategoryById(categoryId.get());
             return questionRepository.countByCategory(category);
-        }
-        return questionRepository.count();
+        }).orElse(questionRepository.count());
     }
 }

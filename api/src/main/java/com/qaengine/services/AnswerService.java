@@ -21,18 +21,13 @@ public class AnswerService {
 
     public Answer getAnswer(@PathVariable Long id) throws ResourceNotFoundException {
         Optional<Answer> answer = answerRepository.findById(id);
-        if (answer.isPresent()) {
-            return answer.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return answer.orElseThrow(ResourceNotFoundException::new);
     }
 
     public Long getTotalAnswers(Optional<Long> categoryId) {
-        if (categoryId.isPresent()) {
+        return categoryId.map(id -> {
             Category category = this.categoryService.getCategoryById(categoryId.get());
             return answerRepository.countByCategory(category);
-        }
-        return answerRepository.count();
+        }).orElse(answerRepository.count());
     }
 }
