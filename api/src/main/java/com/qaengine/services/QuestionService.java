@@ -3,8 +3,11 @@ package com.qaengine.services;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
+import com.qaengine.lib.HelperFunctions;
+import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.Question;
+import com.qaengine.models.inputs.QuestionInput;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionList;
 import com.qaengine.models.outputs.QuestionListElement;
@@ -104,5 +107,39 @@ public class QuestionService {
             Category category = this.categoryService.getCategoryById(categoryId.get());
             return questionRepository.countByCategory(category);
         }).orElse(questionRepository.count());
+    }
+
+    public Question saveQuestion(QuestionInput questionInput, ApplicationUser user, Category category) {
+        Question question = Question.builder()
+                .title(questionInput.getTitle())
+                .text(questionInput.getText())
+                .category(category)
+                .user(user)
+                .build();
+        return questionRepository.save(question);
+    }
+
+    public void deleteQuestion(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+    public Question updateQuestion(Long id, QuestionInput questionInput) {
+        Question question = getQuestion(id);
+        HelperFunctions.copyProperties(question, questionInput);
+        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
+        question.setCategory(category);
+        return questionRepository.save(question);
+    }
+
+    public Question upvoteQuestion(Long id) {
+        Question question = getQuestion(id);
+        question.setScore(question.getScore() + 1);
+        return questionRepository.save(question);
+    }
+
+    public Question downvoteQuestion(Long id) {
+        Question question = getQuestion(id);
+        question.setScore(question.getScore() - 1);
+        return questionRepository.save(question);
     }
 }
