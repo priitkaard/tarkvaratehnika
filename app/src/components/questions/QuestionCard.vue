@@ -38,7 +38,7 @@
         </div>
         <div v-if="question.user.username === currentUser">
                 KAMEHAHAHAHAHAHHA
-                <UITextField :value = "question.text" full />
+                <UITextField :value.sync="newText" full />
                 <UIButton text="Edit" @click="updateQuestion(newText)"/>
             </div>
     </div>
@@ -55,6 +55,7 @@
     import {mapActions, mapState} from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
     import UITextField from '../common/UITextField';
+    import questionService from '../../services/QuestionService';
 
     export default {
         name: "QuestionCard",
@@ -77,13 +78,14 @@
         methods: {
             ...mapActions('question', ['upVote', 'downVote']),
              async updateQuestion(newText) {
-                await questionService.updateQuestion(this.question.id, {title: this.question.title, text: newText, categoryId: this.question.categoryId});
-                await this.loadQuestion();
+                await questionService.updateQuestion(this.question.id, {text: newText, title: this.question.title, categoryId: this.question.category.id});
+                //await this.loadQuestion();
             },
         },
         data() {
             return { 
-                 currentUser: localStorage.getItem('username')
+                 currentUser: localStorage.getItem('username'),
+                 newText: this.question.text
             }
         }
     }
