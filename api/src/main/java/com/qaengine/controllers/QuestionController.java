@@ -2,7 +2,6 @@ package com.qaengine.controllers;
 
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
-import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.Question;
@@ -29,18 +28,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
-    private QuestionRepository questionRepository;
     private QuestionService questionService;
     private CategoryService categoryService;
     private UserService userService;
 
     public QuestionController(
-      QuestionRepository questionRepository,
       QuestionService questionService,
       CategoryService categoryService,
       UserService userService
     ) {
-        this.questionRepository = questionRepository;
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.userService = userService;
@@ -61,13 +57,7 @@ public class QuestionController {
         if (user == null) {
             throw new ResourceNotFoundException("Could not find user. Cannot create.");
         }
-        Question question = Question.builder()
-                .title(questionInput.getTitle())
-                .text(questionInput.getText())
-                .category(category)
-                .user(user)
-                .build();
-        return questionRepository.save(question);
+        return questionService.saveQuestion(questionInput, user, category);
     }
 
     @GetMapping("/{id}")
@@ -79,7 +69,7 @@ public class QuestionController {
     @DeleteMapping("/{id}")
     public Long deleteQuestion(@PathVariable Long id) {
         try {
-            questionRepository.deleteById(id);
+            questionService.deleteQuestion(id);
             return id;
         } catch (Exception e) {
             throw new ResourceNotFoundException();
@@ -91,29 +81,21 @@ public class QuestionController {
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
     ) {
-        Question question = questionService.getQuestion(id);
-        HelperFunctions.copyProperties(question, questionInput);
-        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
-        question.setCategory(category);
-        return questionRepository.save(question);
+        return questionService.updateQuestion(id, questionInput);
     }
 
     @PutMapping("/{id}/upvote")
     public Question upvoteQuestion(
             @PathVariable Long id
     ) {
-        Question question = questionService.getQuestion(id);
-        question.setScore(question.getScore() + 1);
-        return questionRepository.save(question);
+        return questionService.upvoteQuestion(id);
     }
 
     @PutMapping("/{id}/downvote")
     public Question downvoteQuestion(
             @PathVariable Long id
     ) {
-        Question question = questionService.getQuestion(id);
-        question.setScore(question.getScore() - 1);
-        return questionRepository.save(question);
+        return questionService.downvoteQuestion(id);
     }
 
     @GetMapping("/auto-complete")

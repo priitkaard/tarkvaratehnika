@@ -1,8 +1,5 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.AnswerRepository;
-import com.qaengine.database.QuestionRepository;
-import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Question;
@@ -24,21 +21,15 @@ import java.security.Principal;
 
 @RestController
 public class AnswerController {
-    private QuestionRepository questionRepository;
-    private AnswerRepository answerRepository;
     private AnswerService answerService;
     private QuestionService questionService;
     private UserService userService;
 
     @Autowired
     public AnswerController(
-            QuestionRepository questionRepository,
-            AnswerRepository answerRepository,
             AnswerService answerService,
             QuestionService questionService,
             UserService userService) {
-        this.questionRepository = questionRepository;
-        this.answerRepository = answerRepository;
         this.answerService = answerService;
         this.questionService = questionService;
         this.userService = userService;
@@ -52,13 +43,7 @@ public class AnswerController {
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(questionId);
-
-        Answer answer = new Answer();
-        HelperFunctions.copyProperties(answer, answerinput);
-        answer.setQuestion(question);
-        answer.setUser(user);
-
-        return answerRepository.save(answer);
+        return answerService.saveAnswer(user, question, answerinput);
     }
 
 
@@ -69,9 +54,7 @@ public class AnswerController {
 
     @DeleteMapping("/answers/{id}")
     public Long deleteAnswer(@PathVariable Long id) {
-        Answer answer = answerService.getAnswer(id);
-        answerRepository.delete(answer);
-        return id;
+        return answerService.deleteAnswer(id);
     }
 
     @PutMapping("/answer/{id}")
@@ -79,27 +62,21 @@ public class AnswerController {
             @PathVariable Long id,
             @RequestBody @Valid AnswerInput answerInput
     ) {
-        Answer answer = answerService.getAnswer(id);
-        HelperFunctions.copyProperties(answer, answerInput);
-        return answerRepository.save(answer);
+        return answerService.updateAnswer(id, answerInput);
     }
 
     @PutMapping("/answer/{id}/upvote")
     public Answer upvoteAnswer(
             @PathVariable Long id
     ) {
-        Answer answer = getAnswer(id);
-        answer.setScore(answer.getScore() + 1);
-        return answerRepository.save(answer);
+        return answerService.upvoteAnswer(id);
     }
 
     @PutMapping("/answer/{id}/downvote")
     public Answer downvoteAnswer(
             @PathVariable Long id
     ) {
-        Answer answer = getAnswer(id);
-        answer.setScore(answer.getScore() - 1);
-        return answerRepository.save(answer);
+        return answerService.downvoteAnswer(id);
     }
 
 
@@ -107,21 +84,13 @@ public class AnswerController {
     protected Answer acceptAnswer(
             @PathVariable Long answerId
     ) {
-        Answer answer = answerService.getAnswer(answerId);
-
-        Question question = answer.getQuestion();
-        questionRepository.revertAnswerAccepted(question);
-
-        answer.setAccepted(true);
-        return answerRepository.save(answer);
+        return answerService.acceptAnswer(answerId);
     }
 
     @PutMapping("/question/{questionId}/revertAnswerAccepted")
     protected Question revertAnswerAccepted(
             @PathVariable Long questionId
     ) {
-        Question question = questionService.getQuestion(questionId);
-        questionRepository.revertAnswerAccepted(question);
-        return question;
+        return answerService.revertAnswerAccepted(questionId);
     }
 }

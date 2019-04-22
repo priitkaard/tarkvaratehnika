@@ -1,6 +1,5 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.UserRepository;
 import com.qaengine.models.outputs.Statistics;
 import com.qaengine.services.*;
 import org.springframework.web.bind.annotation.GetMapping;

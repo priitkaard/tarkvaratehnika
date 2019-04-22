@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
-    @Query("SELECT count(a) FROM Answer a WHERE a.question.category = :category")
-    Long countByCategory(@Param("category") Category category);
+    Long countByCategory(Category category);
 }

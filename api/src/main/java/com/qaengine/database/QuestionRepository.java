@@ -50,6 +50,5 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     @Query("SELECT q FROM Question q WHERE lower(q.title) LIKE lower(concat('%', ?1,'%'))")
     List<Question> getSimilarQuestions(String input, Pageable pageable);
 
-    @Query("SELECT count(q) FROM Question q WHERE q.category = :category")
-    Long countByCategory(@Param("category") Category category);
+    Long countByCategory(Category category);
 }
