@@ -36,6 +36,11 @@
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
         </div>
+        <div v-if="question.user.username === currentUser">
+                KAMEHAHAHAHAHAHHA
+                <UITextField :value = "question.text" full />
+                <UIButton text="Edit" @click="updateQuestion(newText)"/>
+            </div>
     </div>
 </template>
 
@@ -49,10 +54,11 @@
     import moment from 'moment';
     import {mapActions, mapState} from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
+    import UITextField from '../common/UITextField';
 
     export default {
         name: "QuestionCard",
-        components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton},
+        components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton, UITextField},
         props: {
             'question': Object,
             'views': Number,
@@ -70,7 +76,16 @@
         },
         methods: {
             ...mapActions('question', ['upVote', 'downVote']),
+             async updateQuestion(newText) {
+                await questionService.updateQuestion(this.question.id, {title: this.question.title, text: newText, categoryId: this.question.categoryId});
+                await this.loadQuestion();
+            },
         },
+        data() {
+            return { 
+                 currentUser: localStorage.getItem('username')
+            }
+        }
     }
 </script>
 
