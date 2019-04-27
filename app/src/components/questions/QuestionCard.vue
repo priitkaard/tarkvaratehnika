@@ -32,7 +32,7 @@
                 <folder-icon :size="20"/>
                 {{ question.category.name }}
             </div>
-            <div class="detail" v-if="commentButton">
+            <div class="detail" v-if="commentButton && isLoggedIn">
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
         </div>
@@ -47,7 +47,7 @@
     import EyeIcon from 'vue-material-design-icons/Eye';
     import CommentIcon from 'vue-material-design-icons/Comment';
     import moment from 'moment';
-    import {mapActions} from "vuex";
+    import {mapActions, mapState} from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
 
     export default {
@@ -60,6 +60,7 @@
             commentButton: Boolean,
         },
         computed: {
+            ...mapState('auth', ['isLoggedIn']),
             created() {
                 if (this.question && this.question.created) {
                     return moment(this.question.created).fromNow(true);

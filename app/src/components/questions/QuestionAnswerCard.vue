@@ -20,7 +20,7 @@
                 {{ created }}
             </div>
             <div class="detail">
-                <UIButton text="Comment" @click="$emit('onCommentClick')"/>
+                <UIButton text="Comment" @click="$emit('onCommentClick')" v-if="isLoggedIn"/>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
     import UIButton from "../common/UIButton";
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import moment from 'moment';
-    import {mapActions} from "vuex";
+    import {mapActions, mapState} from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
 
     export default {
@@ -41,6 +41,7 @@
             'answer': Object,
         },
         computed: {
+            ...mapState('auth', ['isLoggedIn']),
             created() {
                 if (this.answer && this.answer.created) {
                     return moment(this.answer.created).fromNow();

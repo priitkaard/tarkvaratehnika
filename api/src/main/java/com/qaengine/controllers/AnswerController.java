@@ -75,7 +75,7 @@ public class AnswerController {
     }
 
     @PutMapping("/answer/{id}")
-    protected Answer updateAnswer(
+    public Answer updateAnswer(
             @PathVariable Long id,
             @RequestBody @Valid AnswerInput answerInput
     ) {
@@ -85,7 +85,7 @@ public class AnswerController {
     }
 
     @PutMapping("/answer/{id}/upvote")
-    protected Answer upvoteAnswer(
+    public Answer upvoteAnswer(
             @PathVariable Long id
     ) {
         Answer answer = getAnswer(id);
@@ -94,7 +94,7 @@ public class AnswerController {
     }
 
     @PutMapping("/answer/{id}/downvote")
-    protected Answer downvoteAnswer(
+    public Answer downvoteAnswer(
             @PathVariable Long id
     ) {
         Answer answer = getAnswer(id);

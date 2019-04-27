@@ -18,7 +18,7 @@ export default {
                     authService.logOut();
                 },
                 loggedIn: true,
-            }
+            },
         ],
     },
     getters: {
@@ -38,7 +38,7 @@ export default {
         },
         chooseItem(context, item) {
             item.action(context);
-        }
+        },
     },
     mutations: {
         setDrawer(state, value) {

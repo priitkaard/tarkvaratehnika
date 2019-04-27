@@ -1,7 +1,6 @@
 package com.qaengine.controllers;
 
 import com.qaengine.database.QuestionRepository;
-import com.qaengine.database.VoteRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
@@ -15,6 +14,7 @@ import com.qaengine.models.outputs.QuestionList;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
+import com.qaengine.services.VoteService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,31 +33,32 @@ import java.util.List;
 @RequestMapping("/question")
 public class QuestionController {
     private QuestionRepository questionRepository;
-    private VoteRepository voteRepository;
+    private VoteService voteService;
     private QuestionService questionService;
     private CategoryService categoryService;
     private UserService userService;
 
     public QuestionController(
-            QuestionRepository questionRepository,
-            VoteRepository voteRepository, QuestionService questionService,
-            CategoryService categoryService,
-            UserService userService
+      QuestionRepository questionRepository,
+      VoteService voteService,
+      QuestionService questionService,
+      CategoryService categoryService,
+      UserService userService
     ) {
         this.questionRepository = questionRepository;
-        this.voteRepository = voteRepository;
+        this.voteService = voteService;
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.userService = userService;
     }
 
     @GetMapping("/list")
-    protected QuestionList listQuestions(@Valid QuestionListInput input) {
+    public QuestionList listQuestions(@Valid QuestionListInput input) {
         return questionService.listQuestions(input);
     }
 
     @PostMapping
-    protected Question postQuestion(
+    public Question postQuestion(
       @RequestBody @Valid QuestionInput questionInput,
       Principal principal
     ) {
@@ -76,13 +77,13 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    protected Question getQuestion(@PathVariable Long id) {
+    public Question getQuestion(@PathVariable Long id) {
         questionService.incrementViews(id);
         return questionService.getQuestion(id);
     }
 
     @DeleteMapping("/{id}")
-    protected Long deleteQuestion(@PathVariable Long id) {
+    public Long deleteQuestion(@PathVariable Long id) {
         try {
             questionRepository.deleteById(id);
             return id;
@@ -92,65 +93,33 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}")
-    protected Question updateQuestion(
+    public Question updateQuestion(
             @PathVariable Long id,
             @RequestBody @Valid QuestionInput questionInput
     ) {
         Question question = questionService.getQuestion(id);
         HelperFunctions.copyProperties(question, questionInput);
+        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
+        question.setCategory(category);
         return questionRepository.save(question);
     }
 
     @PutMapping("/{id}/upvote")
-    protected Vote upvoteQuestion(
+    public Vote upvoteQuestion(
             @PathVariable Long id,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
-        Question question = questionService.getQuestion(id);
-
-        question.getVotes().forEach((Vote vote) -> {
-            if (vote.getUser() == user) {
-                throw new BadRequestException("You have already voted for this question");
-            }
-        });
-
-        question.setScore(question.getScore() + 1);
-        questionRepository.save(question);
-
-        Vote vote = Vote.builder()
-                .question(question)
-                .user(user)
-                .relativeScore(1)
-                .build();
-        voteRepository.save(vote);
-        return vote;
+        return voteService.voteQuestion(id, user, 1);
     }
 
     @PutMapping("/{id}/downvote")
-    protected Vote downvoteQuestion(
+    public Vote downvoteQuestion(
             @PathVariable Long id,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
-        Question question = questionService.getQuestion(id);
-
-        question.getVotes().forEach((Vote vote) -> {
-            if (vote.getUser() == user) {
-                throw new BadRequestException("You have already voted for this question");
-            }
-        });
-
-        question.setScore(question.getScore() - 1);
-        questionRepository.save(question);
-
-        Vote vote = Vote.builder()
-                .question(question)
-                .user(user)
-                .relativeScore(-1)
-                .build();
-        voteRepository.save(vote);
-        return vote;
+        return voteService.voteQuestion(id, user, -1);
     }
 
     @GetMapping("/auto-complete")

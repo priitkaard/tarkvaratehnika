@@ -25,15 +25,23 @@ const state = {
     },
     questions: {
         questions: [],
-        totalPages: 0
+        totalPages: 0,
     },
-    categories: null
+    categories: null,
+    statistics: {
+        category: null,
+        questions: 0,
+        answers: 0,
+        comments: 0,
+        users: 0,
+    }
 };
 
 const getters = {
     filters: (state) => state.filters,
     questions: (state) => state.questions,
-    categories: (state) => state.categories
+    categories: (state) => state.categories,
+    statistics: (state) => state.statistics,
 };
 
 const actions = {
@@ -51,6 +59,7 @@ const actions = {
         context.commit('updateCategory', category);
         context.commit('updatePage', 0);
         context.dispatch('updateQuestionList');
+        context.dispatch('updateStatistics', category);
     },
     async updateQuestionList({ state, commit }) {
         let questions = await questionService.getQuestions(state.filters);
@@ -83,7 +92,17 @@ const actions = {
         await questionService.downVoteAnswer(answerId);
         context.commit('decrementQuestionAnswerScore', answerId);
         context.commit('setAnswerCanVote', {answerId, canVote: false});
-    }
+    },
+    async updateStatistics(context, category) {
+        let statistics;
+        if (category && category.id) {
+            statistics = await questionService.getStatistics(category.id);
+        } else {
+            statistics = await questionService.getStatistics();
+        }
+        
+        context.commit('updateStatistics', {category, ...statistics});
+    } 
 };
 const mutations = {
     updatePage(state, page) {
@@ -125,6 +144,9 @@ const mutations = {
         const answer = getAnswerById(state, answerId);
         answer.canVote = value;
     },
+    updateStatistics(state, statistics) {
+        state.statistics = statistics;
+    }
 };
 
 export default {

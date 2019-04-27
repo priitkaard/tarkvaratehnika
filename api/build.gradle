@@ -27,7 +27,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("com.auth0:java-jwt:3.4.0")
+
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
     compile 'commons-beanutils:commons-beanutils:1.9.3'
     compile "io.springfox:springfox-swagger2:2.9.2"
     compile "io.springfox:springfox-swagger-ui:2.9.2"
@@ -39,4 +42,35 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task task2 {
+    doLast {
+        println "Task 2"
+    }
+}
+
+task task3 {
+    doLast {
+        println "Task 3"
+    }
+}
+
+task task1 {
+    dependsOn task2
+    dependsOn task3
+    doLast {
+		println "Task 1"
+	}
+}
+
+task deploy(type: Exec) {
+    dependsOn jar
+    commandLine './deploy.sh'
+    println 'Uploading jar to server...'
+}
+
+task deployClient(type: Exec) {
+    commandLine './deploy2.sh'
+    println 'Building frontend and copying to S3'
 }

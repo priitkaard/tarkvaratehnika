@@ -46,7 +46,7 @@ public class CommentController {
     }
 
     @PostMapping("/question/{questionId}/comment")
-    protected Comment commentQuestion(
+    public Comment commentQuestion(
             @PathVariable Long questionId,
             @RequestBody @Valid CommentInput commentInput,
             Principal principal
@@ -63,7 +63,7 @@ public class CommentController {
     }
 
     @PostMapping("answer/{answerId}/comment")
-    protected Comment commentAnswer(
+    public Comment commentAnswer(
             @PathVariable Long answerId,
             @RequestBody @Valid CommentInput commentInput,
             Principal principal
@@ -80,12 +80,12 @@ public class CommentController {
     }
 
     @GetMapping("/comment/{id}")
-    protected Comment getComment(@PathVariable Long id) {
+    public Comment getComment(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
 
     @PutMapping("/comment/{commentId}")
-    protected Comment updateComment(
+    public Comment updateComment(
             @PathVariable Long commentId,
             @RequestBody @Valid CommentInput commentInput
     ) {
@@ -95,14 +95,14 @@ public class CommentController {
     }
 
     @DeleteMapping("/comment/{commentId}")
-    protected Long deleteComment(@PathVariable Long commentId) {
+    public Long deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
         return commentId;
     }
 
 
     @PutMapping("/comment/{id}/upvote")
-    protected Comment upvoteComment(
+    public Comment upvoteComment(
             @PathVariable Long id
     ) {
         Comment comment = commentService.getCommentById(id);
@@ -111,7 +111,7 @@ public class CommentController {
     }
 
     @PutMapping("/comment/{id}/downvote")
-    protected Comment downvoteComment(@PathVariable Long id) {
+    public Comment downvoteComment(@PathVariable Long id) {
         Comment comment = commentService.getCommentById(id);
         comment.setScore(comment.getScore() - 1);
         return commentRepository.save(comment);

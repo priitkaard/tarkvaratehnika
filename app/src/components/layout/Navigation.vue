@@ -18,6 +18,9 @@
                         <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
                             {{ item.name }}
                         </li>
+                        <li v-if="username">
+                            {{ username }}
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -27,12 +30,15 @@
 
 <script>
     import MenuIcon from "vue-material-design-icons/Menu";
-    import {mapActions, mapGetters} from "vuex";
+    import {mapActions, mapGetters, mapState} from "vuex";
 
     export default {
         name: "Navigation",
         props: {
             transparent: Boolean
+        },
+        computed: {
+            ...mapState('auth', ['username']),
         },
         components: {MenuIcon},
         methods: {

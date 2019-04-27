@@ -14,6 +14,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public Long getTotalUsers() {
+        return userRepository.count();
+    }
+
     public ApplicationUser getUser(String username) {
         return userRepository.findByUsername(username);
     }
