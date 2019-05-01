@@ -22,12 +22,20 @@
             <div class="detail">
                 <UIButton text="Comment" @click="$emit('onCommentClick')" v-if="isLoggedIn"/>
             </div>
+            <div class="detail" v-if="isLoggedIn && answer.user.username === currentUser">
+                <UIButton text="Edit" @click="editAreaToggle"/>
+            </div>
+        </div>
+        <div v-if="answer.user.username === currentUser && editArea">
+            <UITextField :value.sync="newText" full />
+            <UIButton text="Edit" @click="updateAnswerText"/>
         </div>
     </div>
 </template>
 
 <script>
     import QuestionCardVote from "./QuestionCardVote";
+    import UITextField from '../common/UITextField';
     import UIButton from "../common/UIButton";
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import moment from 'moment';
@@ -36,7 +44,7 @@
 
     export default {
         name: "QuestionAnswerCard",
-        components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton},
+        components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton, UITextField},
         props: {
             'answer': Object,
         },
@@ -51,7 +59,21 @@
         },
         methods: {
             ...mapActions('question', ['upVoteAnswer', 'downVoteAnswer']),
+            editAreaToggle() {
+                this.editArea = !this.editArea
+            },
+            updateAnswerText() {
+                this.$emit('updateText', {new: this.newText, id: this.answer.id})
+                this.editAreaToggle()
+            }
         },
+        data() {
+            return{
+                currentUser: localStorage.getItem('username'),
+                editArea: false,
+                newText: this.answer.text,
+            }
+        }
     }
 </script>
 

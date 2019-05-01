@@ -35,12 +35,14 @@
             <div class="detail" v-if="commentButton && isLoggedIn">
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
-        </div>
-        <div v-if="question.user.username === currentUser">
-                KAMEHAHAHAHAHAHHA
-                <UITextField :value.sync="newText" full />
-                <UIButton text="Edit" @click="updateQuestion(newText)"/>
+            <div class="detail" v-if="question.user.username === currentUser">
+                <UIButton text="Edit" @click="editAreaToggle"/>
             </div>
+        </div>
+        <div v-if="question.user.username === currentUser && editArea">
+                <UITextField :value.sync="newText" full />
+                <UIButton text="Edit" @click="updateQuestionText"/>
+        </div>
     </div>
 </template>
 
@@ -55,7 +57,6 @@
     import {mapActions, mapState} from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
     import UITextField from '../common/UITextField';
-    import questionService from '../../services/QuestionService';
 
     export default {
         name: "QuestionCard",
@@ -77,15 +78,20 @@
         },
         methods: {
             ...mapActions('question', ['upVote', 'downVote']),
-             async updateQuestion(newText) {
-                await questionService.updateQuestion(this.question.id, {text: newText, title: this.question.title, categoryId: this.question.category.id});
-                //await this.loadQuestion();
+            editAreaToggle() {
+              this.editArea = !this.editArea
             },
+            updateQuestionText() {
+                this.$emit('updateText', this.newText)
+                this.editAreaToggle()
+            }
+
         },
         data() {
-            return { 
-                 currentUser: localStorage.getItem('username'),
-                 newText: this.question.text
+            return {
+                currentUser: localStorage.getItem('username'),
+                newText: this.question.text,
+                editArea: false,
             }
         }
     }

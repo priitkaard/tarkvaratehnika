@@ -81,9 +81,12 @@ export default {
     },
     async updateQuestion(questionId, data){
         return await apiService.put(`/question/${questionId}`, {
-        title: data.title,
-        text: data.text,
-        categoryId: data.categoryId})
+            title: data.title,
+            text: data.text,
+            categoryId: data.categoryId})
+    },
+    async updateAnswer(answerId, data){
+        return await apiService.put(`/answer/${answerId}`, {text: data.text})
     },
 
     getStatistics(category) {
