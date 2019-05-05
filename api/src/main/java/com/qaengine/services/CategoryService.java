@@ -25,10 +25,7 @@ public class CategoryService {
 
     public Category getCategoryById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        if (category.isPresent()) {
-            return category.get();
-        }
-        throw new ResourceNotFoundException();
+        return category.orElseThrow(ResourceNotFoundException::new);
     }
 
     public Long getTotalCategories() {
