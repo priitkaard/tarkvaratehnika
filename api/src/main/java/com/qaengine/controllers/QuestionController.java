@@ -5,8 +5,9 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.DTO.QuestionDTO;
+import com.qaengine.models.DTO.QuestionListDTOIn;
+import com.qaengine.models.DTO.QuestionListDTOOut;
 import com.qaengine.models.Question;
-import com.qaengine.models.DTO.QuestionListDTO;
 import com.qaengine.models.Vote;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
@@ -46,7 +47,7 @@ public class QuestionController {
     }
 
     @GetMapping("/list")
-    public QuestionListDTO.QuestionListDTOOut listQuestions(@Valid QuestionListDTO.QuestionListDTOIn input) {
+    public QuestionListDTOOut listQuestions(@Valid QuestionListDTOIn input) {
         return questionService.listQuestions(input);
     }
 

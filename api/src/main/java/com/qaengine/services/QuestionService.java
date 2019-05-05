@@ -8,8 +8,9 @@ import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.DTO.QuestionDTO;
+import com.qaengine.models.DTO.QuestionListDTOIn;
+import com.qaengine.models.DTO.QuestionListDTOOut;
 import com.qaengine.models.Question;
-import com.qaengine.models.DTO.QuestionListDTO;
 import com.qaengine.models.DTO.QuestionListElementDTO;
 import com.qaengine.models.Vote;
 import org.jsoup.Jsoup;
@@ -43,7 +44,7 @@ public class QuestionService {
         this.voteRepository = voteRepository;
     }
 
-    public QuestionListDTO.QuestionListDTOOut listQuestions(QuestionListDTO.QuestionListDTOIn input) {
+    public QuestionListDTOOut listQuestions(QuestionListDTOIn input) {
         Map<String, Sort.Direction> sortDirections = new HashMap<String, Sort.Direction>() {{
             put("DESC", Sort.Direction.DESC);
             put("ASC", Sort.Direction.ASC);
@@ -86,8 +87,7 @@ public class QuestionService {
 
         List<Vote> votes = voteRepository.findAllByQuestionIds(questionIds);
 
-        QuestionListDTO dto = new QuestionListDTO();
-        QuestionListDTO.QuestionListDTOOut list = dto.new QuestionListDTOOut();
+        QuestionListDTOOut list = new QuestionListDTOOut();
         list.setTotalPages(questions.getTotalPages());
         list.setQuestions(questions.getContent()
                 .stream()
