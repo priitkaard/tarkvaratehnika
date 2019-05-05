@@ -35,7 +35,7 @@
             <div class="detail" v-if="commentButton && isLoggedIn">
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
-            <div class="detail" v-if="question.user.username === currentUser && isLoggedIn">
+            <div class="detail" v-if="question.user.username === currentUser && isLoggedIn && showEdit">
                 <UIButton text="Edit" @click="editAreaToggle"/>
             </div>
         </div>
@@ -67,6 +67,7 @@
             'views': Number,
             'comments': Number,
             commentButton: Boolean,
+            'showEdit': Boolean,
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),

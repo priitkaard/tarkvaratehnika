@@ -1,7 +1,7 @@
 <template>
     <div class="QuestionDetailView container" v-if="question">
         <div>
-            <question-card :question="question" @onCommentClick="toggleComment('question')" @updateText = "updateQuestion($event)" comment-button />
+            <question-card :question="question" :showEdit="true" @onCommentClick="toggleComment('question')" @updateText = "updateQuestion($event)" comment-button />
 
             <div class="QuestionDetailView__comment_wrapper">
                 <question-comment-card
