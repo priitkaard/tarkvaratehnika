@@ -10,7 +10,6 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
 import com.qaengine.models.DTO.*;
-import com.qaengine.models.DTO.QuestionListDTO.QuestionListDTOIn;
 import com.qaengine.models.Question;
 
 import static org.junit.Assert.*;
@@ -130,7 +129,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionService, categoryService, userService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        questionController.deleteQuestion(question.getId());
+        questionController.deleteQuestion(question.getId(), principal);
         questionController.getQuestion(question.getId());
     }
 
@@ -139,7 +138,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionService, categoryService, userService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        questionController.updateQuestion(question.getId(), new QuestionDTO("ddd", "gff", 2L));
+        questionController.updateQuestion(question.getId(), new QuestionDTO("ddd", "gff", 2L), principal);
         Question question2 = questionController.getQuestion(question.getId());
         assertEquals(question2.getText(), "ddd");
         assertEquals(question2.getTitle(), "gff");
@@ -194,7 +193,7 @@ public class ApplicationTests {
         Question question = questionController.postQuestion(questionInput, principal);
         AnswerController answerController = new AnswerController(answerService, questionService, userService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
-        answerController.deleteAnswer(answer.getId());
+        answerController.deleteAnswer(answer.getId(), principal);
         answerController.getAnswer(answer.getId());
     }
 
@@ -205,7 +204,7 @@ public class ApplicationTests {
         Question question = questionController.postQuestion(questionInput, principal);
         AnswerController answerController = new AnswerController(answerService, questionService, userService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
-        answerController.updateAnswer(answer.getId(), new AnswerDTO("tst2"));
+        answerController.updateAnswer(answer.getId(), new AnswerDTO("tst2"), principal);
         Answer answer1 = answerController.getAnswer(answer.getId());
         assertEquals(answer.getId(), answer1.getId());
         assertEquals(answer1.getText(), "tst2");
@@ -287,7 +286,7 @@ public class ApplicationTests {
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
-        commentController.updateComment(comment.getId(), new CommentDTO("new"));
+        commentController.updateComment(comment.getId(), new CommentDTO("new"), principal);
         comment = commentController.getComment(comment.getId());
         assertEquals(comment.getText(), "new");
     }
@@ -301,7 +300,7 @@ public class ApplicationTests {
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
-        commentController.deleteComment(comment.getId());
+        commentController.deleteComment(comment.getId(), principal);
         commentController.getComment(comment.getId());
     }
 
