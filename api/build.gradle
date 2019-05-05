@@ -42,33 +42,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-task task2 {
-    doLast {
-        println "Task 2"
-    }
-}
-
-task task3 {
-    doLast {
-        println "Task 3"
-    }
-}
-
-task task1 {
-    dependsOn task2
-    dependsOn task3
-    doLast {
-		println "Task 1"
-	}
-}
-
-task deploy(type: Exec) {
-    dependsOn jar
-    commandLine './deploy.sh'
-    println 'Uploading jar to server...'
-}
-
-task deployClient(type: Exec) {
-    commandLine './deploy2.sh'
-    println 'Building frontend and copying to S3'
-}
+// task deploy(type: Exec) {
+//     commandLine './deploy.sh'
+//     println 'Building jar and uploading to server...'
+// }
+//
+// task deployClient(type: Exec) {
+//     commandLine './deploy2.sh'
+//     println 'Building frontend and copying to S3'
+// }

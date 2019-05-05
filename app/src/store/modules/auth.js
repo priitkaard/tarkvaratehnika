@@ -1,7 +1,7 @@
 export default {
     namespaced: true,
     state: {
-        isLoggedIn: !!localStorage.getItem('authToken'),
+        isLoggedIn: Boolean(localStorage.getItem('authToken')),
         username: localStorage.getItem('username'),
     },
     actions: {
@@ -20,6 +20,6 @@ export default {
         },
         setUsername(state, username) {
             state.username = username;
-        }
+        },
     }
 }

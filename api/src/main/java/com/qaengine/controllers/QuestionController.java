@@ -1,17 +1,18 @@
 package com.qaengine.controllers;
 
-import com.qaengine.Application;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
 import com.qaengine.models.DTO.QuestionDTO;
+import com.qaengine.models.DTO.QuestionListDTOIn;
+import com.qaengine.models.DTO.QuestionListDTOOut;
 import com.qaengine.models.Question;
-import com.qaengine.models.DTO.QuestionListDTO;
+import com.qaengine.models.Vote;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.qaengine.services.VoteService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,19 +33,21 @@ public class QuestionController {
     private QuestionService questionService;
     private CategoryService categoryService;
     private UserService userService;
+    private VoteService voteService;
 
     public QuestionController(
-      QuestionService questionService,
-      CategoryService categoryService,
-      UserService userService
-    ) {
+            QuestionService questionService,
+            CategoryService categoryService,
+            UserService userService,
+            VoteService voteService) {
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.voteService = voteService;
     }
 
     @GetMapping("/list")
-    public QuestionListDTO.QuestionListDTOOut listQuestions(@Valid QuestionListDTO.QuestionListDTOIn input) {
+    public QuestionListDTOOut listQuestions(@Valid QuestionListDTOIn input) {
         return questionService.listQuestions(input);
     }
 
@@ -93,17 +96,21 @@ public class QuestionController {
     }
 
     @PutMapping("/{id}/upvote")
-    public Question upvoteQuestion(
-            @PathVariable Long id
+    public Vote upvoteQuestion(
+            @PathVariable Long id,
+            Principal principal
     ) {
-        return questionService.upvoteQuestion(id);
+        ApplicationUser user = userService.getUser(principal.getName());
+        return voteService.voteQuestion(id, user, 1);
     }
 
     @PutMapping("/{id}/downvote")
-    public Question downvoteQuestion(
-            @PathVariable Long id
+    public Vote downvoteQuestion(
+            @PathVariable Long id,
+            Principal principal
     ) {
-        return questionService.downvoteQuestion(id);
+        ApplicationUser user = userService.getUser(principal.getName());
+        return voteService.voteQuestion(id, user, -1);
     }
 
     @GetMapping("/auto-complete")

@@ -1,5 +1,6 @@
 import apiService from './ApiService';
 import _ from 'lodash';
+import store from '../store';
 
 export default {
     autoCompleteSuggestions(input) {
@@ -42,29 +43,9 @@ export default {
         return apiService.post(`question/${questionId}/answer`, { text });
     },
     async upVote(questionId) {
-        // TODO: Instead send request to backend with authenticated user.
-        const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
-        if (votedQuestions.includes(questionId)) {
-            throw {
-                error: 'Shouldn\'t be allowed to vote'
-            }
-        }
-        votedQuestions.push(questionId);
-        localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
-
         return await apiService.put(`/question/${questionId}/upvote`);
     },
     async downVote(questionId) {
-        // TODO: Instead send request to backend with authenticated user.
-        const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
-        if (votedQuestions.includes(questionId)) {
-            throw {
-                error: 'Shouldn\'t be allowed to vote'
-            }
-        }
-        votedQuestions.push(questionId);
-        localStorage.setItem('votedQuestions', JSON.stringify(votedQuestions));
-
         return await apiService.put(`/question/${questionId}/downvote`);
     },
     async upVoteAnswer(answerId) {
@@ -88,11 +69,18 @@ export default {
     async updateAnswer(answerId, data){
         return await apiService.put(`/answer/${answerId}`, {text: data.text})
     },
-
-    getStatistics(category) {
+    async getStatistics(category) {
+        let url = '/statistics';
         if (category) {
-            return apiService.get(`/statistics?category=${category}`);
+            url = `/statistics?category=${category}`;
         }
-        return apiService.get('/statistics');
+        return await apiService.get(url);
+    },
+    hasVoted(question) {
+        return Boolean(
+            question &&
+            question.votes &&
+            question.votes.find(vote => vote.user.username === store.state.auth.username)
+        );
     }
 }

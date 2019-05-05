@@ -56,13 +56,15 @@
             this.question.title = this.$route.params.userInput;
             this.categories = await categoryService.listCategories();
             this.question.category = this.categories[0];
+            this.question.categoryId = this.categories[0] && this.categories[0].id;
         },
         data() {
             return {
                 question: {
                     title: '',
                     description: '',
-                    category: null
+                    category: null,
+                    categoryId: null,
                 },
                 categories: [],
             }

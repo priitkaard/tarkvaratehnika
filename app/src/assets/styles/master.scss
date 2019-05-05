@@ -94,3 +94,8 @@ body, html {
   /* Non-prefixed version, currently
                                    supported by Chrome and Opera */
 }
+
+blockquote {
+  display: block;
+  border-left: 5px solid $color-primary;
+}

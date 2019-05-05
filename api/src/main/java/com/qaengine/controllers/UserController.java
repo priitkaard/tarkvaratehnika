@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class UserController {
     private UserService userService;
@@ -19,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/user/sign-up")
-    public ApplicationUser signUp(@RequestBody ApplicationUserDTO userInput) {
+    public ApplicationUser signUp(@Valid @RequestBody ApplicationUserDTO userInput) {
         userService.findByUsername(userInput.getUsername()).ifPresent(user -> {
             throw new BadRequestException("ApplicationUser with given username already exists.");
         });

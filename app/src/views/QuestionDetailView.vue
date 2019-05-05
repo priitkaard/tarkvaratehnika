@@ -18,7 +18,7 @@
         </div>
 
         <h4 class="mt-5">Answers</h4>
-        <p v-if="question.answers.length < 1">No answers yet</p>
+        <p v-if="question.answers && question.answers.length < 1">No answers yet</p>
         <UISelect :options="sortOptions"
                   :value.sync="sortBy"
                   v-if="question.answers && question.answers.length > 0" />
