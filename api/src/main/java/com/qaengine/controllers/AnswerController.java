@@ -1,9 +1,10 @@
 package com.qaengine.controllers;
 
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
+import com.qaengine.models.DTO.AnswerDTO;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
@@ -38,7 +39,7 @@ public class AnswerController {
     @PostMapping("question/{questionId}/answer")
     public Answer answerQuestion (
             @PathVariable Long questionId,
-            @RequestBody @Valid AnswerInput answerinput,
+            @RequestBody @Valid AnswerDTO answerinput,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
@@ -53,15 +54,22 @@ public class AnswerController {
     }
 
     @DeleteMapping("/answers/{id}")
-    public Long deleteAnswer(@PathVariable Long id) {
+    public Long deleteAnswer(@PathVariable Long id, Principal principal) {
+        if (!answerService.getAnswer(id).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         return answerService.deleteAnswer(id);
     }
 
     @PutMapping("/answer/{id}")
     public Answer updateAnswer(
             @PathVariable Long id,
-            @RequestBody @Valid AnswerInput answerInput
+            @RequestBody @Valid AnswerDTO answerInput,
+            Principal principal
     ) {
+        if (!answerService.getAnswer(id).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         return answerService.updateAnswer(id, answerInput);
     }
 
@@ -82,15 +90,23 @@ public class AnswerController {
 
     @PutMapping("/answer/{answerId}/accept")
     protected Answer acceptAnswer(
-            @PathVariable Long answerId
+            @PathVariable Long answerId,
+            Principal principal
     ) {
+        if (!answerService.getAnswer(answerId).getQuestion().getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         return answerService.acceptAnswer(answerId);
     }
 
     @PutMapping("/question/{questionId}/revertAnswerAccepted")
     protected Question revertAnswerAccepted(
-            @PathVariable Long questionId
+            @PathVariable Long questionId,
+            Principal principal
     ) {
+        if (!questionService.getQuestion(questionId).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         return answerService.revertAnswerAccepted(questionId);
     }
 }

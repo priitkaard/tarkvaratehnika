@@ -1,4 +1,4 @@
-package com.qaengine.models.outputs;
+package com.qaengine.models.DTO;
 
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
-public class QuestionListElement {
+public class QuestionListElementDTO {
     private long id;
     private String title;
     private String text;

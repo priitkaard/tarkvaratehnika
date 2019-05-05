@@ -1,16 +1,17 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.QuestionRepository;
+import com.qaengine.Application;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
+import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.QuestionInput;
-import com.qaengine.models.inputs.QuestionListInput;
-import com.qaengine.models.outputs.QuestionList;
+import com.qaengine.models.DTO.QuestionListDTO;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,13 +44,13 @@ public class QuestionController {
     }
 
     @GetMapping("/list")
-    public QuestionList listQuestions(@Valid QuestionListInput input) {
+    public QuestionListDTO.QuestionListDTOOut listQuestions(@Valid QuestionListDTO.QuestionListDTOIn input) {
         return questionService.listQuestions(input);
     }
 
     @PostMapping
     public Question postQuestion(
-      @RequestBody @Valid QuestionInput questionInput,
+      @RequestBody @Valid QuestionDTO questionInput,
       Principal principal
     ) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
@@ -67,7 +68,10 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{id}")
-    public Long deleteQuestion(@PathVariable Long id) {
+    public Long deleteQuestion(@PathVariable Long id, Principal principal) {
+        if (!questionService.getQuestion(id).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         try {
             questionService.deleteQuestion(id);
             return id;
@@ -79,8 +83,12 @@ public class QuestionController {
     @PutMapping("/{id}")
     public Question updateQuestion(
             @PathVariable Long id,
-            @RequestBody @Valid QuestionInput questionInput
+            @RequestBody @Valid QuestionDTO questionInput,
+            Principal principal
     ) {
+        if (!questionService.getQuestion(id).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         return questionService.updateQuestion(id, questionInput);
     }
 
