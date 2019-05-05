@@ -51,6 +51,10 @@
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
+            currentUsername()
+            {
+                return this.username;
+            },
             created() {
                 if (this.answer && this.answer.created) {
                     return moment(this.answer.created).fromNow();
@@ -62,16 +66,18 @@
             }
         },
         methods: {
-            ...mapActions('question', ['upVoteAnswer', 'downVoteAnswer']),
             editAreaToggle() {
                 this.editArea = !this.editArea
             },
             updateAnswerText() {
                 this.$emit('updateText', {new: this.newText, id: this.answer.id})
                 this.editAreaToggle()
+
+            },
             addVoteToAnswer(vote) {
                 this.answer.votes.push(vote);
             },
+
             async upVoteAnswer() {
                 const vote = await questionService.upVoteAnswer(this.answer.id);
                 this.addVoteToAnswer(vote);
@@ -85,10 +91,13 @@
         },
         data() {
             return{
-                currentUser: localStorage.getItem('username'),
+                currentUser: '',
                 editArea: false,
                 newText: this.answer.text,
             }
+        },
+        created() {
+            this.currentUser = this.currentUsername;
         }
     }
 </script>

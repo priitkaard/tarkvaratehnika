@@ -35,7 +35,7 @@
             <div class="detail" v-if="commentButton && isLoggedIn">
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
-            <div class="detail" v-if="question.user.username === currentUser">
+            <div class="detail" v-if="question.user.username === currentUser && isLoggedIn">
                 <UIButton text="Edit" @click="editAreaToggle"/>
             </div>
         </div>
@@ -70,6 +70,10 @@
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
+            currentUsername()
+            {
+                return this.username;
+            },
             created() {
                 if (this.question && this.question.created) {
                     return moment(this.question.created).fromNow(true);
@@ -81,15 +85,13 @@
             }
         },
         methods: {
-            ...mapActions('question', ['upVote', 'downVote']),
             editAreaToggle() {
               this.editArea = !this.editArea
             },
             updateQuestionText() {
                 this.$emit('updateText', this.newText)
                 this.editAreaToggle()
-            }
-
+            },
             addVoteToQuestion(vote) {
                 this.question.votes.push(vote);
             },
@@ -106,10 +108,13 @@
         },
         data() {
             return {
-                currentUser: localStorage.getItem('username'),
+                currentUser: '',
                 newText: this.question.text,
                 editArea: false,
             }
+        },
+        created() {
+            this.currentUser = this.currentUsername;
         }
     }
 </script>
