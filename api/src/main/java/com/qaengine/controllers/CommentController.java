@@ -1,5 +1,6 @@
 package com.qaengine.controllers;
 
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Comment;
@@ -72,13 +73,23 @@ public class CommentController {
     @PutMapping("/comment/{commentId}")
     public Comment updateComment(
             @PathVariable Long commentId,
-            @RequestBody @Valid CommentDTO commentInput
+            @RequestBody @Valid CommentDTO commentInput,
+            Principal principal
     ) {
+        if (!commentService.getCommentById(commentId).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         return commentService.updateComment(commentId, commentInput);
     }
 
     @DeleteMapping("/comment/{commentId}")
-    public Long deleteComment(@PathVariable Long commentId) {
+    public Long deleteComment(
+            @PathVariable Long commentId,
+            Principal principal
+    ) {
+        if (!commentService.getCommentById(commentId).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         commentService.deleteComment(commentId);
         return commentId;
     }
