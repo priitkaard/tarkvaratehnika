@@ -4,7 +4,7 @@ import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.CommentInput;
+import com.qaengine.models.DTO.CommentDTO;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.CommentService;
 import com.qaengine.services.QuestionService;
@@ -43,7 +43,7 @@ public class CommentController {
     @PostMapping("/question/{questionId}/comment")
     public Comment commentQuestion(
             @PathVariable Long questionId,
-            @RequestBody @Valid CommentInput commentInput,
+            @RequestBody @Valid CommentDTO commentInput,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
@@ -55,7 +55,7 @@ public class CommentController {
     @PostMapping("answer/{answerId}/comment")
     public Comment commentAnswer(
             @PathVariable Long answerId,
-            @RequestBody @Valid CommentInput commentInput,
+            @RequestBody @Valid CommentDTO commentInput,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
@@ -72,7 +72,7 @@ public class CommentController {
     @PutMapping("/comment/{commentId}")
     public Comment updateComment(
             @PathVariable Long commentId,
-            @RequestBody @Valid CommentInput commentInput
+            @RequestBody @Valid CommentDTO commentInput
     ) {
         return commentService.updateComment(commentId, commentInput);
     }

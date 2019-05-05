@@ -1,6 +1,6 @@
 package com.qaengine.controllers;
 
-import com.qaengine.models.outputs.Statistics;
+import com.qaengine.models.DTO.StatisticsDTO;
 import com.qaengine.services.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +28,12 @@ public class StatisticsController {
     }
 
     @GetMapping()
-    public Statistics getStatistics(@RequestParam(required = false) Long category) {
+    public StatisticsDTO getStatistics(@RequestParam(required = false) Long category) {
         Long users = userService.getTotalUsers();
         Long questions = questionService.getTotalQuestions(Optional.ofNullable(category));
         Long answers = answerService.getTotalAnswers(Optional.ofNullable(category));
         Long comments = commentService.getTotalComments(Optional.ofNullable(category));
-        return new Statistics(
+        return new StatisticsDTO(
                 questions,
                 answers,
                 comments,

@@ -1,4 +1,4 @@
-package com.qaengine.models.inputs;
+package com.qaengine.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentInput {
+public class CommentDTO {
     @NotNull
     private String text;
 }

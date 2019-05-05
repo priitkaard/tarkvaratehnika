@@ -3,7 +3,7 @@ package com.qaengine.services;
 import com.qaengine.database.UserRepository;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
-import com.qaengine.models.inputs.ApplicationUserInput;
+import com.qaengine.models.DTO.ApplicationUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class UserService {
         return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
-    public ApplicationUser createUser(ApplicationUserInput userInput) {
+    public ApplicationUser createUser(ApplicationUserDTO userInput) {
         ApplicationUser user = (ApplicationUser) HelperFunctions.copyProperties(new ApplicationUser(), userInput);
         user.setPassword(bCryptPasswordEncoder.encode(userInput.getPassword()));
         userRepository.save(user);

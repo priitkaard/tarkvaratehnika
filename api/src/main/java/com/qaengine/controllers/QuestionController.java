@@ -1,13 +1,11 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
+import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.QuestionInput;
-import com.qaengine.models.inputs.QuestionListInput;
-import com.qaengine.models.outputs.QuestionList;
+import com.qaengine.models.DTO.QuestionListDTO;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
@@ -43,13 +41,13 @@ public class QuestionController {
     }
 
     @GetMapping("/list")
-    public QuestionList listQuestions(@Valid QuestionListInput input) {
+    public QuestionListDTO.QuestionListDTOOut listQuestions(@Valid QuestionListDTO.QuestionListDTOIn input) {
         return questionService.listQuestions(input);
     }
 
     @PostMapping
     public Question postQuestion(
-      @RequestBody @Valid QuestionInput questionInput,
+      @RequestBody @Valid QuestionDTO questionInput,
       Principal principal
     ) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
@@ -79,7 +77,7 @@ public class QuestionController {
     @PutMapping("/{id}")
     public Question updateQuestion(
             @PathVariable Long id,
-            @RequestBody @Valid QuestionInput questionInput
+            @RequestBody @Valid QuestionDTO questionInput
     ) {
         return questionService.updateQuestion(id, questionInput);
     }

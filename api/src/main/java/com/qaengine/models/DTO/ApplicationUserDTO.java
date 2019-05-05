@@ -1,4 +1,4 @@
-package com.qaengine.models.inputs;
+package com.qaengine.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationUserInput {
+public class ApplicationUserDTO {
     private String username;
     private String password;
 }

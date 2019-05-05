@@ -2,8 +2,8 @@ package com.qaengine.controllers;
 
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
+import com.qaengine.models.DTO.AnswerDTO;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
@@ -38,7 +38,7 @@ public class AnswerController {
     @PostMapping("question/{questionId}/answer")
     public Answer answerQuestion (
             @PathVariable Long questionId,
-            @RequestBody @Valid AnswerInput answerinput,
+            @RequestBody @Valid AnswerDTO answerinput,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
@@ -60,7 +60,7 @@ public class AnswerController {
     @PutMapping("/answer/{id}")
     public Answer updateAnswer(
             @PathVariable Long id,
-            @RequestBody @Valid AnswerInput answerInput
+            @RequestBody @Valid AnswerDTO answerInput
     ) {
         return answerService.updateAnswer(id, answerInput);
     }
