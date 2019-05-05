@@ -50,7 +50,7 @@
                 return null;
             },
             disableVoting() {
-                return !this.answer || questionService.hasVoted(this.answer);
+                return !this.isLoggedIn || !this.answer || questionService.hasVoted(this.answer);
             }
         },
         methods: {
