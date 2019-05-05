@@ -2,7 +2,7 @@ package com.qaengine.controllers;
 
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.models.ApplicationUser;
-import com.qaengine.models.inputs.ApplicationUserInput;
+import com.qaengine.models.DTO.ApplicationUserDTO;
 import com.qaengine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping("/user/sign-up")
-    public ApplicationUser signUp(@RequestBody ApplicationUserInput userInput) {
+    public ApplicationUser signUp(@RequestBody ApplicationUserDTO userInput) {
         userService.findByUsername(userInput.getUsername()).ifPresent(user -> {
             throw new BadRequestException("ApplicationUser with given username already exists.");
         });

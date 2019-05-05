@@ -2,10 +2,9 @@ package com.qaengine.database;
 
 import com.qaengine.models.Category;
 import com.qaengine.models.Question;
-import com.qaengine.models.outputs.QuestionListElement;
+import com.qaengine.models.DTO.QuestionListElementDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -19,7 +18,7 @@ import java.util.List;
 public interface QuestionRepository extends PagingAndSortingRepository<Question, Long> {
 
     @Query(
-            "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
+            "SELECT new com.qaengine.models.DTO.QuestionListElementDTO(" +
             "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
@@ -28,10 +27,10 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') " +
             "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
-    Page<QuestionListElement> listQuestions(@Param("query") String query, Pageable pageable);
+    Page<QuestionListElementDTO> listQuestions(@Param("query") String query, Pageable pageable);
 
     @Query(
-            "SELECT new com.qaengine.models.outputs.QuestionListElement(" +
+            "SELECT new com.qaengine.models.DTO.QuestionListElementDTO(" +
             "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
@@ -40,7 +39,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') AND q.category.id = :categoryId " +
             "GROUP BY q.id, q.title, q.text, q.score, q.created, q.category"
     )
-    Page<QuestionListElement> listQuestionsByCategory(@Param("categoryId") Long categoryId, @Param("query") String query, Pageable pageable);
+    Page<QuestionListElementDTO> listQuestionsByCategory(@Param("categoryId") Long categoryId, @Param("query") String query, Pageable pageable);
 
     @Modifying
     @Transactional

@@ -7,8 +7,8 @@ import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
+import com.qaengine.models.DTO.AnswerDTO;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.AnswerInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +42,7 @@ public class AnswerService {
         }).orElse(answerRepository.count());
     }
 
-    public Answer saveAnswer(ApplicationUser user, Question question, AnswerInput answerInput) {
+    public Answer saveAnswer(ApplicationUser user, Question question, AnswerDTO answerInput) {
         Answer answer = new Answer();
         HelperFunctions.copyProperties(answer, answerInput);
         answer.setQuestion(question);
@@ -57,7 +57,7 @@ public class AnswerService {
         return id;
     }
 
-    public Answer updateAnswer(Long id, AnswerInput answerInput) {
+    public Answer updateAnswer(Long id, AnswerDTO answerInput) {
         Answer answer = getAnswer(id);
         HelperFunctions.copyProperties(answer, answerInput);
         return answerRepository.save(answer);

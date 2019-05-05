@@ -6,11 +6,10 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
+import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.QuestionInput;
-import com.qaengine.models.inputs.QuestionListInput;
-import com.qaengine.models.outputs.QuestionList;
-import com.qaengine.models.outputs.QuestionListElement;
+import com.qaengine.models.DTO.QuestionListDTO;
+import com.qaengine.models.DTO.QuestionListElementDTO;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class QuestionService {
         this.categoryService = categoryService;
     }
 
-    public QuestionList listQuestions(QuestionListInput input) {
+    public QuestionListDTO.QuestionListDTOOut listQuestions(QuestionListDTO.QuestionListDTOIn input) {
         Map<String, Sort.Direction> sortDirections = new HashMap<String, Sort.Direction>() {{
             put("DESC", Sort.Direction.DESC);
             put("ASC", Sort.Direction.ASC);
@@ -69,14 +68,14 @@ public class QuestionService {
         );
         Pageable pageRequest = PageRequest.of(input.getPage(), input.getLimit(), sort);
 
-        Page<QuestionListElement> questions;
+        Page<QuestionListElementDTO> questions;
         if (input.getCategoryId() != null) {
             questions = questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
         } else {
             questions = questionRepository.listQuestions(input.getQuery(), pageRequest);
         }
-
-        QuestionList list = new QuestionList();
+        QuestionListDTO dto = new QuestionListDTO();
+        QuestionListDTO.QuestionListDTOOut list = dto.new QuestionListDTOOut();
         list.setTotalPages(questions.getTotalPages());
         list.setQuestions(questions.getContent()
                 .stream()
@@ -109,7 +108,7 @@ public class QuestionService {
         }).orElse(questionRepository.count());
     }
 
-    public Question saveQuestion(QuestionInput questionInput, ApplicationUser user, Category category) {
+    public Question saveQuestion(QuestionDTO questionInput, ApplicationUser user, Category category) {
         Question question = Question.builder()
                 .title(questionInput.getTitle())
                 .text(questionInput.getText())
@@ -123,7 +122,7 @@ public class QuestionService {
         questionRepository.deleteById(id);
     }
 
-    public Question updateQuestion(Long id, QuestionInput questionInput) {
+    public Question updateQuestion(Long id, QuestionDTO questionInput) {
         Question question = getQuestion(id);
         HelperFunctions.copyProperties(question, questionInput);
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
