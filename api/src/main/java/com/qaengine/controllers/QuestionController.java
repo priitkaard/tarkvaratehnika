@@ -1,16 +1,13 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
-import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
+import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
+import com.qaengine.models.DTO.QuestionListDTO;
 import com.qaengine.models.Vote;
-import com.qaengine.models.inputs.QuestionInput;
-import com.qaengine.models.inputs.QuestionListInput;
-import com.qaengine.models.outputs.QuestionList;
 import com.qaengine.services.CategoryService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
@@ -32,34 +29,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
-    private QuestionRepository questionRepository;
-    private VoteService voteService;
     private QuestionService questionService;
     private CategoryService categoryService;
     private UserService userService;
+    private VoteService voteService;
 
     public QuestionController(
-      QuestionRepository questionRepository,
-      VoteService voteService,
-      QuestionService questionService,
-      CategoryService categoryService,
-      UserService userService
-    ) {
-        this.questionRepository = questionRepository;
-        this.voteService = voteService;
+            QuestionService questionService,
+            CategoryService categoryService,
+            UserService userService,
+            VoteService voteService) {
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.voteService = voteService;
     }
 
     @GetMapping("/list")
-    public QuestionList listQuestions(@Valid QuestionListInput input) {
+    public QuestionListDTO.QuestionListDTOOut listQuestions(@Valid QuestionListDTO.QuestionListDTOIn input) {
         return questionService.listQuestions(input);
     }
 
     @PostMapping
     public Question postQuestion(
-      @RequestBody @Valid QuestionInput questionInput,
+      @RequestBody @Valid QuestionDTO questionInput,
       Principal principal
     ) {
         Category category = categoryService.getCategoryById(questionInput.getCategoryId());
@@ -67,13 +60,7 @@ public class QuestionController {
         if (user == null) {
             throw new ResourceNotFoundException("Could not find user. Cannot create.");
         }
-        Question question = Question.builder()
-                .title(questionInput.getTitle())
-                .text(questionInput.getText())
-                .category(category)
-                .user(user)
-                .build();
-        return questionRepository.save(question);
+        return questionService.saveQuestion(questionInput, user, category);
     }
 
     @GetMapping("/{id}")
@@ -83,9 +70,12 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{id}")
-    public Long deleteQuestion(@PathVariable Long id) {
+    public Long deleteQuestion(@PathVariable Long id, Principal principal) {
+        if (!questionService.getQuestion(id).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         try {
-            questionRepository.deleteById(id);
+            questionService.deleteQuestion(id);
             return id;
         } catch (Exception e) {
             throw new ResourceNotFoundException();
@@ -95,13 +85,13 @@ public class QuestionController {
     @PutMapping("/{id}")
     public Question updateQuestion(
             @PathVariable Long id,
-            @RequestBody @Valid QuestionInput questionInput
+            @RequestBody @Valid QuestionDTO questionInput,
+            Principal principal
     ) {
-        Question question = questionService.getQuestion(id);
-        HelperFunctions.copyProperties(question, questionInput);
-        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
-        question.setCategory(category);
-        return questionRepository.save(question);
+        if (!questionService.getQuestion(id).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
+        return questionService.updateQuestion(id, questionInput);
     }
 
     @PutMapping("/{id}/upvote")

@@ -4,12 +4,14 @@ import com.qaengine.database.QuestionRepository;
 import com.qaengine.database.VoteRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
+import com.qaengine.lib.HelperFunctions;
+import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
+import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
+import com.qaengine.models.DTO.QuestionListDTO;
+import com.qaengine.models.DTO.QuestionListElementDTO;
 import com.qaengine.models.Vote;
-import com.qaengine.models.inputs.QuestionListInput;
-import com.qaengine.models.outputs.QuestionList;
-import com.qaengine.models.outputs.QuestionListElement;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,7 @@ public class QuestionService {
         this.voteRepository = voteRepository;
     }
 
-    public QuestionList listQuestions(QuestionListInput input) {
+    public QuestionListDTO.QuestionListDTOOut listQuestions(QuestionListDTO.QuestionListDTOIn input) {
         Map<String, Sort.Direction> sortDirections = new HashMap<String, Sort.Direction>() {{
             put("DESC", Sort.Direction.DESC);
             put("ASC", Sort.Direction.ASC);
@@ -70,7 +72,7 @@ public class QuestionService {
         );
         Pageable pageRequest = PageRequest.of(input.getPage(), input.getLimit(), sort);
 
-        Page<QuestionListElement> questions;
+        Page<QuestionListElementDTO> questions;
         if (input.getCategoryId() != null) {
             questions = questionRepository.listQuestionsByCategory(input.getCategoryId(), input.getQuery(), pageRequest);
         } else {
@@ -79,12 +81,13 @@ public class QuestionService {
 
         List<Long> questionIds = questions.getContent()
                 .stream()
-                .map(QuestionListElement::getId)
+                .map(QuestionListElementDTO::getId)
                 .collect(Collectors.toList());
 
         List<Vote> votes = voteRepository.findAllByQuestionIds(questionIds);
 
-        QuestionList list = new QuestionList();
+        QuestionListDTO dto = new QuestionListDTO();
+        QuestionListDTO.QuestionListDTOOut list = dto.new QuestionListDTOOut();
         list.setTotalPages(questions.getTotalPages());
         list.setQuestions(questions.getContent()
                 .stream()
@@ -99,11 +102,7 @@ public class QuestionService {
 
     public Question getQuestion(@PathVariable Long id) throws ResourceNotFoundException {
         Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            return question.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return question.orElseThrow(ResourceNotFoundException::new);
     }
 
     public void incrementViews(Long questionId) {
@@ -117,10 +116,43 @@ public class QuestionService {
     }
 
     public Long getTotalQuestions(Optional<Long> categoryId) {
-        if (categoryId.isPresent()) {
+        return categoryId.map(id -> {
             Category category = this.categoryService.getCategoryById(categoryId.get());
             return questionRepository.countByCategory(category);
-        }
-        return questionRepository.count();
+        }).orElse(questionRepository.count());
+    }
+
+    public Question saveQuestion(QuestionDTO questionInput, ApplicationUser user, Category category) {
+        Question question = Question.builder()
+                .title(questionInput.getTitle())
+                .text(questionInput.getText())
+                .category(category)
+                .user(user)
+                .build();
+        return questionRepository.save(question);
+    }
+
+    public void deleteQuestion(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+    public Question updateQuestion(Long id, QuestionDTO questionInput) {
+        Question question = getQuestion(id);
+        HelperFunctions.copyProperties(question, questionInput);
+        Category category = categoryService.getCategoryById(questionInput.getCategoryId());
+        question.setCategory(category);
+        return questionRepository.save(question);
+    }
+
+    public Question upvoteQuestion(Long id) {
+        Question question = getQuestion(id);
+        question.setScore(question.getScore() + 1);
+        return questionRepository.save(question);
+    }
+
+    public Question downvoteQuestion(Long id) {
+        Question question = getQuestion(id);
+        question.setScore(question.getScore() - 1);
+        return questionRepository.save(question);
     }
 }

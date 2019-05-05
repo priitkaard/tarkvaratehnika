@@ -2,8 +2,9 @@ package com.qaengine.services;
 
 import com.qaengine.database.CommentRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
-import com.qaengine.models.Category;
-import com.qaengine.models.Comment;
+import com.qaengine.lib.HelperFunctions;
+import com.qaengine.models.*;
+import com.qaengine.models.DTO.CommentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,7 @@ public class CommentService {
 
     public Comment getCommentById(Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isPresent()) {
-            return comment.get();
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        return comment.orElseThrow(ResourceNotFoundException::new);
 
     }
 
@@ -37,11 +34,46 @@ public class CommentService {
     }
 
     public Long getTotalComments(Optional<Long> categoryId) {
-        if (categoryId.isPresent()) {
+        return categoryId.map(id -> {
             Category category = this.categoryService.getCategoryById(categoryId.get());
             return commentRepository.countByQuestionCategory(category)
                     + commentRepository.countByAnswerCategory(category);
-        }
-        return commentRepository.count();
+        }).orElse(commentRepository.count());
+    }
+
+    public Comment commentQuestion(ApplicationUser user, Question question, CommentDTO commentInput) {
+        Comment comment = new Comment();
+        comment.setQuestion(question);
+        comment.setUser(user);
+
+        HelperFunctions.copyProperties(comment, commentInput);
+        return commentRepository.save(comment);
+    }
+
+    public Comment commentAnswer(ApplicationUser user, Answer answer, CommentDTO commentInput) {
+        Comment comment = new Comment();
+        comment.setAnswer(answer);
+        comment.setUser(user);
+
+        HelperFunctions.copyProperties(comment, commentInput);
+        return commentRepository.save(comment);
+    }
+
+    public Comment updateComment(Long commentId, CommentDTO commentInput) {
+        Comment comment = getCommentById(commentId);
+        HelperFunctions.copyProperties(comment, commentInput);
+        return commentRepository.save(comment);
+    }
+
+    public Comment upvoteComment(Long id) {
+        Comment comment = getCommentById(id);
+        comment.setScore(comment.getScore() + 1);
+        return commentRepository.save(comment);
+    }
+
+    public Comment downvoteComment(Long id) {
+        Comment comment = getCommentById(id);
+        comment.setScore(comment.getScore() - 1);
+        return commentRepository.save(comment);
     }
 }

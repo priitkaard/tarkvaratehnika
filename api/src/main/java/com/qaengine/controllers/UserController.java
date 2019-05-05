@@ -1,12 +1,10 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.UserRepository;
 import com.qaengine.exceptions.BadRequestException;
-import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.ApplicationUser;
-import com.qaengine.models.inputs.ApplicationUserInput;
+import com.qaengine.models.DTO.ApplicationUserDTO;
+import com.qaengine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,24 +13,18 @@ import javax.validation.Valid;
 
 @RestController
 public class UserController {
-
-    private UserRepository userRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/user/sign-up")
-    public ApplicationUser signUp(@Valid @RequestBody ApplicationUserInput userInput) {
-        if (userRepository.findByUsername(userInput.getUsername()) != null) {
+    public ApplicationUser signUp(@Valid @RequestBody ApplicationUserDTO userInput) {
+        userService.findByUsername(userInput.getUsername()).ifPresent(user -> {
             throw new BadRequestException("ApplicationUser with given username already exists.");
-        }
-        ApplicationUser user = (ApplicationUser)HelperFunctions.copyProperties(new ApplicationUser(), userInput);
-        user.setPassword(bCryptPasswordEncoder.encode(userInput.getPassword()));
-        userRepository.save(user);
-        return user;
+        });
+        return userService.createUser(userInput);
     }
 }

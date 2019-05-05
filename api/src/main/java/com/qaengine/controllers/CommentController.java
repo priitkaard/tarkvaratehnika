@@ -1,12 +1,11 @@
 package com.qaengine.controllers;
 
-import com.qaengine.database.CommentRepository;
-import com.qaengine.lib.HelperFunctions;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Comment;
 import com.qaengine.models.Question;
-import com.qaengine.models.inputs.CommentInput;
+import com.qaengine.models.DTO.CommentDTO;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.CommentService;
 import com.qaengine.services.QuestionService;
@@ -25,7 +24,6 @@ import java.security.Principal;
 
 @RestController
 public class CommentController {
-    private CommentRepository commentRepository;
     private QuestionService questionService;
     private AnswerService answerService;
     private CommentService commentService;
@@ -33,12 +31,10 @@ public class CommentController {
 
     @Autowired
     public CommentController(
-            CommentRepository commentRepository,
             QuestionService questionService,
             AnswerService answerService,
             CommentService commentService,
             UserService userService) {
-        this.commentRepository = commentRepository;
         this.questionService = questionService;
         this.answerService = answerService;
         this.commentService = commentService;
@@ -48,35 +44,25 @@ public class CommentController {
     @PostMapping("/question/{questionId}/comment")
     public Comment commentQuestion(
             @PathVariable Long questionId,
-            @RequestBody @Valid CommentInput commentInput,
+            @RequestBody @Valid CommentDTO commentInput,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
         Question question = questionService.getQuestion(questionId);
 
-        Comment comment = new Comment();
-        comment.setQuestion(question);
-        comment.setUser(user);
-
-        HelperFunctions.copyProperties(comment, commentInput);
-        return commentRepository.save(comment);
+        return commentService.commentQuestion(user, question, commentInput);
     }
 
     @PostMapping("answer/{answerId}/comment")
     public Comment commentAnswer(
             @PathVariable Long answerId,
-            @RequestBody @Valid CommentInput commentInput,
+            @RequestBody @Valid CommentDTO commentInput,
             Principal principal
     ) {
         ApplicationUser user = userService.getUser(principal.getName());
         Answer answer = answerService.getAnswer(answerId);
 
-        Comment comment = new Comment();
-        comment.setAnswer(answer);
-        comment.setUser(user);
-
-        HelperFunctions.copyProperties(comment, commentInput);
-        return commentRepository.save(comment);
+        return commentService.commentAnswer(user, answer, commentInput);
     }
 
     @GetMapping("/comment/{id}")
@@ -87,15 +73,23 @@ public class CommentController {
     @PutMapping("/comment/{commentId}")
     public Comment updateComment(
             @PathVariable Long commentId,
-            @RequestBody @Valid CommentInput commentInput
+            @RequestBody @Valid CommentDTO commentInput,
+            Principal principal
     ) {
-        Comment comment = commentService.getCommentById(commentId);
-        HelperFunctions.copyProperties(comment, commentInput);
-        return commentRepository.save(comment);
+        if (!commentService.getCommentById(commentId).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
+        return commentService.updateComment(commentId, commentInput);
     }
 
     @DeleteMapping("/comment/{commentId}")
-    public Long deleteComment(@PathVariable Long commentId) {
+    public Long deleteComment(
+            @PathVariable Long commentId,
+            Principal principal
+    ) {
+        if (!commentService.getCommentById(commentId).getUser().getUsername().equals(principal.getName())) {
+            throw new BadRequestException("Permission denied");
+        }
         commentService.deleteComment(commentId);
         return commentId;
     }
@@ -105,15 +99,12 @@ public class CommentController {
     public Comment upvoteComment(
             @PathVariable Long id
     ) {
-        Comment comment = commentService.getCommentById(id);
-        comment.setScore(comment.getScore() + 1);
-        return commentRepository.save(comment);
+        return commentService.upvoteComment(id);
+
     }
 
     @PutMapping("/comment/{id}/downvote")
     public Comment downvoteComment(@PathVariable Long id) {
-        Comment comment = commentService.getCommentById(id);
-        comment.setScore(comment.getScore() - 1);
-        return commentRepository.save(comment);
+        return commentService.downvoteComment(id);
     }
 }

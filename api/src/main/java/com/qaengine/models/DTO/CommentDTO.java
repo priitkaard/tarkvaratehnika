@@ -1,4 +1,4 @@
-package com.qaengine.models.inputs;
+package com.qaengine.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentInput {
+public class CommentDTO {
     @NotNull
     @Size(min = 1)
     private String text;

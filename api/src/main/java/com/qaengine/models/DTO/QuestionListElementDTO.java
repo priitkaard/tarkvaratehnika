@@ -1,4 +1,4 @@
-package com.qaengine.models.outputs;
+package com.qaengine.models.DTO;
 
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Category;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class QuestionListElement {
+public class QuestionListElementDTO {
     private long id;
     private String title;
     private String text;
@@ -24,7 +24,7 @@ public class QuestionListElement {
     private Date lastAnswer;
     private List<Vote> votes;
 
-    public QuestionListElement(
+    public QuestionListElementDTO(
             long id, String title, String text, int score, int views, Date created, Category category,
             ApplicationUser user, long comments, Date lastComment, long answers, Date lastAnswer
     ) {
