@@ -63,35 +63,7 @@ const actions = {
     },
     async updateQuestionList({ state, commit }) {
         let questions = await questionService.getQuestions(state.filters);
-
-        // TODO: Implement correct solution in backend after authentication is implemented.
-        const votedQuestions = JSON.parse(localStorage.getItem('votedQuestions') || '[]');
-        questions.questions = questions.questions.map(question => {
-            question.canVote = !votedQuestions.includes(question.id);
-            return question;
-        });
-
         commit('updateQuestionList', questions);
-    },
-    async upVote(context, questionId) {
-        await questionService.upVote(questionId);
-        context.commit('incrementQuestionScore', questionId);
-        context.commit('setCanVote', {questionId, canVote: false});
-    },
-    async downVote(context, questionId) {
-        await questionService.downVote(questionId);
-        context.commit('decrementQuestionScore', questionId);
-        context.commit('setCanVote', {questionId, canVote: false});
-    },
-    async upVoteAnswer(context, answerId) {
-        await questionService.upVoteAnswer(answerId);
-        context.commit('incrementQuestionAnswerScore', answerId);
-        context.commit('setAnswerCanVote', {answerId, canVote: false});
-    },
-    async downVoteAnswer(context, answerId) {
-        await questionService.downVoteAnswer(answerId);
-        context.commit('decrementQuestionAnswerScore', answerId);
-        context.commit('setAnswerCanVote', {answerId, canVote: false});
     },
     async updateStatistics(context, category) {
         let statistics;
@@ -128,10 +100,6 @@ const mutations = {
         const question = getQuestionById(state, questionId);
         question.score -= 1;
     },
-    setCanVote(state, {questionId, value}) {
-        const question = getQuestionById(state, questionId);
-        question.canVote = value;
-    },
     incrementQuestionAnswerScore(state, answerId) {
         const answer = getAnswerById(state, answerId);
         answer.score += 1;
@@ -139,10 +107,6 @@ const mutations = {
     decrementQuestionAnswerScore(state, answerId) {
         const answer = getAnswerById(state, answerId);
         answer.score -= 1;
-    },
-    setAnswerCanVote(state, {answerId, value}) {
-        const answer = getAnswerById(state, answerId);
-        answer.canVote = value;
     },
     updateStatistics(state, statistics) {
         state.statistics = statistics;

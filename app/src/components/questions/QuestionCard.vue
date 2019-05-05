@@ -2,7 +2,7 @@
     <div class="QuestionCard noselect" v-if="question">
         <question-card-vote
                 :score="question.score"
-                :disable-voting="!question.canVote"
+                :disable-voting="disableVoting"
                 @onUpVote="upVote(question.id)"
                 @onDownVote="downVote(question.id)" />
 
@@ -47,8 +47,9 @@
     import EyeIcon from 'vue-material-design-icons/Eye';
     import CommentIcon from 'vue-material-design-icons/Comment';
     import moment from 'moment';
-    import {mapActions, mapState} from "vuex";
+    import { mapState } from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
+    import questionService from "../../services/QuestionService";
 
     export default {
         name: "QuestionCard",
@@ -60,16 +61,31 @@
             commentButton: Boolean,
         },
         computed: {
-            ...mapState('auth', ['isLoggedIn']),
+            ...mapState('auth', ['isLoggedIn', 'username']),
             created() {
                 if (this.question && this.question.created) {
                     return moment(this.question.created).fromNow(true);
                 }
                 return null;
+            },
+            disableVoting() {
+                return !this.question || questionService.hasVoted(this.question);
             }
         },
         methods: {
-            ...mapActions('question', ['upVote', 'downVote']),
+            addVoteToQuestion(vote) {
+                this.question.votes.push(vote);
+            },
+            async upVote() {
+                const vote = await questionService.upVote(this.question.id);
+                this.addVoteToQuestion(vote);
+                this.question.score += 1;
+            },
+            async downVote() {
+                const vote = await questionService.downVote(this.question.id);
+                this.addVoteToQuestion(vote);
+                this.question.score -= 1;
+            }
         },
     }
 </script>

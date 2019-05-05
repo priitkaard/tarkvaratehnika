@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '../store';
-import apiService from './ApiService';
+import apiService, { handleErrors } from './ApiService';
 
 export default {
     doLogin(token, username) {
@@ -16,7 +16,12 @@ export default {
     },
 
     async tryLogin(username, password) {
-        const response = await axios.post(`${apiService.API_URL}login`, { username, password });
+        let response;
+        try {
+            response = await axios.post(`${apiService.API_URL}login`, { username, password });
+        } catch (err) {
+            handleErrors(err);
+        }
 
         const token = response.headers.authorization;
         this.doLogin(token, username);
@@ -25,9 +30,13 @@ export default {
     },
 
     async register(username, password) {
-        await axios.post(`${apiService.API_URL}user/sign-up`, {
-            username,
-            password
-        });
+        try {
+            return await axios.post(`${apiService.API_URL}user/sign-up`, {
+                username,
+                password
+            });
+        } catch (err) {
+            handleErrors(err);
+        }
     }
 }

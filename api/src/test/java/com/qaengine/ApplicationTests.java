@@ -169,7 +169,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         assertEquals(question.getId(), answer.getQuestion().getId());
         assertEquals(answer.getText(), "test");
@@ -180,7 +180,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         assertEquals(answer.getId(), answerController.getAnswer(answer.getId()).getId());
     }
@@ -190,7 +190,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         answerController.deleteAnswer(answer.getId());
         answerController.getAnswer(answer.getId());
@@ -201,7 +201,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         answerController.updateAnswer(answer.getId(), new AnswerInput("tst2"));
         Answer answer1 = answerController.getAnswer(answer.getId());
@@ -214,7 +214,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         answerController.upvoteAnswer(answer.getId());
         answer = answerController.getAnswer(answer.getId());
@@ -226,7 +226,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         answerController.downvoteAnswer(answer.getId());
         answer = answerController.getAnswer(answer.getId());
@@ -254,7 +254,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);
@@ -269,7 +269,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);
@@ -281,7 +281,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);
@@ -295,7 +295,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);
@@ -308,7 +308,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);
@@ -322,7 +322,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);
@@ -359,7 +359,7 @@ public class ApplicationTests {
         QuestionController questionController = new QuestionController(questionRepository, questionService, categoryService, userService);
         QuestionInput questionInput = new QuestionInput("abc", "def", 4L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(questionRepository, answerRepository, answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerInput("test"), principal);
         CommentController commentController = new CommentController(commentRepository, questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentInput("test"), principal);

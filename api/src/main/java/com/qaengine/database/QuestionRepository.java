@@ -23,6 +23,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
+            "LEFT JOIN Vote v ON v.question = q " +
             "LEFT JOIN Comment c ON c.question = q " +
             "LEFT JOIN Answer a ON a.question = q " +
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') " +
@@ -35,6 +36,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             "       q.id, q.title, q.text, q.score, q.views, q.created, q.category, q.user," +
             "       COUNT(a), MAX(a.created), COUNT(c), MAX(c.created)) " +
             "FROM Question q " +
+            "LEFT JOIN Vote v ON v.question = q " +
             "LEFT JOIN Comment c ON c.question = q " +
             "LEFT JOIN Answer a ON a.question = q " +
             "WHERE LOWER(q.title) LIKE CONCAT('%', LOWER(:query), '%') AND q.category.id = :categoryId " +

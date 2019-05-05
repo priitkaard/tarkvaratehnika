@@ -1,5 +1,6 @@
 package com.qaengine.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +25,12 @@ public class Vote {
 
     @ManyToOne()
     @JoinColumn(name = "question_id")
+    @JsonIgnore()
     private Question question;
 
     @ManyToOne()
     @JoinColumn(name = "answer_id")
+    @JsonIgnore()
     private Answer answer;
 
     @ManyToOne()

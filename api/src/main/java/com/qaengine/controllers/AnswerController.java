@@ -6,10 +6,12 @@ import com.qaengine.lib.HelperFunctions;
 import com.qaengine.models.Answer;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.Question;
+import com.qaengine.models.Vote;
 import com.qaengine.models.inputs.AnswerInput;
 import com.qaengine.services.AnswerService;
 import com.qaengine.services.QuestionService;
 import com.qaengine.services.UserService;
+import com.qaengine.services.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,7 @@ public class AnswerController {
     private AnswerService answerService;
     private QuestionService questionService;
     private UserService userService;
+    private VoteService voteService;
 
     @Autowired
     public AnswerController(
@@ -36,12 +39,13 @@ public class AnswerController {
             AnswerRepository answerRepository,
             AnswerService answerService,
             QuestionService questionService,
-            UserService userService) {
+            UserService userService, VoteService voteService) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.answerService = answerService;
         this.questionService = questionService;
         this.userService = userService;
+        this.voteService = voteService;
     }
 
     @PostMapping("question/{questionId}/answer")
@@ -85,21 +89,21 @@ public class AnswerController {
     }
 
     @PutMapping("/answer/{id}/upvote")
-    public Answer upvoteAnswer(
-            @PathVariable Long id
+    public Vote upvoteAnswer(
+            @PathVariable Long id,
+            Principal principal
     ) {
-        Answer answer = getAnswer(id);
-        answer.setScore(answer.getScore() + 1);
-        return answerRepository.save(answer);
+        ApplicationUser user = userService.getUser(principal.getName());
+        return voteService.voteAnswer(id, user, 1);
     }
 
     @PutMapping("/answer/{id}/downvote")
-    public Answer downvoteAnswer(
-            @PathVariable Long id
+    public Vote downvoteAnswer(
+            @PathVariable Long id,
+            Principal principal
     ) {
-        Answer answer = getAnswer(id);
-        answer.setScore(answer.getScore() - 1);
-        return answerRepository.save(answer);
+        ApplicationUser user = userService.getUser(principal.getName());
+        return voteService.voteAnswer(id, user, -1);
     }
 
 

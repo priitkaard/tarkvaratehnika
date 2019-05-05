@@ -1,10 +1,12 @@
 package com.qaengine.services;
 
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.database.VoteRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Category;
 import com.qaengine.models.Question;
+import com.qaengine.models.Vote;
 import com.qaengine.models.inputs.QuestionListInput;
 import com.qaengine.models.outputs.QuestionList;
 import com.qaengine.models.outputs.QuestionListElement;
@@ -29,12 +31,14 @@ import java.util.stream.Collectors;
 public class QuestionService {
     private QuestionRepository questionRepository;
     private CategoryService categoryService;
+    private VoteRepository voteRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
-                           CategoryService categoryService) {
+                           CategoryService categoryService, VoteRepository voteRepository) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
+        this.voteRepository = voteRepository;
     }
 
     public QuestionList listQuestions(QuestionListInput input) {
@@ -73,13 +77,22 @@ public class QuestionService {
             questions = questionRepository.listQuestions(input.getQuery(), pageRequest);
         }
 
+        List<Long> questionIds = questions.getContent()
+                .stream()
+                .map(QuestionListElement::getId)
+                .collect(Collectors.toList());
+
+        List<Vote> votes = voteRepository.findAllByQuestionIds(questionIds);
+
         QuestionList list = new QuestionList();
         list.setTotalPages(questions.getTotalPages());
         list.setQuestions(questions.getContent()
                 .stream()
-                .peek(question -> question.setText(
-                        Parser.unescapeEntities(Jsoup.parse(question.getText()).text(), false))
-                )
+                .peek(question -> {
+                    question.setText(
+                            Parser.unescapeEntities(Jsoup.parse(question.getText()).text(), false));
+                    question.setVotes(votes.stream().filter(vote -> vote.getQuestion().getId() == question.getId()).collect(Collectors.toList()));
+                })
                 .collect(Collectors.toList()));
         return list;
     }

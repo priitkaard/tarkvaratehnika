@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -16,12 +18,14 @@ public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
     @JsonIgnore
     private String password;
+
     private int score = 0;
 
     @JsonIgnore
