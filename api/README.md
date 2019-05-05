@@ -1,3 +1,8 @@
+# Deployment
+S3 Bucket endpoint: http://tutkit.s3-website.eu-north-1.amazonaws.com/
+API (EC2 instance): 3.82.117.200:8080
+PostgreSQL (RDS instance): tutkit-instance.c4g3ku9rpltc.us-east-1.rds.amazonaws.com
+
 # Authentication
 Most endpoints require authentication.
 Register at:

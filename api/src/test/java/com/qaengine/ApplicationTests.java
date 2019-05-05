@@ -1,6 +1,11 @@
 package com.qaengine;
 
-import com.qaengine.controllers.*;
+import com.qaengine.controllers.AnswerController;
+import com.qaengine.controllers.CategoryController;
+import com.qaengine.controllers.CommentController;
+import com.qaengine.controllers.QuestionController;
+import com.qaengine.controllers.StatisticsController;
+import com.qaengine.controllers.UserController;
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.CommentRepository;
 import com.qaengine.database.QuestionRepository;
@@ -9,12 +14,18 @@ import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
-import com.qaengine.models.DTO.*;
+import com.qaengine.models.DTO.AnswerDTO;
+import com.qaengine.models.DTO.ApplicationUserDTO;
+import com.qaengine.models.DTO.CommentDTO;
+import com.qaengine.models.DTO.QuestionDTO;
+import com.qaengine.models.DTO.QuestionListDTOIn;
 import com.qaengine.models.Question;
-
-import static org.junit.Assert.*;
-
-import com.qaengine.services.*;
+import com.qaengine.services.AnswerService;
+import com.qaengine.services.CategoryService;
+import com.qaengine.services.CommentService;
+import com.qaengine.services.QuestionService;
+import com.qaengine.services.UserService;
+import com.qaengine.services.VoteService;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -25,6 +36,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.security.Principal;
+
+import static org.junit.Assert.assertEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
@@ -51,6 +64,8 @@ public class ApplicationTests {
     UserRepository userRepository;
     @Autowired
     UserController userController;
+    @Autowired
+    VoteService voteService;
     Principal principal = new Principal() {
         @Override
         public String getName() {
@@ -68,7 +83,7 @@ public class ApplicationTests {
     @Test
     public void getQuestionFromController() {
 
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
         Long questionId = question.getId();
@@ -81,7 +96,7 @@ public class ApplicationTests {
 
     @Test
     public void createQuestion() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         try {
             questionController.postQuestion(questionInput, principal);
@@ -94,39 +109,38 @@ public class ApplicationTests {
 
     @Test
     public void questionList() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 5L);
         questionController.postQuestion(questionInput, principal);
         questionController.postQuestion(new QuestionDTO("def", "hji", 5L), principal);
-        QuestionListDTO dto = new QuestionListDTO();
-        QuestionListDTO.QuestionListDTOIn questionListInput = dto.new QuestionListDTOIn(0, 10, "score", "DESC", "", 5L);
+        QuestionListDTOIn questionListInput = new QuestionListDTOIn(0, 10, "score", "DESC", "", 5L);
         assertEquals(questionController.listQuestions(questionListInput).getQuestions().size(), 2);
 
     }
 
     @Test
     public void upVote() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
         assertEquals(question.getScore().longValue(), 0);
-        questionController.upvoteQuestion(question.getId());
+        questionController.upvoteQuestion(question.getId(), principal);
         assertEquals(questionController.getQuestion(question.getId()).getScore().longValue(), 1L);
     }
 
     @Test
     public void downVote() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
         assertEquals(question.getScore().longValue(), 0);
-        questionController.downvoteQuestion(question.getId());
+        questionController.downvoteQuestion(question.getId(), principal);
         assertEquals(questionController.getQuestion(question.getId()).getScore().longValue(), -1L);
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void deleteQuestion() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
         questionController.deleteQuestion(question.getId(), principal);
@@ -135,7 +149,7 @@ public class ApplicationTests {
 
     @Test
     public void updateQuestion() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
         questionController.updateQuestion(question.getId(), new QuestionDTO("ddd", "gff", 2L), principal);
@@ -148,7 +162,7 @@ public class ApplicationTests {
 
     @Test
     public void autoCompleteTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         questionController.postQuestion(questionInput, principal);
         questionController.postQuestion(questionInput, principal);
@@ -167,10 +181,10 @@ public class ApplicationTests {
 
     @Test
     public void addAnswerTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         assertEquals(question.getId(), answer.getQuestion().getId());
         assertEquals(answer.getText(), "test");
@@ -178,20 +192,20 @@ public class ApplicationTests {
 
     @Test
     public void getAnswerTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         assertEquals(answer.getId(), answerController.getAnswer(answer.getId()).getId());
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void deleteAnswerTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         answerController.deleteAnswer(answer.getId(), principal);
         answerController.getAnswer(answer.getId());
@@ -199,10 +213,10 @@ public class ApplicationTests {
 
     @Test
     public void updateAnswerTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         answerController.updateAnswer(answer.getId(), new AnswerDTO("tst2"), principal);
         Answer answer1 = answerController.getAnswer(answer.getId());
@@ -212,24 +226,24 @@ public class ApplicationTests {
 
     @Test
     public void upvoteAnswerTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
-        answerController.upvoteAnswer(answer.getId());
+        answerController.upvoteAnswer(answer.getId(), principal);
         answer = answerController.getAnswer(answer.getId());
         assertEquals(answer.getScore().longValue(), 1L);
     }
 
     @Test
     public void downvoteAnswerTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
-        answerController.downvoteAnswer(answer.getId());
+        answerController.downvoteAnswer(answer.getId(), principal);
         answer = answerController.getAnswer(answer.getId());
         assertEquals(answer.getScore().longValue(), -1L);
     }
@@ -252,10 +266,10 @@ public class ApplicationTests {
     // CommentController TESTS
     @Test
     public void addCommentTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
@@ -267,10 +281,10 @@ public class ApplicationTests {
 
     @Test
     public void getCommentTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
@@ -279,10 +293,10 @@ public class ApplicationTests {
 
     @Test
     public void updateCommentTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
@@ -293,10 +307,10 @@ public class ApplicationTests {
 
     @Test(expected = ResourceNotFoundException.class)
     public void deleteCommentTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
@@ -306,10 +320,10 @@ public class ApplicationTests {
 
     @Test
     public void upvoteCommentTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
@@ -320,10 +334,10 @@ public class ApplicationTests {
 
     @Test
     public void downvoteCommentTest() {
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 1L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);
@@ -357,10 +371,10 @@ public class ApplicationTests {
         assertEquals(statisticsController.getStatistics(4L).getComments(), 0);
         assertEquals(statisticsController.getStatistics(4L).getQuestions(), 0);
 
-        QuestionController questionController = new QuestionController(questionService, categoryService, userService);
+        QuestionController questionController = new QuestionController(questionService, categoryService, userService, voteService);
         QuestionDTO questionInput = new QuestionDTO("abc", "def", 4L);
         Question question = questionController.postQuestion(questionInput, principal);
-        AnswerController answerController = new AnswerController(answerService, questionService, userService);
+        AnswerController answerController = new AnswerController(answerService, questionService, userService, voteService);
         Answer answer = answerController.answerQuestion(question.getId(), new AnswerDTO("test"), principal);
         CommentController commentController = new CommentController(questionService, answerService, commentService, userService);
         Comment comment = commentController.commentAnswer(answer.getId(), new CommentDTO("test"), principal);

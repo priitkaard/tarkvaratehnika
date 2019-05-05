@@ -24,12 +24,24 @@ async function request(config) {
         const response = await axios.request(requestConfig);
         return response.data;
     } catch (err) {
-        // TODO: Log error to sentry
-        throw {
-            error: 'Request failed',
-            message: err
+        handleErrors(err);
+    }
+}
+
+export function handleErrors(err) {
+    // TODO: Log error to sentry
+    if (err.response.status === 400) {
+        const responseBody = err.response.data;
+        if (!responseBody) {
+            throw { error: 'Request failed' };
+        }
+        if (responseBody.errors && responseBody.errors.length) {
+            throw { error: responseBody.errors[0].defaultMessage };
+        } else if (responseBody.message) {
+            throw {error: responseBody.message};
         }
     }
+    throw { error: 'Technical error' };
 }
 
 export default {

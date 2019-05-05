@@ -2,9 +2,9 @@
     <div class="QuestionAnswerCard noselect" v-if="answer">
         <question-card-vote
                 :score="answer.score"
-                :disable-voting="!answer.canVote"
-                @onUpVote="upVoteAnswer(answer.id)"
-                @onDownVote="downVoteAnswer(answer.id)" />
+                :disable-voting="disableVoting"
+                @onUpVote="upVoteAnswer()"
+                @onDownVote="downVoteAnswer()" />
 
         <div class="QuestionAnswerCard__body">
             <p v-html="answer.text"></p>
@@ -31,8 +31,9 @@
     import UIButton from "../common/UIButton";
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import moment from 'moment';
-    import {mapActions, mapState} from "vuex";
+    import { mapState } from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
+    import questionService from "../../services/QuestionService";
 
     export default {
         name: "QuestionAnswerCard",
@@ -41,16 +42,31 @@
             'answer': Object,
         },
         computed: {
-            ...mapState('auth', ['isLoggedIn']),
+            ...mapState('auth', ['isLoggedIn', 'username']),
             created() {
                 if (this.answer && this.answer.created) {
                     return moment(this.answer.created).fromNow();
                 }
                 return null;
+            },
+            disableVoting() {
+                return !this.isLoggedIn || !this.answer || questionService.hasVoted(this.answer);
             }
         },
         methods: {
-            ...mapActions('question', ['upVoteAnswer', 'downVoteAnswer']),
+            addVoteToAnswer(vote) {
+                this.answer.votes.push(vote);
+            },
+            async upVoteAnswer() {
+                const vote = await questionService.upVoteAnswer(this.answer.id);
+                this.addVoteToAnswer(vote);
+                this.answer.score += 1;
+            },
+            async downVoteAnswer() {
+                const vote = await questionService.downVoteAnswer(this.answer.id);
+                this.addVoteToAnswer(vote);
+                this.answer.score -= 1;
+            }
         },
     }
 </script>
