@@ -2,7 +2,7 @@ export default {
     namespaced: true,
     state: {
         isLoggedIn: Boolean(localStorage.getItem('authToken')),
-        username: localStorage.getItem('username'),
+        username: null,
     },
     actions: {
         logIn(context, payload) {
