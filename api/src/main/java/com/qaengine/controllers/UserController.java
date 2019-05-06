@@ -1,13 +1,13 @@
 package com.qaengine.controllers;
 
+import com.qaengine.database.UserRepository;
+import com.qaengine.database.VoteRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.models.ApplicationUser;
 import com.qaengine.models.DTO.ApplicationUserDTO;
 import com.qaengine.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -26,5 +26,10 @@ public class UserController {
             throw new BadRequestException("ApplicationUser with given username already exists.");
         });
         return userService.createUser(userInput);
+    }
+
+    @GetMapping("/user/points/{username}")
+    public int points(@PathVariable String username){
+        return userService.getUserScore(username);
     }
 }
