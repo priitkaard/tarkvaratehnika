@@ -46,8 +46,6 @@ public class StatisticsTests {
     UserService userService;
     @Autowired
     VoteService voteService;
-    @Autowired
-    UserController userController;
 
     Principal principal = new Principal() {
         @Override
@@ -55,11 +53,6 @@ public class StatisticsTests {
             return "name";
         }
     };
-
-    @Test
-    public void aaSignUpUserForTests() {
-        userController.signUp(new ApplicationUserDTO("name", "pw"));
-    }
 
     @Test
     public void getStatisticsTest()

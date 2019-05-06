@@ -51,8 +51,6 @@ public class CommentTests {
     UserService userService;
     @Autowired
     VoteService voteService;
-    @Autowired
-    UserController userController;
 
     Principal principal = new Principal() {
         @Override
@@ -60,11 +58,6 @@ public class CommentTests {
             return "name";
         }
     };
-
-    @Test
-    public void aaSignUpUserForTests() {
-        userController.signUp(new ApplicationUserDTO("name", "pw"));
-    }
 
     // CommentController TESTS
     @Test
