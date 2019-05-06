@@ -3,15 +3,13 @@ import store from '../store';
 import apiService, { handleErrors } from './ApiService';
 
 export default {
-    doLogin(token, username) {
+    doLogin(token, username, points) {
         localStorage.setItem('authToken', token);
-        localStorage.setItem('username', username);
-        store.dispatch('auth/logIn', { username });
+        store.dispatch('auth/logIn', { username, points });
     },
 
     logOut() {
         localStorage.removeItem('authToken');
-        localStorage.removeItem('username');
         store.dispatch('auth/logOut');
     },
 
@@ -23,8 +21,10 @@ export default {
             handleErrors(err);
         }
 
+        let points = await apiService.get(`/user/points/${username}`);
+
         const token = response.headers.authorization;
-        this.doLogin(token, username);
+        this.doLogin(token, username, points);
 
         return token;
     },
@@ -38,5 +38,6 @@ export default {
         } catch (err) {
             handleErrors(err);
         }
-    }
+    },
+
 }
