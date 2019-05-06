@@ -1,8 +1,10 @@
 package com.qaengine;
 
 import com.qaengine.controllers.QuestionController;
+import com.qaengine.controllers.UserController;
 import com.qaengine.database.QuestionRepository;
 import com.qaengine.exceptions.ResourceNotFoundException;
+import com.qaengine.models.DTO.ApplicationUserDTO;
 import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.DTO.QuestionListDTOIn;
 import com.qaengine.models.Question;
@@ -34,6 +36,9 @@ public class QuestionTests {
     UserService userService;
     @Autowired
     VoteService voteService;
+    @Autowired
+    UserController userController;
+
     Principal principal = new Principal() {
         @Override
         public String getName() {
@@ -41,6 +46,10 @@ public class QuestionTests {
         }
     };
 
+    @Test
+    public void aaSignUpUserForTests() {
+        userController.signUp(new ApplicationUserDTO("name", "pw"));
+    }
 
     // QuestionController
     @Test

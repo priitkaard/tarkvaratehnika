@@ -46,7 +46,7 @@ public class Question {
     @Builder.Default
     private Integer score = 0;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
     private List<Vote> votes;
 
     @Column(nullable = false)

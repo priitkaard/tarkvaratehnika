@@ -3,6 +3,7 @@ package com.qaengine;
 import com.qaengine.controllers.AnswerController;
 import com.qaengine.controllers.CommentController;
 import com.qaengine.controllers.QuestionController;
+import com.qaengine.controllers.UserController;
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.CommentRepository;
 import com.qaengine.database.QuestionRepository;
@@ -10,6 +11,7 @@ import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
 import com.qaengine.models.DTO.AnswerDTO;
+import com.qaengine.models.DTO.ApplicationUserDTO;
 import com.qaengine.models.DTO.CommentDTO;
 import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
@@ -49,12 +51,20 @@ public class CommentTests {
     UserService userService;
     @Autowired
     VoteService voteService;
+    @Autowired
+    UserController userController;
+
     Principal principal = new Principal() {
         @Override
         public String getName() {
             return "name";
         }
     };
+
+    @Test
+    public void aaSignUpUserForTests() {
+        userController.signUp(new ApplicationUserDTO("name", "pw"));
+    }
 
     // CommentController TESTS
     @Test

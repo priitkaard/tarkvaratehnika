@@ -7,6 +7,7 @@ import com.qaengine.database.QuestionRepository;
 import com.qaengine.models.Answer;
 import com.qaengine.models.Comment;
 import com.qaengine.models.DTO.AnswerDTO;
+import com.qaengine.models.DTO.ApplicationUserDTO;
 import com.qaengine.models.DTO.CommentDTO;
 import com.qaengine.models.DTO.QuestionDTO;
 import com.qaengine.models.Question;
@@ -45,12 +46,21 @@ public class StatisticsTests {
     UserService userService;
     @Autowired
     VoteService voteService;
+    @Autowired
+    UserController userController;
+
     Principal principal = new Principal() {
         @Override
         public String getName() {
             return "name";
         }
     };
+
+    @Test
+    public void aaSignUpUserForTests() {
+        userController.signUp(new ApplicationUserDTO("name", "pw"));
+    }
+
     @Test
     public void getStatisticsTest()
     {
