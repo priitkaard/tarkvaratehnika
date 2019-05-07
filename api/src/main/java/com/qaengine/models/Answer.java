@@ -29,7 +29,7 @@ public class Answer {
     @Column(nullable = false)
     private Integer score = 0;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", fetch = FetchType.EAGER)
     private List<Vote> votes;
 
     @Column(nullable = false)
