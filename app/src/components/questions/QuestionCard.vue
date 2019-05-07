@@ -35,6 +35,13 @@
             <div class="detail" v-if="commentButton && isLoggedIn">
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
+            <div class="detail" v-if="question.user.username === currentUser && isLoggedIn && showEdit">
+                <UIButton text="Edit" @click="editAreaToggle"/>
+            </div>
+        </div>
+        <div v-if="question.user.username === currentUser && editArea">
+                <UITextField :value.sync="newText" full />
+                <UIButton text="Edit" @click="updateQuestionText"/>
         </div>
     </div>
 </template>
@@ -49,19 +56,25 @@
     import moment from 'moment';
     import { mapState } from "vuex";
     import AccountIcon from "vue-material-design-icons/Account";
+    import UITextField from '../common/UITextField';
     import questionService from "../../services/QuestionService";
 
     export default {
         name: "QuestionCard",
-        components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton},
+        components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton, UITextField},
         props: {
             'question': Object,
             'views': Number,
             'comments': Number,
             commentButton: Boolean,
+            'showEdit': Boolean,
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
+            currentUsername()
+            {
+                return this.username;
+            },
             created() {
                 if (this.question && this.question.created) {
                     return moment(this.question.created).fromNow(true);
@@ -73,6 +86,13 @@
             }
         },
         methods: {
+            editAreaToggle() {
+              this.editArea = !this.editArea
+            },
+            updateQuestionText() {
+                this.$emit('updateText', this.newText)
+                this.editAreaToggle()
+            },
             addVoteToQuestion(vote) {
                 this.question.votes.push(vote);
             },
@@ -87,6 +107,16 @@
                 this.question.score -= 1;
             }
         },
+        data() {
+            return {
+                currentUser: '',
+                newText: this.question.text,
+                editArea: false,
+            }
+        },
+        created() {
+            this.currentUser = this.currentUsername;
+        }
     }
 </script>
 

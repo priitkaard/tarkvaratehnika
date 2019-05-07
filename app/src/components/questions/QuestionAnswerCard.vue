@@ -22,12 +22,20 @@
             <div class="detail">
                 <UIButton text="Comment" @click="$emit('onCommentClick')" v-if="isLoggedIn"/>
             </div>
+            <div class="detail" v-if="isLoggedIn && answer.user.username === currentUser">
+                <UIButton text="Edit" @click="editAreaToggle"/>
+            </div>
+        </div>
+        <div v-if="answer.user.username === currentUser && editArea">
+            <UITextField :value.sync="newText" full />
+            <UIButton text="Edit" @click="updateAnswerText"/>
         </div>
     </div>
 </template>
 
 <script>
     import QuestionCardVote from "./QuestionCardVote";
+    import UITextField from '../common/UITextField';
     import UIButton from "../common/UIButton";
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import moment from 'moment';
@@ -37,12 +45,16 @@
 
     export default {
         name: "QuestionAnswerCard",
-        components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton},
+        components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton, UITextField},
         props: {
             'answer': Object,
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
+            currentUsername()
+            {
+                return this.username;
+            },
             created() {
                 if (this.answer && this.answer.created) {
                     return moment(this.answer.created).fromNow();
@@ -54,9 +66,18 @@
             }
         },
         methods: {
+            editAreaToggle() {
+                this.editArea = !this.editArea
+            },
+            updateAnswerText() {
+                this.$emit('updateText', {new: this.newText, id: this.answer.id})
+                this.editAreaToggle()
+
+            },
             addVoteToAnswer(vote) {
                 this.answer.votes.push(vote);
             },
+
             async upVoteAnswer() {
                 const vote = await questionService.upVoteAnswer(this.answer.id);
                 this.addVoteToAnswer(vote);
@@ -68,6 +89,16 @@
                 this.answer.score -= 1;
             }
         },
+        data() {
+            return{
+                currentUser: '',
+                editArea: false,
+                newText: this.answer.text,
+            }
+        },
+        created() {
+            this.currentUser = this.currentUsername;
+        }
     }
 </script>
 

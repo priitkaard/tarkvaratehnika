@@ -5,13 +5,11 @@ import apiService, { handleErrors } from './ApiService';
 export default {
     doLogin(token, username) {
         localStorage.setItem('authToken', token);
-        localStorage.setItem('username', username);
         store.dispatch('auth/logIn', { username });
     },
 
     logOut() {
         localStorage.removeItem('authToken');
-        localStorage.removeItem('username');
         store.dispatch('auth/logOut');
     },
 
