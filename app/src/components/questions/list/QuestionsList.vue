@@ -6,6 +6,7 @@
                 :question="question"
                 :comments="question.comments"
                 :views="question.views"
+                :showEdit="false"
                 @onContentClick="openQuestionView(question.id)" />
 
         <div v-if="questions.questions.length === 0"

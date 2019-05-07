@@ -60,6 +60,15 @@ export default {
     async commentQuestion(questionId, text) {
         return await apiService.post(`/question/${questionId}/comment`, {text});
     },
+    async updateQuestion(questionId, data){
+        return await apiService.put(`/question/${questionId}`, {
+            title: data.title,
+            text: data.text,
+            categoryId: data.categoryId})
+    },
+    async updateAnswer(answerId, data){
+        return await apiService.put(`/answer/${answerId}`, {text: data.text})
+    },
     async getStatistics(category) {
         let url = '/statistics';
         if (category) {

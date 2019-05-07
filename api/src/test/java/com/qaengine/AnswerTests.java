@@ -5,6 +5,7 @@ import com.qaengine.controllers.QuestionController;
 import com.qaengine.controllers.UserController;
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.exceptions.ResourceNotFoundException;
 import com.qaengine.models.Answer;
 import com.qaengine.models.DTO.AnswerDTO;
@@ -43,9 +44,10 @@ public class AnswerTests {
     @Autowired
     UserService userService;
     @Autowired
-    UserController userController;
-    @Autowired
     VoteService voteService;
+    @Autowired
+    UserController userController;
+
     Principal principal = new Principal() {
         @Override
         public String getName() {
@@ -55,7 +57,11 @@ public class AnswerTests {
 
     @Test
     public void aaSignUpUserForTests() {
-        userController.signUp(new ApplicationUserDTO("name", "pw"));
+        try {
+            userController.signUp(new ApplicationUserDTO("name", "pw"));
+        } catch (BadRequestException e) {
+            // User already created
+        }
     }
 
     @Test
