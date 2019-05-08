@@ -42,4 +42,7 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+    public int getUserScore(String username){
+        return userRepository.findByUsername(username).getScore();
+    }
 }
