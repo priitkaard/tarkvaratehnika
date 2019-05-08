@@ -3,7 +3,7 @@
         <UISelect
                 @onChange="onChange"
                 :options="categories"
-                :value="filters.category"
+                :value="filters.category || categories[0]"
                 full />
     </div>
 </template>
