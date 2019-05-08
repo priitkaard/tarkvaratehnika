@@ -6,7 +6,7 @@ const API_URL =
         : 'http://127.0.0.1:8080/';
 
 const axios = Axios.create({
-    baseURL: API_URL
+    baseURL: API_URL,
 });
 
 async function request(config) {
@@ -51,7 +51,7 @@ export default {
         return request({
             ...config,
             method: 'GET',
-            url
+            url,
         });
     },
 
@@ -60,7 +60,7 @@ export default {
             ...config,
             method: 'POST',
             url,
-            data
+            data,
         });
     },
 
@@ -69,7 +69,7 @@ export default {
             ...config,
             method: 'PUT',
             url,
-            data
+            data,
         });
     },
-}
+};

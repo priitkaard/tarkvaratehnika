@@ -12,7 +12,7 @@
     import {mapGetters, mapActions} from 'vuex';
 
     export default {
-        name: "QuestionFilterBar",
+        name: 'QuestionFilterBar',
         data() {
             return {
                 options: [
@@ -20,12 +20,12 @@
                     {key: 'answers', name: 'Most responses'},
                     {key: 'last_answer', name: 'Recently answered'},
                     {key: 'comments', name: 'Most comments'},
-                    {key: 'last_comment', name: 'Recently commented'}
-                ]
-            }
+                    {key: 'last_comment', name: 'Recently commented'},
+                ],
+            };
         },
         computed: {
-            ...mapGetters('question', ['filters'])
+            ...mapGetters('question', ['filters']),
         },
         methods: {
             ...mapActions('question', ['updateSort', 'updateQuestionList']),
@@ -33,9 +33,9 @@
                 if (this.filters.sort !== sort) {
                     this.updateSort(sort);
                 }
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

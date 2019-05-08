@@ -94,10 +94,10 @@
     import UITextField from '../components/common/UITextField';
     import UIGroup from '../components/common/UIGroup';
     import questionService from '../services/QuestionService';
-    import QuestionCard from "../components/questions/QuestionCard";
-    import QuestionAnswerCard from "../components/questions/QuestionAnswerCard";
-    import QuestionCommentCard from "../components/questions/QuestionCommentCard";
-    import {mapState} from "vuex";
+    import QuestionCard from '../components/questions/QuestionCard';
+    import QuestionAnswerCard from '../components/questions/QuestionAnswerCard';
+    import QuestionCommentCard from '../components/questions/QuestionCommentCard';
+    import {mapState} from 'vuex';
 
     export default {
         name: 'QuestionDetailView',
@@ -130,7 +130,7 @@
                 sortBy: null,
                 newText: '',
                 bestAnswer: '',
-            }
+            };
         },
         computed: {
             ...mapState('auth', ['isLoggedIn']),
@@ -152,7 +152,7 @@
             async answerQuestion() {
                 await questionService.answerQuestion(this.question.id, this.answerInput);
                 await this.loadQuestion();
-                this.answerInput = ''
+                this.answerInput = '';
             },
             async commentAnswer(answerId) {
                 await questionService.commentAnswer(answerId, this.commentInputs[answerId]);
@@ -169,7 +169,7 @@
             toggleComment(key) {
                 this.commentDisplay = {
                     ...this.commentDisplay,
-                    [key]: !this.commentDisplay[key]
+                    [key]: !this.commentDisplay[key],
                 };
             },
             async updateQuestion(newText) {
@@ -181,7 +181,7 @@
                 await this.loadQuestion();
             },
             async chooseBestAnswer(id){
-                if(confirm("Do you really want to select this answer as best answer? (Permanent)")) {
+                if(confirm('Do you really want to select this answer as best answer? (Permanent)')) {
                     await questionService.acceptAnswer(id);
                     await this.loadQuestion();
                 }
@@ -191,18 +191,18 @@
                 for (let i = 0; i < values.length; i++) {
                     if (values[i].accepted){
                         let bestAnswer = values[i];
-                        this.question.answers.splice(i,1);
+                        this.question.answers.splice(i, 1);
                         return bestAnswer;
                     }
                 }
                 return null;
-            }
+            },
         },
         async created() {
             await this.loadQuestion();
             this.sortBy = this.sortOptions[0];
         },
-    }
+    };
 </script>
 
 <style scoped lang="scss">

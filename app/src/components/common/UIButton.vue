@@ -8,13 +8,13 @@
 
 <script>
     export default {
-        name: "UIButton",
+        name: 'UIButton',
         props: {
             text: String,
             outline: Boolean,
             full: Boolean,
-        }
-    }
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

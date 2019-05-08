@@ -11,7 +11,7 @@
 
 <script>
     export default {
-        name: "UITextField",
+        name: 'UITextField',
         props: {
             placeholder: String,
             value: String,
@@ -20,15 +20,15 @@
             full: Boolean,
         },
         data() {
-            return { input: this.value }
+            return { input: this.value };
         },
         watch: {
             input(val) {
                 this.$emit('update:value', val);
-            }
-        }
+            },
+        },
 
-    }
+    };
 </script>
 
 <style scoped lang="scss">

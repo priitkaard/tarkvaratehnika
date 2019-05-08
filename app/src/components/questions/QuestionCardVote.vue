@@ -10,11 +10,11 @@
 </template>
 
 <script>
-    import MenuUpIcon from "vue-material-design-icons/MenuUp.vue"
-    import MenuDownIcon from "vue-material-design-icons/MenuDown.vue"
+    import MenuUpIcon from 'vue-material-design-icons/MenuUp.vue';
+    import MenuDownIcon from 'vue-material-design-icons/MenuDown.vue';
 
     export default {
-        name: "QuestionCardVote",
+        name: 'QuestionCardVote',
         props: {
             'disableVoting': Boolean,
             'score': Number,
@@ -30,8 +30,8 @@
             downVote() {
                 this.$emit('onDownVote');
             },
-        }
-    }
+        },
+    };
 </script>
 
 <style scoped lang="scss">

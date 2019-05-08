@@ -29,13 +29,13 @@
 </template>
 
 <script>
-    import MenuIcon from "vue-material-design-icons/Menu";
-    import {mapActions, mapGetters, mapState} from "vuex";
+    import MenuIcon from 'vue-material-design-icons/Menu';
+    import {mapActions, mapGetters, mapState} from 'vuex';
 
     export default {
-        name: "Navigation",
+        name: 'Navigation',
         props: {
-            transparent: Boolean
+            transparent: Boolean,
         },
         computed: {
             ...mapState('auth', ['username']),
@@ -47,7 +47,7 @@
             ...mapGetters('navigation', ['getMenuItems']),
         },
 
-    }
+    };
 </script>
 
 <style lang="scss" scoped>

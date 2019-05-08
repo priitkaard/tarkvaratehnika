@@ -8,10 +8,10 @@
 
 <script>
     import {mapActions, mapState} from 'vuex';
-    import Login from "../auth/Login";
+    import Login from '../auth/Login';
 
     export default {
-        name: "Modal",
+        name: 'Modal',
         computed: {
             ...mapState('modal', ['component']),
         },
@@ -19,9 +19,9 @@
             ...mapActions('modal', ['dismissModal']),
         },
         components: {
-            Login
-        }
-    }
+            Login,
+        },
+    };
 </script>
 
 <style scoped lang="scss">

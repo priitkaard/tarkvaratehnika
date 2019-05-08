@@ -9,34 +9,34 @@
 </template>
 
 <script>
-    import UISelect from "../../common/UISelect";
+    import UISelect from '../../common/UISelect';
     import categoryService from '../../../services/CategoryService';
     import {mapGetters, mapActions} from 'vuex';
 
     export default {
-        name: "QuestionFilterCategory",
+        name: 'QuestionFilterCategory',
         components: {UISelect},
         computed: {
-            ...mapGetters('question', ['filters'])
+            ...mapGetters('question', ['filters']),
         },
         data() {
             return {
-                categories: []
-            }
+                categories: [],
+            };
         },
         async created() {
             this.categories = [
                 {id: 0, name: 'All lectures'},
-                ... await categoryService.listCategories()
+                ... await categoryService.listCategories(),
             ];
         },
         methods: {
             ...mapActions('question', ['updateCategory', 'updateQuestionList']),
             onChange(category) {
                 this.updateCategory(category.id === 0 ? null : category);
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

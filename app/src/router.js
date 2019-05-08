@@ -4,6 +4,7 @@ import HomeView from './views/HomeView.vue';
 import QuestionDetailView from './views/QuestionDetailView.vue';
 import QuestionListView from './views/QuestionListView.vue';
 import AddQuestionView from './views/AddQuestionView.vue';
+import { LAYOUT } from './services/LayoutService';
 
 Vue.use(Router);
 
@@ -16,24 +17,24 @@ export default new Router({
             name: 'HomeView',
             component: HomeView,
             meta: {
-                layout: 'full',
-            }
+                layout: LAYOUT.FULL,
+            },
         },
         {
             path: '/questions/create',
             name: 'AddQuestionView',
             component: AddQuestionView,
-            props: true
+            props: true,
         },
         {
             name: 'QuestionListView',
             path: '/questions',
-            component: QuestionListView
+            component: QuestionListView,
         },
         {
             name: 'QuestionDetailView',
             path: '/question/:id',
-            component: QuestionDetailView
+            component: QuestionDetailView,
         },
-    ]
+    ],
 });

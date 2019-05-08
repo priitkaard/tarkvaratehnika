@@ -24,15 +24,15 @@
 </template>
 
 <script>
-    import UIGroup from "../common/UIGroup";
-    import UIButton from "../common/UIButton";
-    import UIAlert from "../common/UIAlert";
-    import UITextField from "../common/UITextField";
+    import UIGroup from '../common/UIGroup';
+    import UIButton from '../common/UIButton';
+    import UIAlert from '../common/UIAlert';
+    import UITextField from '../common/UITextField';
     import * as authService from '../../services/AuthService';
-    import CloseIcon from "vue-material-design-icons/Close";
+    import CloseIcon from 'vue-material-design-icons/Close';
 
     export default {
-        name: "Login",
+        name: 'Login',
         props: ['onDismiss'],
         components: {
             CloseIcon,
@@ -81,9 +81,9 @@
             setMessage(message) {
                 this.message = message;
                 this.error = null;
-            }
+            },
         },
-    }
+    };
 </script>
 
 <style scoped lang="scss">

@@ -14,21 +14,21 @@
 </template>
 
 <script>
-    import AccountIcon from "vue-material-design-icons/Account";
+    import AccountIcon from 'vue-material-design-icons/Account';
     import moment from 'moment';
 
     export default {
-        name: "QuestionCommentCard",
+        name: 'QuestionCommentCard',
         props: {
-            comment: Object
+            comment: Object,
         },
         components: {AccountIcon},
         data() {
             return {
-                created: moment(this.comment.created).fromNow() 
-            }
-        }
-    }
+                created: moment(this.comment.created).fromNow(),
+            };
+        },
+    };
 </script>
 
 <style scoped lang="scss">

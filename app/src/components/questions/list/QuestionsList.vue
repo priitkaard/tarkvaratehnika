@@ -38,27 +38,27 @@
 <script>
     import UIButton from '../../common/UIButton';
     import {mapGetters} from 'vuex';
-    import QuestionCard from "../QuestionCard";
+    import QuestionCard from '../QuestionCard';
 
     export default {
-        name: "QuestionsList",
+        name: 'QuestionsList',
         components: {
             QuestionCard,
-            UIButton
+            UIButton,
         },
         computed: {
-            ...mapGetters('question', ['questions', 'filters'])
+            ...mapGetters('question', ['questions', 'filters']),
         },
         methods: {
             updatePage(page) {
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
                 this.$store.dispatch('question/updatePage', page);
             },
             openQuestionView(questionId) {
                 this.$router.push({ name: 'QuestionDetailView', params: { id: questionId } });
             },
         },
-    }
+    };
 </script>
 
 <style lang="scss" scoped>

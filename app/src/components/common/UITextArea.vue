@@ -11,7 +11,7 @@
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
     export default {
-        name: "UITextArea",
+        name: 'UITextArea',
         props: {
             value: String,
         },
@@ -29,13 +29,13 @@
                     type: ClassicEditor,
                     config: {
                         removePlugins: [ 'Heading', 'Link' ],
-                        toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ]
+                        toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ],
                     },
                 },
                 input: '',
-            }
+            };
         },
-    }
+    };
 </script>
 
 <style scoped>

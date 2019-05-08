@@ -25,15 +25,15 @@
 </template>
 
 <script>
-    import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
-    import Navigation from "../components/layout/Navigation";
-    import {mapState} from "vuex";
+    import QuestionFilterSearch from '../components/questions/filters/QuestionFilterSearch';
+    import Navigation from '../components/layout/Navigation';
+    import {mapState} from 'vuex';
 
     export default {
-        name: "HomeView",
+        name: 'HomeView',
         components: {
             Navigation,
-            QuestionFilterSearch
+            QuestionFilterSearch,
         },
         computed: {
             ...mapState('auth', ['isLoggedIn']),
@@ -41,11 +41,11 @@
         methods: {
             startSearch() {
                 this.$router.push({
-                    name: 'QuestionListView'
+                    name: 'QuestionListView',
                 });
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

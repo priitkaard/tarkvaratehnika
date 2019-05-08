@@ -26,7 +26,7 @@
     import { mapActions, mapGetters, mapState } from 'vuex';
 
     export default {
-        name: "NavigationDrawer",
+        name: 'NavigationDrawer',
         components: {ChevronRightIcon},
         computed: {
             ...mapState('navigation', ['drawer', 'menuItems']),
@@ -35,7 +35,7 @@
             ...mapActions('navigation', ['closeDrawer', 'chooseItem']),
             ...mapGetters('navigation', ['getMenuItems']),
         },
-    }
+    };
 </script>
 
 <style scoped lang="scss">

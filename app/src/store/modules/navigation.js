@@ -27,7 +27,7 @@ export default {
                 return state.menuItems.filter(item => item.loggedOut !== true);
             }
             return state.menuItems.filter(item => item.loggedIn !== true);
-        }
+        },
     },
     actions: {
         openDrawer(context) {

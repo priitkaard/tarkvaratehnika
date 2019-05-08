@@ -37,7 +37,7 @@ export async function register(username, password) {
     try {
         return await axios.post(`${apiService.API_URL}user/sign-up`, {
             username,
-            password
+            password,
         });
     } catch (err) {
         handleErrors(err);

@@ -3,17 +3,17 @@
         <navigation-drawer />
 
         <transition name="fade">
-            <Navigation v-if="$route.meta.layout !== 'full'"/>
+            <Navigation v-if="!isFullLayout"/>
         </transition>
 
-        <div class="page-content" v-bind:class="{'nav-offset': $route.meta.layout !== 'full'}">
+        <div class="page-content" v-bind:class="{'nav-offset': !isFullLayout}">
             <transition name="router-animation">
                 <router-view></router-view>
             </transition>
         </div>
 
         <transition name="fade">
-            <Footer v-if="$route.meta.layout !== 'full'"/>
+            <Footer v-if="!isFullLayout"/>
         </transition>
 
         <modal />
@@ -22,10 +22,11 @@
 
 <script>
 
-    import Navigation from "./components/layout/Navigation";
-    import Footer from "./components/layout/Footer";
-    import NavigationDrawer from "./components/layout/NavigationDrawer";
-    import Modal from "./components/modal/Modal";
+    import Navigation from './components/layout/Navigation';
+    import Footer from './components/layout/Footer';
+    import NavigationDrawer from './components/layout/NavigationDrawer';
+    import Modal from './components/modal/Modal';
+    import { LAYOUT } from './services/LayoutService';
 
     export default {
         name: 'app',
@@ -33,9 +34,14 @@
             Modal,
             NavigationDrawer,
             Footer,
-            Navigation
-        }
-    }
+            Navigation,
+        },
+        computed: {
+            isFullLayout() {
+                return this.$route.meta.layout === LAYOUT.FULL;
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

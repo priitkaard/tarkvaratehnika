@@ -47,20 +47,20 @@
 </template>
 
 <script>
-    import QuestionCardVote from "./QuestionCardVote";
-    import UIButton from "../common/UIButton";
+    import QuestionCardVote from './QuestionCardVote';
+    import UIButton from '../common/UIButton';
     import FolderIcon from 'vue-material-design-icons/Folder';
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import EyeIcon from 'vue-material-design-icons/Eye';
     import CommentIcon from 'vue-material-design-icons/Comment';
     import moment from 'moment';
-    import { mapState } from "vuex";
-    import AccountIcon from "vue-material-design-icons/Account";
+    import { mapState } from 'vuex';
+    import AccountIcon from 'vue-material-design-icons/Account';
     import UITextField from '../common/UITextField';
-    import questionService from "../../services/QuestionService";
+    import questionService from '../../services/QuestionService';
 
     export default {
-        name: "QuestionCard",
+        name: 'QuestionCard',
         components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton, UITextField},
         props: {
             'question': Object,
@@ -83,15 +83,15 @@
             },
             disableVoting() {
                 return !this.isLoggedIn || !this.question || questionService.hasVoted(this.question);
-            }
+            },
         },
         methods: {
             editAreaToggle() {
-              this.editArea = !this.editArea
+                this.editArea = !this.editArea;
             },
             updateQuestionText() {
-                this.$emit('updateText', this.newText)
-                this.editAreaToggle()
+                this.$emit('updateText', this.newText);
+                this.editAreaToggle();
             },
             addVoteToQuestion(vote) {
                 this.question.votes.push(vote);
@@ -105,19 +105,19 @@
                 const vote = await questionService.downVote(this.question.id);
                 this.addVoteToQuestion(vote);
                 this.question.score -= 1;
-            }
+            },
         },
         data() {
             return {
                 currentUser: '',
                 newText: this.question.text,
                 editArea: false,
-            }
+            };
         },
         created() {
             this.currentUser = this.currentUsername;
-        }
-    }
+        },
+    };
 </script>
 
 <style scoped lang="scss">

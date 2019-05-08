@@ -33,23 +33,23 @@
 </template>
 
 <script>
-    import MagnifyIcon from "vue-material-design-icons/Magnify";
+    import MagnifyIcon from 'vue-material-design-icons/Magnify';
     import questionService from '../../../services/QuestionService';
     import {mapActions} from 'vuex';
 
     export default {
-        name: "QuestionFilterSearch",
+        name: 'QuestionFilterSearch',
         props: ['rounded'],
         components: {MagnifyIcon},
         data() {
             return {
-                suggestions: []
-            }
+                suggestions: [],
+            };
         },
         computed: {
             query() {
                 return this.$store.state.question.filters.query;
-            }
+            },
         },
         methods: {
             ...mapActions('question', ['updateQuery', 'updateQuestionList']),
@@ -65,9 +65,9 @@
                 this.$router.push({
                     name: 'QuestionDetailView',
                     params: {
-                        id: suggestion.id
-                    }
-                })
+                        id: suggestion.id,
+                    },
+                });
             },
             async onQueryChanged(e) {
                 const query = e.target.value;
@@ -78,9 +78,9 @@
                 } else {
                     this.suggestions = [];
                 }
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>
@@ -137,7 +137,7 @@
             z-index: 3;
             overflow: hidden;
             @include shadow-depth;
-            
+
             em {
                 display: block;
                 font-style: normal;

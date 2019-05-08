@@ -8,6 +8,6 @@ export default {
     mutations: {
         setPoints(state, points) {
             state.points = points;
-        }
-    }
-}
+        },
+    },
+};

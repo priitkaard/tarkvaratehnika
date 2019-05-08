@@ -6,21 +6,21 @@
 
 <script>
     export default {
-        name: "UIAlert",
+        name: 'UIAlert',
         props: {
             value: String,
             success: Boolean,
             danger: Boolean,
         },
         data() {
-            return { input: this.value }
+            return { input: this.value };
         },
         watch: {
             input(val) {
                 this.$emit('input', val);
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style scoped lang="scss">

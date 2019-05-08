@@ -21,10 +21,10 @@
 </template>
 
 <script>
-    import ChevronDownIcon from "vue-material-design-icons/ChevronDown";
-    import ChevronUpIcon from "vue-material-design-icons/ChevronUp";
+    import ChevronDownIcon from 'vue-material-design-icons/ChevronDown';
+    import ChevronUpIcon from 'vue-material-design-icons/ChevronUp';
     export default {
-        name: "UISelect",
+        name: 'UISelect',
         components: {ChevronUpIcon, ChevronDownIcon},
         props: {
             options: Array,
@@ -34,12 +34,12 @@
         data() {
             return {
                 selectClosed: true,
-            }
+            };
         },
         computed: {
             selected() {
-                return this.options.filter(option => option === this.value)[0]
-            }
+                return this.options.filter(option => option === this.value)[0];
+            },
         },
         methods: {
             toggleSelect() {
@@ -55,15 +55,15 @@
                 if (!this.selectClosed && !(el === event.target || el.contains(event.target))) {
                     this.selectClosed = true;
                 }
-            }
+            },
         },
         created() {
             document.body.addEventListener('click', this.onClickEvent);
         },
         destroyed() {
             document.body.removeEventListener('click', this.onClickEvent);
-        }
-    }
+        },
+    };
 </script>
 
 <style scoped lang="scss">

@@ -23,19 +23,19 @@
 </template>
 
 <script>
-    import ArrowRightIcon from "vue-material-design-icons/ArrowRight.vue"
+    import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue';
     import QuestionService from '../../services/QuestionService';
 
     export default {
-        name: "QuestionSearch",
+        name: 'QuestionSearch',
         data() {
             return {
                 searchInput: '',
-                suggestions: []
-            }
+                suggestions: [],
+            };
         },
         components: {
-            ArrowRightIcon
+            ArrowRightIcon,
         },
         methods: {
             async updateAutoComplete() {
@@ -50,12 +50,12 @@
                 this.$router.push({
                     name: 'AddQuestionView',
                     params: {
-                        userInput: this.searchInput
-                    }
+                        userInput: this.searchInput,
+                    },
                 });
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

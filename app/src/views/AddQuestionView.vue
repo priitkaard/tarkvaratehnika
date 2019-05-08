@@ -46,7 +46,7 @@
     import categoryService from '../services/CategoryService';
 
     export default {
-        name: "AddQuestionView",
+        name: 'AddQuestionView',
         components: {
             UISelect,
             UIButton,
@@ -67,7 +67,7 @@
                     categoryId: null,
                 },
                 categories: [],
-            }
+            };
         },
         methods: {
             onCategoryChange(category) {
@@ -78,17 +78,17 @@
                 const response = await questionService.postQuestion({
                     title: this.question.title,
                     description: this.question.description,
-                    categoryId: this.question.categoryId
+                    categoryId: this.question.categoryId,
                 });
                 this.$router.push({
                     name: 'QuestionDetailView',
                     params: {
-                        id: response.id
-                    }
+                        id: response.id,
+                    },
                 });
-            }
-        }
-    }
+            },
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

@@ -25,27 +25,27 @@
 <script>
     import QuestionFilterBar from '../components/questions/filters/QuestionFilterBar';
     import QuestionsList from '../components/questions/list/QuestionsList';
-    import QuestionStatistics from "../components/questions/sidebars/QuestionStatistics";
-    import QuestionFilterSearch from "../components/questions/filters/QuestionFilterSearch";
-    import QuestionFilterCategory from "../components/questions/filters/QuestionFilterCategory";
+    import QuestionStatistics from '../components/questions/sidebars/QuestionStatistics';
+    import QuestionFilterSearch from '../components/questions/filters/QuestionFilterSearch';
+    import QuestionFilterCategory from '../components/questions/filters/QuestionFilterCategory';
     import { mapActions } from 'vuex';
 
     export default {
-        name: "QuestionListView",
+        name: 'QuestionListView',
         components: {
             QuestionFilterCategory,
             QuestionStatistics,
             QuestionFilterBar,
             QuestionsList,
-            QuestionFilterSearch
+            QuestionFilterSearch,
         },
         methods: {
-            ...mapActions('question', ['updateQuestionList'])
+            ...mapActions('question', ['updateQuestionList']),
         },
         created() {
             this.updateQuestionList();
-        }
-    }
+        },
+    };
 </script>
 
 <style scoped>

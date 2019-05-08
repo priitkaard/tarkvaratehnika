@@ -18,5 +18,5 @@ export default new Vuex.Store({
         auth,
         user,
     },
-    strict: debug
+    strict: debug,
 });

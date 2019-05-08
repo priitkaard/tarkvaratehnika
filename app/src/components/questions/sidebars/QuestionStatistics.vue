@@ -24,24 +24,24 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from "vuex";
-    import ChartBarIcon from "vue-material-design-icons/ChartBar";
+    import { mapActions, mapGetters } from 'vuex';
+    import ChartBarIcon from 'vue-material-design-icons/ChartBar';
 
     export default {
-        name: "QuestionStatistics",
+        name: 'QuestionStatistics',
         components: {
             ChartBarIcon,
         },
         computed: {
-            ...mapGetters('question', ['statistics'])
+            ...mapGetters('question', ['statistics']),
         },
         methods: {
-            ...mapActions('question', ['updateStatistics'])
+            ...mapActions('question', ['updateStatistics']),
         },
         created() {
             this.updateStatistics();
-        }
-    }
+        },
+    };
 </script>
 
 <style lang="scss" scoped>

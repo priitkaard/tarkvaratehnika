@@ -34,7 +34,7 @@ const state = {
         answers: 0,
         comments: 0,
         users: 0,
-    }
+    },
 };
 
 const getters = {
@@ -45,7 +45,7 @@ const getters = {
 };
 
 const actions = {
-    updateQuery({ commit }, query) { commit('updateQuery', query) },
+    updateQuery({ commit }, query) { commit('updateQuery', query); },
     updatePage(context, page) {
         context.commit('updatePage', page);
         context.dispatch('updateQuestionList');
@@ -74,7 +74,7 @@ const actions = {
         }
         
         context.commit('updateStatistics', {category, ...statistics});
-    } 
+    }, 
 };
 const mutations = {
     updatePage(state, page) {
@@ -90,7 +90,7 @@ const mutations = {
         state.filters.category = category;
     },
     updateQuestionList(state, questions) {
-        state.questions = questions
+        state.questions = questions;
     },
     incrementQuestionScore(state, questionId) {
         const question = getQuestionById(state, questionId);
@@ -110,7 +110,7 @@ const mutations = {
     },
     updateStatistics(state, statistics) {
         state.statistics = statistics;
-    }
+    },
 };
 
 export default {
@@ -118,5 +118,5 @@ export default {
     state,
     getters,
     actions,
-    mutations
-}
+    mutations,
+};

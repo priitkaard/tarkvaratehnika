@@ -12,7 +12,7 @@ export default {
         logOut(context) {
             context.commit('setLoggedIn', false);
             context.commit('setUsername', null);
-        }
+        },
     },
     mutations: {
         setLoggedIn(state, value) {
@@ -21,5 +21,5 @@ export default {
         setUsername(state, username) {
             state.username = username;
         },
-    }
-}
+    },
+};

@@ -6,8 +6,8 @@ export default {
     autoCompleteSuggestions(input) {
         return apiService.get('question/auto-complete', {
             params: {
-                query: input
-            }
+                query: input,
+            },
         });
     },
 
@@ -15,7 +15,7 @@ export default {
         return apiService.post('question', {
             title: data.title,
             text: data.description,
-            categoryId: data.categoryId
+            categoryId: data.categoryId,
         });
     },
 
@@ -31,8 +31,8 @@ export default {
         return apiService.get('question/list', {
             params: {
                 ...questionFilters,
-                categoryId
-            }
+                categoryId,
+            },
         });
     },
 
@@ -64,10 +64,10 @@ export default {
         return await apiService.put(`/question/${questionId}`, {
             title: data.title,
             text: data.text,
-            categoryId: data.categoryId})
+            categoryId: data.categoryId});
     },
     async updateAnswer(answerId, data){
-        return await apiService.put(`/answer/${answerId}`, {text: data.text})
+        return await apiService.put(`/answer/${answerId}`, {text: data.text});
     },
     async getStatistics(category) {
         let url = '/statistics';
@@ -84,6 +84,6 @@ export default {
         );
     },
     async acceptAnswer(id){
-        return await apiService.put(`/answer/${id}/accept`)
-    }
-}
+        return await apiService.put(`/answer/${id}/accept`);
+    },
+};
