@@ -46,7 +46,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     @Modifying
     @Transactional
     @Query("update Answer a set a.accepted = false where a.question = :question")
-    void revertAnswerAccepted(Question question);
+    void revertAnswerAccepted(@Param("question") Question question);
 
     @Query("SELECT q FROM Question q WHERE lower(q.title) LIKE lower(concat('%', ?1,'%'))")
     List<Question> getSimilarQuestions(String input, Pageable pageable);

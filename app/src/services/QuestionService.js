@@ -82,5 +82,8 @@ export default {
             question.votes &&
             question.votes.find(vote => vote.user.username === store.state.auth.username)
         );
+    },
+    async acceptAnswer(id){
+        return await apiService.put(`/answer/${id}/accept`)
     }
 }

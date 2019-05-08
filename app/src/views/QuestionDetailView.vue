@@ -16,20 +16,49 @@
                 </form>
             </div>
         </div>
-
         <h4 class="mt-5">Answers</h4>
         <p v-if="question.answers && question.answers.length < 1">No answers yet</p>
         <UISelect :options="sortOptions"
                   :value.sync="sortBy"
                   v-if="question.answers && question.answers.length > 0" />
 
+
+        <div v-if="bestAnswer">
+            <question-answer-card
+                    :answer="bestAnswer"
+                    :best="false"
+                    :questionUser="'.'"
+                    @onCommentClick="toggleComment(bestAnswer.id)"
+                    @updateText="updateAnswer($event)"
+                    style="background:lightgreen"
+            />
+
+            <div class="QuestionDetailView__comment_wrapper">
+                <question-comment-card
+                        v-for="comment in bestAnswer.comments"
+                        :key="comment.id"
+                        :comment="comment" />
+
+                <form @submit.prevent="commentAnswer(bestAnswer.id)" v-if="commentDisplay[bestAnswer.id]">
+                    <UIGroup class="mt-2">
+                        <UITextField :value.sync="commentInputs[bestAnswer.id]" placeholder="Comment" full />
+                        <UIButton text="Comment" @click="commentAnswer(bestAnswer.id)" />
+                    </UIGroup>
+                </form>
+            </div>
+
+        </div>
+
         <div v-for="answer in question.answers"
              :key="answer.id"
         >
             <question-answer-card
                     :answer="answer"
+                    :best="bestAnswer === null"
+                    :questionUser="question.user.username"
                     @onCommentClick="toggleComment(answer.id)"
                     @updateText="updateAnswer($event)"
+                    @chooseBestAnswer = chooseBestAnswer($event)
             />
 
             <div class="QuestionDetailView__comment_wrapper">
@@ -48,9 +77,10 @@
 
         </div>
 
-        <h4 class="mt-5" v-if="isLoggedIn">Answer the question</h4>
 
-        <form @submit.prevent="answerQuestion()" v-if="isLoggedIn">
+        <h4 class="mt-5" v-if="isLoggedIn && bestAnswer == null">Answer the question</h4>
+
+        <form @submit.prevent="answerQuestion()" v-if="isLoggedIn && bestAnswer == null">
             <UITextArea :value.sync="answerInput" />
             <UIButton text="Answer" @click="answerQuestion()" />
         </form>
@@ -99,6 +129,7 @@
                 ],
                 sortBy: null,
                 newText: '',
+                bestAnswer: '',
             }
         },
         computed: {
@@ -114,7 +145,9 @@
                 this.question.answers.forEach(answer => {
                     this.commentDisplay[answer.id] = false;
                     this.commentInputs[answer.id] = '';
-                })
+                });
+
+                this.bestAnswer = this.takeBestAnswerOut(this.question.answers);
             },
             async answerQuestion() {
                 await questionService.answerQuestion(this.question.id, this.answerInput);
@@ -147,6 +180,23 @@
                 await questionService.updateAnswer(newData.id, {text: newData.new});
                 await this.loadQuestion();
             },
+            async chooseBestAnswer(id){
+                if(confirm("Do you really want to select this answer as best answer? (Permanent)")) {
+                    await questionService.acceptAnswer(id);
+                    await this.loadQuestion();
+                }
+                await this.loadQuestion();
+            },
+            takeBestAnswerOut(values) {
+                for (let i = 0; i < values.length; i++) {
+                    if (values[i].accepted){
+                        let bestAnswer = values[i];
+                        this.question.answers.splice(i,1);
+                        return bestAnswer;
+                    }
+                }
+                return null;
+            }
         },
         async created() {
             await this.loadQuestion();
