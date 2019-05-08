@@ -14,6 +14,7 @@ module.exports = {
         "comma-spacing": ["error", { "before": false, "after": true }],
         "key-spacing": ["error", { "afterColon": true }],
         "vue/script-indent": ["error", 4, { "baseIndent": 1 }],
+        'max-len': ["error", { "code": 120 }]
     },
     parserOptions: {
         parser: "babel-eslint"

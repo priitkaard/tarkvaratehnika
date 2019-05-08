@@ -1,7 +1,12 @@
 <template>
     <div class="QuestionDetailView container" v-if="question">
         <div>
-            <question-card :question="question" :showEdit="true" @onCommentClick="toggleComment('question')" @updateText = "updateQuestion($event)" comment-button />
+            <question-card
+                :question="question"
+                :showEdit="true"
+                @onCommentClick="toggleComment('question')"
+                @updateText = "updateQuestion($event)" comment-button
+            />
 
             <div class="QuestionDetailView__comment_wrapper">
                 <question-comment-card
@@ -173,7 +178,12 @@
                 };
             },
             async updateQuestion(newText) {
-                await questionService.updateQuestion(this.question.id, {text: newText, title: this.question.title, categoryId: this.question.category.id});
+                const payload = {
+                    text: newText,
+                    title: this.question.title,
+                    categoryId: this.question.category.id,
+                };
+                await questionService.updateQuestion(this.question.id, payload);
                 await this.loadQuestion();
             },
             async updateAnswer(newData) {
