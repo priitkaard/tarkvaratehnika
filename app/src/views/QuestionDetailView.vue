@@ -22,7 +22,7 @@
                   :value.sync="sortBy"
                   v-if="question.answers && question.answers.length > 0" />
 
-        <!-- 1. Repetition -->
+
         <div v-if="bestAnswer">
             <question-answer-card
                     :answer="bestAnswer"
@@ -48,9 +48,9 @@
             </div>
 
         </div>
-        <!-- 2.Repetition -->
+
         <div v-for="answer in question.answers"
-             :key="answer.id" v-if="answer.accepted === false"
+             :key="answer.id"
         >
             <question-answer-card
                     :answer="answer"
@@ -145,9 +145,9 @@
                 this.question.answers.forEach(answer => {
                     this.commentDisplay[answer.id] = false;
                     this.commentInputs[answer.id] = '';
-                })
+                });
 
-                this.bestAnswer = this.withouts(this.question.answers);
+                this.bestAnswer = this.takeBestAnswerOut(this.question.answers);
             },
             async answerQuestion() {
                 await questionService.answerQuestion(this.question.id, this.answerInput);
@@ -187,10 +187,12 @@
                 }
                 await this.loadQuestion();
             },
-            withouts(values) {
+            takeBestAnswerOut(values) {
                 for (let i = 0; i < values.length; i++) {
                     if (values[i].accepted){
-                        return (values[i]);
+                        let bestAnswer = values[i];
+                        this.question.answers.splice(i,1);
+                        return bestAnswer;
                     }
                 }
                 return null;
@@ -199,17 +201,6 @@
         async created() {
             await this.loadQuestion();
             this.sortBy = this.sortOptions[0];
-            this.bestAnswer = this.withouts(this.question.answers);
-        },
-        filters: {
-            without : function(values) {
-                for (let i = 0; i < values.length; i++) {
-                    if (values[i].accepted){
-                        return (values[i]);
-                    }
-                }
-                return null;
-            }
         },
     }
 </script>
