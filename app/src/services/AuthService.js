@@ -2,39 +2,44 @@ import axios from 'axios';
 import store from '../store';
 import apiService, { handleErrors } from './ApiService';
 
-export default {
-    doLogin(token, username) {
-        localStorage.setItem('authToken', token);
-        store.dispatch('auth/logIn', { username });
-    },
+const LOCAL_STORAGE = {
+    AUTH_TOKEN: 'authToken',
+};
 
-    logOut() {
-        localStorage.removeItem('authToken');
-        store.dispatch('auth/logOut');
-    },
+export async function doLogin(token, username) {
+    localStorage.setItem(LOCAL_STORAGE.AUTH_TOKEN, token);
+    store.dispatch('auth/logIn', { username });
 
-    async tryLogin(username, password) {
-        let response;
-        try {
-            response = await axios.post(`${apiService.API_URL}login`, { username, password });
-        } catch (err) {
-            handleErrors(err);
-        }
+    const points = await apiService.get(`/user/points/${username}`);
+    store.commit('user/setPoints', points);
+}
 
-        const token = response.headers.authorization;
-        this.doLogin(token, username);
+export function logOut() {
+    localStorage.removeItem(LOCAL_STORAGE.AUTH_TOKEN);
+    store.dispatch('auth/logOut');
+}
 
-        return token;
-    },
+export async function tryLogin(username, password) {
+    let response;
+    try {
+        response = await axios.post(`${apiService.API_URL}login`, { username, password });
+    } catch (err) {
+        handleErrors(err);
+    }
 
-    async register(username, password) {
-        try {
-            return await axios.post(`${apiService.API_URL}user/sign-up`, {
-                username,
-                password
-            });
-        } catch (err) {
-            handleErrors(err);
-        }
+    const token = response.headers.authorization;
+    await doLogin(token, username);
+
+    return token;
+}
+
+export async function register(username, password) {
+    try {
+        return await axios.post(`${apiService.API_URL}user/sign-up`, {
+            username,
+            password
+        });
+    } catch (err) {
+        handleErrors(err);
     }
 }

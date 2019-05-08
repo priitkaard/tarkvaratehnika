@@ -2,6 +2,7 @@ package com.qaengine.services;
 
 import com.qaengine.database.AnswerRepository;
 import com.qaengine.database.QuestionRepository;
+import com.qaengine.database.UserRepository;
 import com.qaengine.database.VoteRepository;
 import com.qaengine.exceptions.BadRequestException;
 import com.qaengine.models.Answer;
@@ -19,14 +20,16 @@ public class VoteService {
     private QuestionRepository questionRepository;
     private AnswerService answerService;
     private AnswerRepository answerRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public VoteService(VoteRepository voteRepository, QuestionService questionService, QuestionRepository questionRepository, AnswerService answerService, AnswerRepository answerRepository) {
+    public VoteService(VoteRepository voteRepository, QuestionService questionService, QuestionRepository questionRepository, AnswerService answerService, AnswerRepository answerRepository,  UserRepository userRepository) {
         this.voteRepository = voteRepository;
         this.questionService = questionService;
         this.questionRepository = questionRepository;
         this.answerService = answerService;
         this.answerRepository = answerRepository;
+        this.userRepository = userRepository;
     }
 
     public Vote voteQuestion(Long questionId, ApplicationUser user, int relativeScore) {
@@ -39,6 +42,9 @@ public class VoteService {
         });
 
         question.setScore(question.getScore() + relativeScore);
+        ApplicationUser votedUser = question.getUser();
+        votedUser.setScore(votedUser.getScore() + relativeScore);
+        userRepository.save(user);
         questionRepository.save(question);
 
         Vote vote = Vote.builder()
@@ -60,6 +66,9 @@ public class VoteService {
         });
 
         answer.setScore(answer.getScore() + relativeScore);
+        ApplicationUser votedUser = answer.getUser();
+        votedUser.setScore(votedUser.getScore() + relativeScore);
+        userRepository.save(user);
         answerRepository.save(answer);
 
         Vote vote = Vote.builder()

@@ -39,8 +39,11 @@
 </script>
 
 <style lang="scss" scoped>
+    @import url('https://fonts.googleapis.com/css?family=Roboto');
+
     html, body {
         margin: 0;
+        font-family: 'Roboto', sans-serif;
     }
 
     .page-content {

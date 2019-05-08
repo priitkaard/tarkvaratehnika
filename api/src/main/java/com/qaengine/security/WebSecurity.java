@@ -42,6 +42,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/comment/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/category/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/statistics/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/points/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/answer/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -61,7 +62,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of("*"));
+        configuration.setAllowedOrigins(ImmutableList.of("http://localhost:8081", "http://tutkit.s3-website.eu-north-1.amazonaws.com"));
         configuration.setAllowedMethods(ImmutableList.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));

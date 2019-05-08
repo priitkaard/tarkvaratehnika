@@ -1,7 +1,7 @@
 <template>
     <div class="Navigation" :class="{'Navigation__transparent': transparent}">
         <div class="container">
-            
+
             <div class="Navigation__mobile">
                 <img @click="$router.push({name: 'HomeView'})" src="../../assets/img/logo-inline.png" alt="" />
                 <menu-icon @click="openDrawer" class="Navigation__mobile_hamburger" />
@@ -18,8 +18,8 @@
                         <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
                             {{ item.name }}
                         </li>
-                        <li v-if="username">
-                            {{ username }}
+                        <li v-if="username && points !== null">
+                            {{ username }}: {{points}}
                         </li>
                     </ul>
                 </div>
@@ -39,12 +39,14 @@
         },
         computed: {
             ...mapState('auth', ['username']),
+            ...mapState('user', ['points']),
         },
         components: {MenuIcon},
         methods: {
             ...mapActions('navigation', ['openDrawer', 'chooseItem']),
             ...mapGetters('navigation', ['getMenuItems']),
         },
+
     }
 </script>
 
