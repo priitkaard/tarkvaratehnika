@@ -23,24 +23,26 @@
                   v-if="question.answers && question.answers.length > 0" />
 
         <!-- 1. Repetition -->
-        <div>
+        <div v-if="bestAnswer">
             <question-answer-card
-                    :answer="answer"
-                    @onCommentClick="toggleComment(answer.id)"
+                    :answer="bestAnswer"
+                    :best="false"
+                    :questionUser="'.'"
+                    @onCommentClick="toggleComment(bestAnswer.id)"
                     @updateText="updateAnswer($event)"
                     style="background:lightgreen"
             />
 
             <div class="QuestionDetailView__comment_wrapper">
                 <question-comment-card
-                        v-for="comment in answer.comments"
+                        v-for="comment in bestAnswer.comments"
                         :key="comment.id"
                         :comment="comment" />
 
-                <form @submit.prevent="commentAnswer(answer.id)" v-if="commentDisplay[answer.id]">
+                <form @submit.prevent="commentAnswer(bestAnswer.id)" v-if="commentDisplay[bestAnswer.id]">
                     <UIGroup class="mt-2">
-                        <UITextField :value.sync="commentInputs[answer.id]" placeholder="Comment" full />
-                        <UIButton text="Comment" @click="commentAnswer(answer.id)" />
+                        <UITextField :value.sync="commentInputs[bestAnswer.id]" placeholder="Comment" full />
+                        <UIButton text="Comment" @click="commentAnswer(bestAnswer.id)" />
                     </UIGroup>
                 </form>
             </div>
@@ -52,6 +54,8 @@
         >
             <question-answer-card
                     :answer="answer"
+                    :best="bestAnswer === null"
+                    :questionUser="question.user.username"
                     @onCommentClick="toggleComment(answer.id)"
                     @updateText="updateAnswer($event)"
                     @chooseBestAnswer = chooseBestAnswer($event)
@@ -142,6 +146,8 @@
                     this.commentDisplay[answer.id] = false;
                     this.commentInputs[answer.id] = '';
                 })
+
+                this.bestAnswer = this.withouts(this.question.answers);
             },
             async answerQuestion() {
                 await questionService.answerQuestion(this.question.id, this.answerInput);
@@ -175,8 +181,10 @@
                 await this.loadQuestion();
             },
             async chooseBestAnswer(id){
-                console.log(id);
-                await questionService.acceptAnswer(id);
+                if(confirm("Do you really want to select this answer as best answer? (Permanent)")) {
+                    await questionService.acceptAnswer(id);
+                    await this.loadQuestion();
+                }
                 await this.loadQuestion();
             },
             withouts(values) {

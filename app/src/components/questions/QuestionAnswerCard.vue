@@ -25,7 +25,7 @@
             <div class="detail" v-if="isLoggedIn && answer.user.username === currentUser">
                 <UIButton text="Edit" @click="editAreaToggle"/>
             </div>
-            <div class="detail" v-if="isLoggedIn">
+            <div class="detail" v-if="isLoggedIn && best && currentUser === questionUser">
                 <UIButton text="BEST" @click="$emit('chooseBestAnswer', answer.id)" />
             </div>
         </div>
@@ -51,6 +51,8 @@
         components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton, UITextField},
         props: {
             'answer': Object,
+            'best': Boolean,
+            'questionUser': String
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
