@@ -28,7 +28,7 @@
     import UIButton from "../common/UIButton";
     import UIAlert from "../common/UIAlert";
     import UITextField from "../common/UITextField";
-    import authService from '../../services/AuthService';
+    import * as authService from '../../services/AuthService';
     import CloseIcon from "vue-material-design-icons/Close";
 
     export default {

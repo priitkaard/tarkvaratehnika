@@ -1,4 +1,4 @@
-import authService from '../../services/AuthService';
+import * as authService from '../../services/AuthService';
 
 export default {
     namespaced: true,

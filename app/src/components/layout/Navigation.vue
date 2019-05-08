@@ -18,7 +18,7 @@
                         <li v-for="item in getMenuItems()" :key="item.id" @click="chooseItem(item)">
                             {{ item.name }}
                         </li>
-                        <li v-if="username">
+                        <li v-if="username && points !== null">
                             {{ username }}: {{points}}
                         </li>
                     </ul>
@@ -38,7 +38,8 @@
             transparent: Boolean
         },
         computed: {
-            ...mapState('auth', ['username', 'points']),
+            ...mapState('auth', ['username']),
+            ...mapState('user', ['points']),
         },
         components: {MenuIcon},
         methods: {
