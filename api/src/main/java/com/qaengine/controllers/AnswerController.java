@@ -102,9 +102,9 @@ public class AnswerController {
             @PathVariable Long answerId,
             Principal principal
     ) {
-       /* if (!answerService.getAnswer(answerId).getQuestion().getUser().getUsername().equals(principal.getName())) {
+        if (!answerService.getAnswer(answerId).getQuestion().getUser().getUsername().equals(principal.getName())) {
             throw new BadRequestException("Permission denied");
-        }*/
+        }
         return answerService.acceptAnswer(answerId);
     }
 

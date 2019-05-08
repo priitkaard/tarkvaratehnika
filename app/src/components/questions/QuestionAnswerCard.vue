@@ -26,7 +26,7 @@
                 <UIButton text="Edit" @click="editAreaToggle"/>
             </div>
             <div class="detail" v-if="isLoggedIn && best && currentUser === questionUser">
-                <UIButton text="BEST" @click="$emit('chooseBestAnswer', answer.id)" />
+                <UIButton text="Best" @click="$emit('chooseBestAnswer', answer.id)" />
             </div>
         </div>
         <div v-if="answer.user.username === currentUser && editArea">
