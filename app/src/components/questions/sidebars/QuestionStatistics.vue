@@ -4,7 +4,7 @@
             <div><chart-bar-icon :size="30  " /></div>
             <div>Statistics</div>
         </div>
-        <div class="item mt-1 mb-2">
+        <div class="item">
             <span>Total users:</span>
             <span>{{statistics.users}}</span>
         </div>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from "vuex";
+    import { mapActions, mapGetters } from "vuex";
     import ChartBarIcon from "vue-material-design-icons/ChartBar";
 
     export default {
@@ -45,8 +45,12 @@
 </script>
 
 <style lang="scss" scoped>
+    @import '../../../assets/styles/mixins';
+
     .QuestionStatistics {
         text-align: center;
+        @include shadow-box();
+
         p {
             padding-bottom: 20px;
             font-weight: bold;
@@ -64,6 +68,10 @@
             align-items: center;
             align-content: center;
             padding: 10px;
+            border-right: 5px solid orange;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
     }
 </style>
