@@ -1,10 +1,11 @@
 <template>
     <div class="QuestionCard noselect" v-if="question">
         <question-card-vote
-                :score="question.score"
+                :score="score"
                 :disable-voting="disableVoting"
                 @onUpVote="upVote(question.id)"
-                @onDownVote="downVote(question.id)" />
+                @onDownVote="downVote(question.id)"
+        />
 
         <div class="QuestionCard__body" @click="$emit('onContentClick')">
             <h3>{{ question.title }}</h3>
@@ -16,32 +17,39 @@
                 <eye-icon :size="20"/>
                 {{ views }}
             </div>
+
             <div class="detail" v-if="comments !== undefined">
                 <comment-icon :size="20"/>
                 {{ comments }}
             </div>
+
             <div class="detail" v-if="question.user">
                 <account-icon />
                 {{ question.user.username }}
             </div>
+
             <div class="detail" v-if="created">
                 <clock-outline-icon :size="20"/>
                 {{ created }}
             </div>
+
             <div class="detail" v-if="question.category">
                 <folder-icon :size="20"/>
                 {{ question.category.name }}
             </div>
-            <div class="detail" v-if="commentButton && isLoggedIn">
+
+            <div class="detail" v-if="isLoggedIn && isDetailView">
                 <UIButton text="Comment" @click="$emit('onCommentClick')"/>
             </div>
-            <div class="detail" v-if="question.user.username === currentUser && isLoggedIn && showEdit">
-                <UIButton text="Edit" @click="editAreaToggle"/>
+
+            <div class="detail" v-if="isLoggedIn && isCurrentUser(question.user) && isDetailView">
+                <UIButton text="Edit" @click="toggleIsEditAreaVisible()"/>
             </div>
         </div>
-        <div v-if="question.user.username === currentUser && editArea">
-                <UITextField :value.sync="newText" full />
-                <UIButton text="Edit" @click="updateQuestionText"/>
+
+        <div v-if="isCurrentUser(question.user) && isEditAreaVisible">
+                <UITextArea :value.sync="editInput" />
+                <UIButton text="Edit" @click="updateQuestionText()"/>
         </div>
     </div>
 </template>
@@ -56,66 +64,89 @@
     import moment from 'moment';
     import { mapState } from 'vuex';
     import AccountIcon from 'vue-material-design-icons/Account';
-    import UITextField from '../common/UITextField';
+    import UITextArea from '../common/UITextArea';
     import questionService from '../../services/QuestionService';
+    import { isCurrentUser } from '../../services/AuthService';
 
     export default {
         name: 'QuestionCard',
-        components: {AccountIcon, QuestionCardVote, FolderIcon, ClockOutlineIcon, EyeIcon, CommentIcon, UIButton, UITextField},
+        components: {
+            AccountIcon,
+            QuestionCardVote,
+            FolderIcon,
+            ClockOutlineIcon,
+            EyeIcon,
+            CommentIcon,
+            UIButton,
+            UITextArea,
+        },
         props: {
             'question': Object,
             'views': Number,
             'comments': Number,
-            commentButton: Boolean,
-            'showEdit': Boolean,
+            isDetailView: Boolean,
         },
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
-            currentUsername()
-            {
-                return this.username;
+
+            score() {
+                return questionService.calculateScore(this.question);
             },
+
             created() {
                 if (this.question && this.question.created) {
                     return moment(this.question.created).fromNow(true);
                 }
                 return null;
             },
+
             disableVoting() {
                 return !this.isLoggedIn || !this.question || questionService.hasVoted(this.question);
             },
         },
         methods: {
-            editAreaToggle() {
-                this.editArea = !this.editArea;
+            isCurrentUser,
+
+            toggleIsEditAreaVisible() {
+                this.isEditAreaVisible = !this.isEditAreaVisible;
             },
-            updateQuestionText() {
-                this.$emit('updateText', this.newText);
-                this.editAreaToggle();
+
+            async updateQuestionText() {
+                this.toggleIsEditAreaVisible();
+
+                const payload = {
+                    text: this.editInput,
+                    title: this.question.title,
+                    categoryId: this.question.category.id,
+                };
+                await questionService.updateQuestion(this.question.id, payload);
+
+                this.requestQuestionReload();
             },
+
+            requestQuestionReload() {
+                this.$emit('onRequestQuestionReload');
+            },
+
             addVoteToQuestion(vote) {
                 this.question.votes.push(vote);
             },
+
             async upVote() {
                 const vote = await questionService.upVote(this.question.id);
                 this.addVoteToQuestion(vote);
-                this.question.score += 1;
             },
+
             async downVote() {
                 const vote = await questionService.downVote(this.question.id);
                 this.addVoteToQuestion(vote);
-                this.question.score -= 1;
             },
         },
         data() {
             return {
-                currentUser: '',
-                newText: this.question.text,
-                editArea: false,
+                isEditAreaVisible: false,
+                editInput: String(this.question.text),
             };
-        },
-        created() {
-            this.currentUser = this.currentUsername;
         },
     };
 </script>

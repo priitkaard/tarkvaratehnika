@@ -3,16 +3,19 @@
         <div>
             <question-card
                 :question="question"
-                :showEdit="true"
                 @onCommentClick="toggleComment('question')"
-                @updateText = "updateQuestion($event)" comment-button
+                @onRequestQuestionReload="loadQuestion()"
+                comment-button
+                isDetailView
             />
 
             <div class="QuestionDetailView__comment_wrapper">
                 <question-comment-card
                         v-for="comment in question.comments"
                         :key="comment.id"
-                        :comment="comment" />
+                        :comment="comment"
+                />
+
                 <form @submit.prevent="commentQuestion()" v-if="commentDisplay.question">
                     <UIGroup class="mt-2">
                         <UITextField :value.sync="commentInputs.question" placeholder="Comment" full />
@@ -21,49 +24,24 @@
                 </form>
             </div>
         </div>
+
         <h4 class="mt-5">Answers</h4>
+
         <p v-if="question.answers && question.answers.length < 1">No answers yet</p>
+
         <UISelect :options="sortOptions"
                   :value.sync="sortBy"
+                  @onChange="sortAnswers()"
                   v-if="question.answers && question.answers.length > 0" />
 
-
-        <div v-if="bestAnswer">
-            <question-answer-card
-                    :answer="bestAnswer"
-                    :best="false"
-                    :questionUser="'.'"
-                    @onCommentClick="toggleComment(bestAnswer.id)"
-                    @updateText="updateAnswer($event)"
-                    style="background:lightgreen"
-            />
-
-            <div class="QuestionDetailView__comment_wrapper">
-                <question-comment-card
-                        v-for="comment in bestAnswer.comments"
-                        :key="comment.id"
-                        :comment="comment" />
-
-                <form @submit.prevent="commentAnswer(bestAnswer.id)" v-if="commentDisplay[bestAnswer.id]">
-                    <UIGroup class="mt-2">
-                        <UITextField :value.sync="commentInputs[bestAnswer.id]" placeholder="Comment" full />
-                        <UIButton text="Comment" @click="commentAnswer(bestAnswer.id)" />
-                    </UIGroup>
-                </form>
-            </div>
-
-        </div>
-
-        <div v-for="answer in question.answers"
+        <div v-for="answer in sortedAnswers"
              :key="answer.id"
         >
             <question-answer-card
+                    :question="question"
                     :answer="answer"
-                    :best="bestAnswer === null"
-                    :questionUser="question.user.username"
                     @onCommentClick="toggleComment(answer.id)"
-                    @updateText="updateAnswer($event)"
-                    @chooseBestAnswer = chooseBestAnswer($event)
+                    @onRequestQuestionReload="loadQuestion()"
             />
 
             <div class="QuestionDetailView__comment_wrapper">
@@ -82,13 +60,14 @@
 
         </div>
 
+        <div v-if="isLoggedIn && !bestAnswer">
+            <h4 class="mt-5">Answer the question</h4>
 
-        <h4 class="mt-5" v-if="isLoggedIn && bestAnswer == null">Answer the question</h4>
-
-        <form @submit.prevent="answerQuestion()" v-if="isLoggedIn && bestAnswer == null">
-            <UITextArea :value.sync="answerInput" />
-            <UIButton text="Answer" @click="answerQuestion()" />
-        </form>
+            <form @submit.prevent="answerQuestion()">
+                <UITextArea :value.sync="answerInput" />
+                <UIButton text="Answer" @click="answerQuestion()" />
+            </form>
+        </div>
     </div>
 </template>
 
@@ -102,7 +81,7 @@
     import QuestionCard from '../components/questions/QuestionCard';
     import QuestionAnswerCard from '../components/questions/QuestionAnswerCard';
     import QuestionCommentCard from '../components/questions/QuestionCommentCard';
-    import {mapState} from 'vuex';
+    import { mapState } from 'vuex';
 
     export default {
         name: 'QuestionDetailView',
@@ -119,6 +98,7 @@
         data () {
             return {
                 question: null,
+                sortedAnswers: [],
                 answerInput: '',
                 commentDisplay: {},
                 commentInputs: {},
@@ -134,11 +114,14 @@
                 ],
                 sortBy: null,
                 newText: '',
-                bestAnswer: '',
             };
         },
         computed: {
             ...mapState('auth', ['isLoggedIn']),
+
+            bestAnswer() {
+                return this.question && this.question.answers.find(answer => answer.accepted);
+            },
         },
         methods: {
             async loadQuestion() {
@@ -152,8 +135,27 @@
                     this.commentInputs[answer.id] = '';
                 });
 
-                this.bestAnswer = this.takeBestAnswerOut(this.question.answers);
+                this.sortedAnswers = this.question.answers;
+                this.sortAnswers();
             },
+
+            sortAnswers() {
+                this.sortedAnswers = this.sortedAnswers.sort((a1, a2) => {
+                    if (a1.accepted) {
+                        return -1;
+                    }
+                    if (a2.accepted) {
+                        return 1;
+                    }
+                    if (this.sortBy && this.sortBy.name === 'Score') {
+                        return questionService.calculateScore(a1) > questionService.calculateScore(a2) ? -1 : 1;
+                    } else if (this.sortBy && this.sortBy.name === 'Time') {
+                        return a1.created > a2.created ? -1 : 1;
+                    }
+                    return -1;
+                });
+            },
+
             async answerQuestion() {
                 await questionService.answerQuestion(this.question.id, this.answerInput);
                 await this.loadQuestion();
@@ -187,7 +189,7 @@
                 await this.loadQuestion();
             },
             async updateAnswer(newData) {
-                await questionService.updateAnswer(newData.id, {text: newData.new});
+                await questionService.updateAnswer(newData.id, { text: newData.new });
                 await this.loadQuestion();
             },
             async chooseBestAnswer(id){
@@ -196,16 +198,6 @@
                     await this.loadQuestion();
                 }
                 await this.loadQuestion();
-            },
-            takeBestAnswerOut(values) {
-                for (let i = 0; i < values.length; i++) {
-                    if (values[i].accepted){
-                        let bestAnswer = values[i];
-                        this.question.answers.splice(i, 1);
-                        return bestAnswer;
-                    }
-                }
-                return null;
             },
         },
         async created() {

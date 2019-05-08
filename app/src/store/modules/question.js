@@ -72,9 +72,9 @@ const actions = {
         } else {
             statistics = await questionService.getStatistics();
         }
-        
-        context.commit('updateStatistics', {category, ...statistics});
-    }, 
+
+        context.commit('updateStatistics', { category, ...statistics });
+    },
 };
 const mutations = {
     updatePage(state, page) {

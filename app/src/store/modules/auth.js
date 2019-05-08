@@ -1,9 +1,14 @@
+import { LOCAL_STORAGE } from '../../services/AuthService';
+import { storageGet } from '../../services/StorageService';
+
+const initalState = {
+    isLoggedIn: Boolean(storageGet('authToken')),
+    username: storageGet('username'),
+};
+
 export default {
     namespaced: true,
-    state: {
-        isLoggedIn: Boolean(localStorage.getItem('authToken')),
-        username: null,
-    },
+    state: initalState,
     actions: {
         logIn(context, payload) {
             context.commit('setLoggedIn', true);

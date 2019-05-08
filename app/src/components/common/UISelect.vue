@@ -25,7 +25,7 @@
     import ChevronUpIcon from 'vue-material-design-icons/ChevronUp';
     export default {
         name: 'UISelect',
-        components: {ChevronUpIcon, ChevronDownIcon},
+        components: { ChevronUpIcon, ChevronDownIcon },
         props: {
             options: Array,
             value: Object,

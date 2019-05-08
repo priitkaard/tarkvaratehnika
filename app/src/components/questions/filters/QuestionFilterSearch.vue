@@ -35,12 +35,12 @@
 <script>
     import MagnifyIcon from 'vue-material-design-icons/Magnify';
     import questionService from '../../../services/QuestionService';
-    import {mapActions} from 'vuex';
+    import { mapActions } from 'vuex';
 
     export default {
         name: 'QuestionFilterSearch',
         props: ['rounded'],
-        components: {MagnifyIcon},
+        components: { MagnifyIcon },
         data() {
             return {
                 suggestions: [],

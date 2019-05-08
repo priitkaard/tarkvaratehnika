@@ -1,84 +1,115 @@
 <template>
-    <div class="QuestionAnswerCard noselect" v-if="answer">
+    <div :class="classNames('QuestionAnswerCard', 'noselect', { 'QuestionAnswerCard--accepted': answer.accepted })"
+         v-if="answer"
+    >
         <question-card-vote
-                :score="answer.score"
+                :score="score"
                 :disable-voting="disableVoting"
                 @onUpVote="upVoteAnswer()"
-                @onDownVote="downVoteAnswer()" />
+                @onDownVote="downVoteAnswer()"
+        />
 
         <div class="QuestionAnswerCard__body">
             <p v-html="answer.text"></p>
         </div>
 
         <div class="QuestionAnswerCard__details">
-            <div class="detail" v-if="answer.user">
+            <div class="detail">
                 <account-icon />
                 {{ answer.user.username }}
             </div>
+
             <div class="detail" v-if="created">
                 <clock-outline-icon :size="20"/>
                 {{ created }}
             </div>
+
             <div class="detail">
-                <UIButton text="Comment" @click="$emit('onCommentClick')" v-if="isLoggedIn"/>
+                <UIButton text="Comment" @click="toggleComment()" v-if="isLoggedIn"/>
             </div>
-            <div class="detail" v-if="isLoggedIn && answer.user.username === currentUser">
-                <UIButton text="Edit" @click="editAreaToggle"/>
+
+            <div class="detail no-margin" v-if="isLoggedIn && isCurrentUser(answer.user)">
+                <UIButton text="Edit" @click="toggleIsEditVisible()"/>
             </div>
-            <div class="detail" v-if="isLoggedIn && best && currentUser === questionUser">
-                <UIButton text="Best" @click="$emit('chooseBestAnswer', answer.id)" />
+
+            <div class="detail no-margin" v-if="isLoggedIn && isCurrentUser(question.user) && !findBestAnswer()">
+                <UIButton text="Best" @click="chooseBestAnswer()" />
             </div>
         </div>
-        <div v-if="answer.user.username === currentUser && editArea">
-            <UITextField :value.sync="newText" full />
-            <UIButton text="Edit" @click="updateAnswerText"/>
+
+        <div v-if="isCurrentUser(answer.user) && isEditVisible">
+            <UITextArea :value.sync="editInput" />
+            <UIButton text="Edit" @click="updateAnswerText()" />
         </div>
     </div>
 </template>
 
 <script>
     import QuestionCardVote from './QuestionCardVote';
-    import UITextField from '../common/UITextField';
+    import UITextArea from '../common/UITextArea';
     import UIButton from '../common/UIButton';
     import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline';
     import moment from 'moment';
     import { mapState } from 'vuex';
     import AccountIcon from 'vue-material-design-icons/Account';
     import questionService from '../../services/QuestionService';
+    import { isCurrentUser } from '../../services/AuthService';
+    import classNames from 'classnames';
 
     export default {
         name: 'QuestionAnswerCard',
-        components: {AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton, UITextField},
+        components: { AccountIcon, QuestionCardVote, ClockOutlineIcon, UIButton, UITextArea },
         props: {
-            'answer': Object,
-            'best': Boolean,
-            'questionUser': String,
+            question: Object,
+            answer: Object,
         },
+
         computed: {
             ...mapState('auth', ['isLoggedIn', 'username']),
-            currentUsername()
-            {
-                return this.username;
-            },
+
             created() {
                 if (this.answer && this.answer.created) {
                     return moment(this.answer.created).fromNow();
                 }
                 return null;
             },
+
+            score() {
+                return questionService.calculateScore(this.answer);
+            },
+
             disableVoting() {
                 return !this.isLoggedIn || !this.answer || questionService.hasVoted(this.answer);
             },
         },
-        methods: {
-            editAreaToggle() {
-                this.editArea = !this.editArea;
-            },
-            updateAnswerText() {
-                this.$emit('updateText', {new: this.newText, id: this.answer.id});
-                this.editAreaToggle();
 
+        methods: {
+            classNames,
+            isCurrentUser,
+
+            findBestAnswer() {
+                return this.question && this.question.answers.find(answer => answer.accepted);
             },
+
+            toggleIsEditVisible() {
+                this.isEditVisible = !this.isEditVisible;
+            },
+
+            async updateAnswerText() {
+                this.toggleIsEditVisible();
+
+                await questionService.updateAnswer(this.answer.id, { text: this.editInput });
+                this.requestQuestionReload();
+            },
+
+            requestQuestionReload() {
+                this.$emit('onRequestQuestionReload');
+            },
+
+            toggleComment() {
+                this.$emit('onCommentClick');
+            },
+
             addVoteToAnswer(vote) {
                 this.answer.votes.push(vote);
             },
@@ -86,23 +117,28 @@
             async upVoteAnswer() {
                 const vote = await questionService.upVoteAnswer(this.answer.id);
                 this.addVoteToAnswer(vote);
-                this.answer.score += 1;
             },
+
             async downVoteAnswer() {
                 const vote = await questionService.downVoteAnswer(this.answer.id);
                 this.addVoteToAnswer(vote);
-                this.answer.score -= 1;
+            },
+
+            async chooseBestAnswer() {
+                const message =
+                    'Do you really want to select this answer as best answer? This action can not be reverted!';
+
+                if (confirm(message)) {
+                    await questionService.acceptAnswer(this.answer.id);
+                }
+                this.requestQuestionReload();
             },
         },
         data() {
-            return{
-                currentUser: '',
-                editArea: false,
-                newText: this.answer.text,
+            return {
+                isEditVisible: false,
+                editInput: String(this.answer.text),
             };
-        },
-        created() {
-            this.currentUser = this.currentUsername;
         },
     };
 </script>
@@ -119,6 +155,10 @@
         margin: 10px 0;
         position: relative;
         @include shadow-box;
+
+        &--accepted {
+            border-top: 8px solid #00b900;
+        }
 
         &__body {
             display: inline-block;
@@ -150,6 +190,8 @@
                 align-items: center;
                 font-size: 14px;
                 margin-left: 20px;
+                &.no-margin { margin-left: 0 }
+
                 .material-design-icon { margin-right: 5px }
             }
             @media (max-width: 768px) {

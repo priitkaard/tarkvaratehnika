@@ -27,7 +27,7 @@
 
     export default {
         name: 'NavigationDrawer',
-        components: {ChevronRightIcon},
+        components: { ChevronRightIcon },
         computed: {
             ...mapState('navigation', ['drawer', 'menuItems']),
         },

@@ -32,7 +32,7 @@
                         toolbar: [ 'bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote' ],
                     },
                 },
-                input: '',
+                input: this.value || '',
             };
         },
     };

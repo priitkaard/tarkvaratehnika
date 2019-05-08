@@ -6,7 +6,6 @@
                 :question="question"
                 :comments="question.comments"
                 :views="question.views"
-                :showEdit="false"
                 @onContentClick="openQuestionView(question.id)" />
 
         <div v-if="questions.questions.length === 0"
@@ -37,7 +36,7 @@
 
 <script>
     import UIButton from '../../common/UIButton';
-    import {mapGetters} from 'vuex';
+    import { mapGetters } from 'vuex';
     import QuestionCard from '../QuestionCard';
 
     export default {

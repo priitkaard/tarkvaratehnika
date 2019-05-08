@@ -11,11 +11,11 @@
 <script>
     import UISelect from '../../common/UISelect';
     import categoryService from '../../../services/CategoryService';
-    import {mapGetters, mapActions} from 'vuex';
+    import { mapGetters, mapActions } from 'vuex';
 
     export default {
         name: 'QuestionFilterCategory',
-        components: {UISelect},
+        components: { UISelect },
         computed: {
             ...mapGetters('question', ['filters']),
         },
@@ -26,7 +26,7 @@
         },
         async created() {
             this.categories = [
-                {id: 0, name: 'All lectures'},
+                { id: 0, name: 'All lectures' },
                 ... await categoryService.listCategories(),
             ];
         },

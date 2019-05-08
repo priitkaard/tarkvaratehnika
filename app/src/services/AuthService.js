@@ -1,21 +1,23 @@
 import axios from 'axios';
 import store from '../store';
 import apiService, { handleErrors } from './ApiService';
+import { LOCAL_STORAGE, storageRemove, storageSet } from './StorageService';
+import { initializeUser } from './UserService';
 
-const LOCAL_STORAGE = {
-    AUTH_TOKEN: 'authToken',
-};
 
 export async function doLogin(token, username) {
-    localStorage.setItem(LOCAL_STORAGE.AUTH_TOKEN, token);
+    storageSet(LOCAL_STORAGE.AUTH_TOKEN, token);
+    storageSet(LOCAL_STORAGE.USERNAME, username);
+
     store.dispatch('auth/logIn', { username });
 
-    const points = await apiService.get(`/user/points/${username}`);
-    store.commit('user/setPoints', points);
+    await initializeUser();
 }
 
 export function logOut() {
-    localStorage.removeItem(LOCAL_STORAGE.AUTH_TOKEN);
+    storageRemove(LOCAL_STORAGE.AUTH_TOKEN);
+    storageRemove(LOCAL_STORAGE.USERNAME);
+
     store.dispatch('auth/logOut');
 }
 
@@ -42,4 +44,8 @@ export async function register(username, password) {
     } catch (err) {
         handleErrors(err);
     }
+}
+
+export function isCurrentUser(user) {
+    return user && user.username === store.state.auth.username;
 }

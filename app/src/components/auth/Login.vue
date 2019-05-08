@@ -56,7 +56,7 @@
                 try {
                     await authService.tryLogin(this.inputs.username, this.inputs.password);
                     this.onDismiss();
-                    this.$router.push({name: 'HomeView'});
+                    this.$router.push({ name: 'HomeView' });
                 } catch (err) {
                     this.setError('Invalid credentials!');
                 }

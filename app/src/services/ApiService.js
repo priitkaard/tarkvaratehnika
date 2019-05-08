@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { LOCAL_STORAGE, storageGet } from './StorageService';
 
 const API_URL =
     process.env.NODE_ENV === 'production'
@@ -10,14 +11,14 @@ const axios = Axios.create({
 });
 
 async function request(config) {
-    const requestConfig = {...config};
+    const requestConfig = { ...config };
     if (!requestConfig.headers) {
         requestConfig.headers = {};
     }
 
-    // For future usage.
-    if (localStorage.authToken) {
-        requestConfig.headers.authorization = localStorage.authToken;
+    const authToken = storageGet(LOCAL_STORAGE.AUTH_TOKEN);
+    if (authToken) {
+        requestConfig.headers.authorization = authToken;
     }
 
     try {
@@ -38,7 +39,7 @@ export function handleErrors(err) {
         if (responseBody.errors && responseBody.errors.length) {
             throw { error: responseBody.errors[0].defaultMessage };
         } else if (responseBody.message) {
-            throw {error: responseBody.message};
+            throw { error: responseBody.message };
         }
     }
     throw { error: 'Technical error' };

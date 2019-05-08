@@ -9,18 +9,18 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions} from 'vuex';
+    import { mapGetters, mapActions } from 'vuex';
 
     export default {
         name: 'QuestionFilterBar',
         data() {
             return {
                 options: [
-                    {key: 'score', name: 'Most popular'},
-                    {key: 'answers', name: 'Most responses'},
-                    {key: 'last_answer', name: 'Recently answered'},
-                    {key: 'comments', name: 'Most comments'},
-                    {key: 'last_comment', name: 'Recently commented'},
+                    { key: 'score', name: 'Most popular' },
+                    { key: 'answers', name: 'Most responses' },
+                    { key: 'last_answer', name: 'Recently answered' },
+                    { key: 'comments', name: 'Most comments' },
+                    { key: 'last_comment', name: 'Recently commented' },
                 ],
             };
         },

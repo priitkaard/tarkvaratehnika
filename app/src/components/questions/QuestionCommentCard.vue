@@ -22,7 +22,7 @@
         props: {
             comment: Object,
         },
-        components: {AccountIcon},
+        components: { AccountIcon },
         data() {
             return {
                 created: moment(this.comment.created).fromNow(),

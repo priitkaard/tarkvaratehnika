@@ -30,7 +30,7 @@
 
 <script>
     import MenuIcon from 'vue-material-design-icons/Menu';
-    import {mapActions, mapGetters, mapState} from 'vuex';
+    import { mapActions, mapGetters, mapState } from 'vuex';
 
     export default {
         name: 'Navigation',
@@ -41,7 +41,7 @@
             ...mapState('auth', ['username']),
             ...mapState('user', ['points']),
         },
-        components: {MenuIcon},
+        components: { MenuIcon },
         methods: {
             ...mapActions('navigation', ['openDrawer', 'chooseItem']),
             ...mapGetters('navigation', ['getMenuItems']),
