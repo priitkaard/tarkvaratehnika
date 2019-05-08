@@ -16,20 +16,45 @@
                 </form>
             </div>
         </div>
-
         <h4 class="mt-5">Answers</h4>
         <p v-if="question.answers && question.answers.length < 1">No answers yet</p>
         <UISelect :options="sortOptions"
                   :value.sync="sortBy"
                   v-if="question.answers && question.answers.length > 0" />
 
+        <!-- 1. Repetition -->
+        <div>
+            <question-answer-card
+                    :answer="answer"
+                    @onCommentClick="toggleComment(answer.id)"
+                    @updateText="updateAnswer($event)"
+                    style="background:lightgreen"
+            />
+
+            <div class="QuestionDetailView__comment_wrapper">
+                <question-comment-card
+                        v-for="comment in answer.comments"
+                        :key="comment.id"
+                        :comment="comment" />
+
+                <form @submit.prevent="commentAnswer(answer.id)" v-if="commentDisplay[answer.id]">
+                    <UIGroup class="mt-2">
+                        <UITextField :value.sync="commentInputs[answer.id]" placeholder="Comment" full />
+                        <UIButton text="Comment" @click="commentAnswer(answer.id)" />
+                    </UIGroup>
+                </form>
+            </div>
+
+        </div>
+        <!-- 2.Repetition -->
         <div v-for="answer in question.answers"
-             :key="answer.id"
+             :key="answer.id" v-if="answer.accepted === false"
         >
             <question-answer-card
                     :answer="answer"
                     @onCommentClick="toggleComment(answer.id)"
                     @updateText="updateAnswer($event)"
+                    @chooseBestAnswer = chooseBestAnswer($event)
             />
 
             <div class="QuestionDetailView__comment_wrapper">
@@ -48,9 +73,10 @@
 
         </div>
 
-        <h4 class="mt-5" v-if="isLoggedIn">Answer the question</h4>
 
-        <form @submit.prevent="answerQuestion()" v-if="isLoggedIn">
+        <h4 class="mt-5" v-if="isLoggedIn && bestAnswer == null">Answer the question</h4>
+
+        <form @submit.prevent="answerQuestion()" v-if="isLoggedIn && bestAnswer == null">
             <UITextArea :value.sync="answerInput" />
             <UIButton text="Answer" @click="answerQuestion()" />
         </form>
@@ -99,6 +125,7 @@
                 ],
                 sortBy: null,
                 newText: '',
+                bestAnswer: '',
             }
         },
         computed: {
@@ -147,10 +174,34 @@
                 await questionService.updateAnswer(newData.id, {text: newData.new});
                 await this.loadQuestion();
             },
+            async chooseBestAnswer(id){
+                console.log(id);
+                await questionService.acceptAnswer(id);
+                await this.loadQuestion();
+            },
+            withouts(values) {
+                for (let i = 0; i < values.length; i++) {
+                    if (values[i].accepted){
+                        return (values[i]);
+                    }
+                }
+                return null;
+            }
         },
         async created() {
             await this.loadQuestion();
             this.sortBy = this.sortOptions[0];
+            this.bestAnswer = this.withouts(this.question.answers);
+        },
+        filters: {
+            without : function(values) {
+                for (let i = 0; i < values.length; i++) {
+                    if (values[i].accepted){
+                        return (values[i]);
+                    }
+                }
+                return null;
+            }
         },
     }
 </script>

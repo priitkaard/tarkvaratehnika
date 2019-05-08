@@ -25,6 +25,9 @@
             <div class="detail" v-if="isLoggedIn && answer.user.username === currentUser">
                 <UIButton text="Edit" @click="editAreaToggle"/>
             </div>
+            <div class="detail" v-if="isLoggedIn">
+                <UIButton text="BEST" @click="$emit('chooseBestAnswer', answer.id)" />
+            </div>
         </div>
         <div v-if="answer.user.username === currentUser && editArea">
             <UITextField :value.sync="newText" full />
