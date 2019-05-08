@@ -58,9 +58,10 @@ public class QuestionService {
             put("score", "score");
             put("created", "created");
             put("answers", "COUNT(a)");
-            put("last_answer", "COALESCE(MAX(a.created), q.created)");
+            // Hack, since couldn't find a solution to set NULLs as last rows.
+            put("last_answer", "COALESCE(MAX(a.created), '1999-01-01')");
             put("comments", "COUNT(c)");
-            put("last_comment", "COALESCE(MAX(c.created), q.created)");
+            put("last_comment", "COALESCE(MAX(c.created), '1999-01-01')");
         }};
 
         if (!sortOptions.keySet().contains(input.getSort())) {
